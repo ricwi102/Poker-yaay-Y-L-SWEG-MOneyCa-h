@@ -1,5 +1,7 @@
 package poker;
 
+import java.util.Collections;
+
 public class GameTest
 {
     public static void main(String[] args) {
@@ -10,9 +12,10 @@ public class GameTest
 
 	Holdem holdem = new Holdem(players,board);
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 	    holdem.nextStreet();
 	}
+
 
     }
 }

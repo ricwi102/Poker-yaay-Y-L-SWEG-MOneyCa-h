@@ -21,6 +21,10 @@ public class Player
 	return hand;
     }
 
+    public String getName() {
+	return name;
+    }
+
     @Override public String toString() {
 	StringBuilder builder = new StringBuilder();
 	builder.append(name);

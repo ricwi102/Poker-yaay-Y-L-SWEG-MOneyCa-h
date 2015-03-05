@@ -48,7 +48,20 @@ public class Holdem
 	List<Card> cards = new ArrayList<Card>();
 	cards.addAll(board.getOpenCards());
 	cards.addAll(player.getHand());
+	if(getFlush(cards) != null){
+	    return getFlush(cards);
+	}else if(getStraight(cards) != null){
+	    return getStraight(cards);
+	}else{
+	    sortHand(cards);
+	    while(cards.size() > 5){
+		cards.remove(0);
+	    }
+	    return cards;
+	}
     }
+
+
 
     private List<Card> getFlush(List<Card> cards){
 	List<Card> testHand = new ArrayList<Card>();
@@ -75,6 +88,31 @@ public class Holdem
 	return null;
     }
 
+    private List<Card> getStraight(List<Card> cards){
+	List<Card> testHand = new ArrayList<Card>();
+	sortHand(cards);
+	int cardsChecked = 0;
+	int testIndex = 0;
+	while(cardsChecked < cards.size()){
+	    if(testIndex +cardsChecked + 1 < cards.size() && cards.get(testIndex+cardsChecked).getValue() == cards.get(testIndex+cardsChecked + 1).getValue() - 1){
+		testHand.add(cards.get(testIndex+cardsChecked));
+		testIndex++;
+	    }else if(testHand.size() == 5){
+		return testHand;
+	    }else if(testHand.size() > 5){
+		while (testHand.size() > 5){
+		    testHand.remove(0);
+		}
+		return testHand;
+	    }else{
+		cardsChecked++;
+		testHand = new ArrayList<Card>();
+		testIndex = 0;
+	    }
+	}
+	return null;
+    }
+
     public void sortHand(List<Card> cards){
     	Collections.sort(cards, new CardComparator());
         }
@@ -95,12 +133,20 @@ public class Holdem
 		break;
 	    case 3:
 		dealRiver();
-		dealCounter = 0;
+		dealCounter++;
 		break;
+	    case 4:
+		for (Player player : players) {
+		    System.out.println(player);
+		}
+		System.out.println(board);
+		List<Card> bestHand = getBestHand(players[0]);
+		System.out.println("Best hand for " + players[0].getName());
+		for (Card card : bestHand) {
+		    System.out.println(card);
+		}
+		dealCounter = 0;
 	}
-	for (Player player : players) {
-	    System.out.println(player);
-	}
-	System.out.println(board);
+
     }
 }
