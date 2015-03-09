@@ -18,6 +18,31 @@ public class Holdem
 	deck = new Deck();
     }
 
+    public static void main(String[] args) {
+	List<Card> testList = new ArrayList<>();
+	testList.add(new Card(11, CardColor.HEARTS));
+	testList.add(new Card(6, CardColor.HEARTS));
+	testList.add(new Card(6, CardColor.DIAMONDS));
+	testList.add(new Card(6, CardColor.HEARTS));
+	testList.add(new Card(6, CardColor.HEARTS));
+	testList.add(new Card(12, CardColor.HEARTS));
+
+	List<List<Card>> test = getSameValueCards(testList);
+
+	testList = getFourOfAKind(test, testList);
+
+	for (Card card : testList) {
+	    System.out.println(card);
+	}
+
+	/*
+	for (List<Card> cards : test) {
+	    for (Card card: cards) {
+		System.out.println(card);
+	    }
+	}*/
+    }
+
     private void dealCards(){
 	for(int i = 0; i < 2; i++) {
 	    for (Player player : players) {
@@ -25,6 +50,8 @@ public class Holdem
 	    }
 	}
     }
+
+
 
     private void dealFlop(){
 	for (int i = 0; i < 3; i++) {
@@ -45,7 +72,7 @@ public class Holdem
     }
 
     private List<Card> getBestHand(Player player){
-	List<Card> cards = new ArrayList<Card>();
+	List<Card> cards = new ArrayList<>();
 	cards.addAll(board.getOpenCards());
 	cards.addAll(player.getHand());
 	if(getFlush(cards) != null){
@@ -61,12 +88,44 @@ public class Holdem
 	}
     }
 
+    private static List<List<Card>> getSameValueCards(List<Card> cards){
+	List<List<Card>> sameValueCards = new ArrayList<>();
+	List<Card> testHand = new ArrayList<>();
+	sortHand(cards);
+	for (int i = 0; i < cards.size(); i++) {
+	    if (testHand.isEmpty() || cards.get(i).getValue() == cards.get(i - 1).getValue()){
+		testHand.add(cards.get(i));
+	    } else{
+		if (testHand.size() >= 2){
+		    sameValueCards.add(testHand);
+		}
+		testHand = new ArrayList<>();
+		testHand.add(cards.get(i));
+	    }
+	}
+
+	if (testHand.size() >= 2) sameValueCards.add(testHand);
+	sortSameKind(sameValueCards);
+	if (!sameValueCards.isEmpty()) return sameValueCards;
+	return null;
+    }
 
 
-    private List<Card> getFlush(List<Card> cards){
-	List<Card> testHand = new ArrayList<Card>();
+
+    private static List<Card> getStraightFlush(List<Card> cards){
+	List<Card> testHand = getFlush(cards);
+	if (testHand != null){
+	    return getStraight(testHand);
+	}
+	return null;
+    }
+
+
+
+    private static List<Card> getFlush(List<Card> cards){
+	List<Card> testHand = new ArrayList<>();
 	for (int i = 0; i < 4; i++) {
-	    testHand = new ArrayList<Card>();
+	    testHand = new ArrayList<>();
 	    CardColor currentColor = CardColor.values()[i];
 	    for (Card card : cards) {
 		if(card.getColor() == currentColor){
@@ -80,16 +139,13 @@ public class Holdem
 	}
 	if (testHand.size() >= 5){
 	    sortHand(testHand);
-	    while (testHand.size() > 5){
-		testHand.remove(0);
-	    }
 	    return testHand;
 	}
 	return null;
     }
-
-    private List<Card> getStraight(List<Card> cards){
-	List<Card> testHand = new ArrayList<Card>();
+/*
+    private static List<Card> getStraight(List<Card> cards){
+	List<Card> testHand = new ArrayList<>();
 	sortHand(cards);
 	int cardsChecked = 0;
 	int testIndex = 0;
@@ -100,9 +156,6 @@ public class Holdem
 	    }else if(testHand.size() == 5){
 		return testHand;
 	    }else if(testHand.size() > 5){
-		while (testHand.size() > 5){
-		    testHand.remove(0);
-		}
 		return testHand;
 	    }else{
 		cardsChecked++;
@@ -112,10 +165,58 @@ public class Holdem
 	}
 	return null;
     }
+*/
+    private static List<Card> getStraight(List<Card> cards){
+	List<Card> testHand = new ArrayList<>();
+	sortHand(cards);
 
-    public void sortHand(List<Card> cards){
+	for (int i = 0; i < cards.size(); i++) {
+	    if (testHand.isEmpty() || cards.get(i).getValue() == cards.get(i - 1).getValue() + 1){
+		testHand.add(cards.get(i));
+	    } else if (cards.get(i).getValue() != cards.get(i - 1).getValue()){
+		if (testHand.size() >= 5){
+		    return testHand;
+		} else if (i > cards.size() - 5) {
+		    break;
+		} else {
+		    testHand = new ArrayList<>();
+		    testHand.add(cards.get(i));
+		}
+	    }
+	}
+	if (testHand.size() >= 5) {
+	    return testHand;
+	}
+	return null;
+    }
+
+    private static List<Card> getFourOfAKind(List<List<Card>>  sameValueCards, List<Card> cards){
+	sortHand(cards);
+	List<Card> testHand = new ArrayList<>();
+	for (List<Card> cardList : sameValueCards) {
+	    if (cardList.size() == 4){
+		testHand.addAll(cardList);
+		for (int i = cards.size() - 1; i >= 0; i--) {
+		    if (!testHand.contains(cards.get(i))){
+			testHand.add(cards.get(i));
+			return testHand;
+		    }
+		}
+	    }
+	}
+
+
+
+	return null;
+    }
+
+    public static void sortHand(List<Card> cards){
     	Collections.sort(cards, new CardComparator());
         }
+
+    private static void sortSameKind(List<List<Card>> sameValueCards){
+	Collections.sort(sameValueCards, new SameKindComparator());
+    }
 
     public void nextStreet(){
 	switch(dealCounter){
