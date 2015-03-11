@@ -19,28 +19,7 @@ public class Holdem
     }
 
     public static void main(String[] args) {
-	List<Card> testList = new ArrayList<>();
-	testList.add(new Card(11, CardColor.HEARTS));
-	testList.add(new Card(6, CardColor.HEARTS));
-	testList.add(new Card(6, CardColor.DIAMONDS));
-	testList.add(new Card(6, CardColor.HEARTS));
-	testList.add(new Card(6, CardColor.HEARTS));
-	testList.add(new Card(12, CardColor.HEARTS));
 
-	List<List<Card>> test = getSameValueCards(testList);
-
-	testList = getFourOfAKind(test, testList);
-
-	for (Card card : testList) {
-	    System.out.println(card);
-	}
-
-	/*
-	for (List<Card> cards : test) {
-	    for (Card card: cards) {
-		System.out.println(card);
-	    }
-	}*/
     }
 
     private void dealCards(){
@@ -71,24 +50,40 @@ public class Holdem
 	board.addCard(deck.drawCard());
     }
 
-    private List<Card> getBestHand(Player player){
+    private PokerHand getBestHand(Player player){
+	final int fourOfAKind = 4;
+	final int threeOfAKind = 3;
+	final int pair = 2;
 	List<Card> cards = new ArrayList<>();
 	cards.addAll(board.getOpenCards());
 	cards.addAll(player.getHand());
-	if(getFlush(cards) != null){
-	    return getFlush(cards);
+	List<List<Card>> numOfAKind = getSameValueCards(cards);
+	if(getStraightFlush(cards) != null){
+	    return new PokerHand(HandType.STRAIGHTFLUSH, getStraightFlush(cards));
+	}else if(getNumOfAKind(numOfAKind, cards, fourOfAKind) != null) {
+	    return new PokerHand(HandType.FOUROFAKIND, getNumOfAKind(numOfAKind, cards, fourOfAKind));
+	}else if(getNumOfAKind(numOfAKind, cards, threeOfAKind, pair) != null) {
+	    return new PokerHand(HandType.FULLHOUSE, getNumOfAKind(numOfAKind, cards, threeOfAKind, pair));
+	} else if(getFlush(cards) != null){
+	    return new PokerHand(HandType.FLUSH, getFlush(cards));
 	}else if(getStraight(cards) != null){
-	    return getStraight(cards);
+	    return new PokerHand(HandType.STRAIGHT, getStraight(cards));
+	}else if(getNumOfAKind(numOfAKind, cards, threeOfAKind) != null) {
+	    return new PokerHand(HandType.THREEOFAKIND, getNumOfAKind(numOfAKind, cards, threeOfAKind));
+	}else if(getNumOfAKind(numOfAKind, cards, pair, pair) != null){
+	    return new PokerHand(HandType.TWOPAIR, getNumOfAKind(numOfAKind, cards, pair, pair));
+	}else if (getNumOfAKind(numOfAKind, cards, pair) != null) {
+	    return new PokerHand(HandType.PAIR, getNumOfAKind(numOfAKind, cards, pair));
 	}else{
 	    sortHand(cards);
 	    while(cards.size() > 5){
 		cards.remove(0);
 	    }
-	    return cards;
+	    return new PokerHand(HandType.HIGHCARD, cards);
 	}
     }
 
-    private static List<List<Card>> getSameValueCards(List<Card> cards){
+    private List<List<Card>> getSameValueCards(List<Card> cards){
 	List<List<Card>> sameValueCards = new ArrayList<>();
 	List<Card> testHand = new ArrayList<>();
 	sortHand(cards);
@@ -112,7 +107,7 @@ public class Holdem
 
 
 
-    private static List<Card> getStraightFlush(List<Card> cards){
+    private List<Card> getStraightFlush(List<Card> cards){
 	List<Card> testHand = getFlush(cards);
 	if (testHand != null){
 	    return getStraight(testHand);
@@ -122,7 +117,7 @@ public class Holdem
 
 
 
-    private static List<Card> getFlush(List<Card> cards){
+    private List<Card> getFlush(List<Card> cards){
 	List<Card> testHand = new ArrayList<>();
 	for (int i = 0; i < 4; i++) {
 	    testHand = new ArrayList<>();
@@ -166,7 +161,7 @@ public class Holdem
 	return null;
     }
 */
-    private static List<Card> getStraight(List<Card> cards){
+    private List<Card> getStraight(List<Card> cards){
 	List<Card> testHand = new ArrayList<>();
 	sortHand(cards);
 
@@ -190,32 +185,104 @@ public class Holdem
 	return null;
     }
 
-    private static List<Card> getFourOfAKind(List<List<Card>>  sameValueCards, List<Card> cards){
+    private List<Card> getNumOfAKind(List<List<Card>>  sameValueCards, List<Card> cards, int num){
 	sortHand(cards);
 	List<Card> testHand = new ArrayList<>();
+	if (sameValueCards == null) return null;
 	for (List<Card> cardList : sameValueCards) {
-	    if (cardList.size() == 4){
+	    if (cardList.size() == num){
 		testHand.addAll(cardList);
 		for (int i = cards.size() - 1; i >= 0; i--) {
 		    if (!testHand.contains(cards.get(i))){
 			testHand.add(cards.get(i));
+		    }
+		    if (testHand.size() >= 5){
 			return testHand;
 		    }
 		}
 	    }
 	}
-
-
-
 	return null;
     }
 
-    public static void sortHand(List<Card> cards){
+    private List<Card> getNumOfAKind(List<List<Card>>  sameValueCards, List<Card> cards, int num1, int num2){
+	sortHand(cards);
+	List<Card> testHand = new ArrayList<>();
+	boolean foundFirst = false;
+	if (sameValueCards == null) return null;
+	for (List<Card> cardList : sameValueCards) {
+	    if (cardList.size() == num1 && !foundFirst){
+		testHand.addAll(cardList);
+		foundFirst = true;
+	    }else if (foundFirst && cardList.size() >= num2){
+		for (int i = 0; i < num2; i++) {
+		    testHand.add(cardList.get(i));
+		}
+		for (int i = cards.size() - 1; i >= 0; i--) {
+		    if (!(testHand.size() >= 5) && !testHand.contains(cards.get(i))){
+			testHand.add(cards.get(i));
+		    }
+		    if (testHand.size() >= 5){
+			return testHand;
+		    }
+		}
+	    }
+	}
+	return null;
+    }
+
+    public void sortHand(List<Card> cards){
     	Collections.sort(cards, new CardComparator());
         }
 
-    private static void sortSameKind(List<List<Card>> sameValueCards){
+    private void sortSameKind(List<List<Card>> sameValueCards){
 	Collections.sort(sameValueCards, new SameKindComparator());
+    }
+
+    private void compareHands(){
+	for (Player player : players) {
+	    System.out.println(player);
+	}
+	System.out.println(board);
+	PokerHand bestHand = new PokerHand();
+	PokerHand bestHand1 = getBestHand(players[0]);
+	PokerHand bestHand2 = getBestHand(players[1]);
+	if(bestHand1.getHandStrength() < bestHand2.getHandStrength()){
+	    bestHand = bestHand2;
+	}else if(bestHand1.getHandStrength() > bestHand2.getHandStrength()) {
+	    bestHand = bestHand1;
+	}else {
+	    for (int i = 4; i >= 0; i--) {
+		if (bestHand1.getCards().get(i).getValue() < bestHand2.getCards().get(i).getValue()) {
+		    bestHand = bestHand2;
+		    break;
+		} else if (bestHand1.getCards().get(i).getValue() > bestHand2.getCards().get(i).getValue()) {
+		    bestHand = bestHand1;
+		    break;
+		}
+	    }
+	}
+
+	System.out.println("Best hand for " + players[0].getName());
+		for (Card card : bestHand1.getCards()) {
+		    System.out.println(card);
+		}
+		System.out.println("Best hand for " + players[1].getName());
+		for (Card card : bestHand2.getCards()) {
+		    System.out.println(card);
+		}
+		System.out.println("Best hand overall: ");
+		for (Card card : bestHand.getCards()) {
+		    System.out.println(card);
+		}
+    }
+
+    private void resetGame(){
+	deck.shuffleDeck();
+	board.resetBoard();
+	for (Player player : players) {
+	    player.resetHand();
+	}
     }
 
     public void nextStreet(){
@@ -237,17 +304,9 @@ public class Holdem
 		dealCounter++;
 		break;
 	    case 4:
-		for (Player player : players) {
-		    System.out.println(player);
-		}
-		System.out.println(board);
-		List<Card> bestHand = getBestHand(players[0]);
-		System.out.println("Best hand for " + players[0].getName());
-		for (Card card : bestHand) {
-		    System.out.println(card);
-		}
+		compareHands();
+		resetGame();
 		dealCounter = 0;
 	}
-
     }
 }

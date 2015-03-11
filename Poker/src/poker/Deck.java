@@ -22,6 +22,11 @@ public class Deck
 	}
     }
 
+    public void shuffleDeck(){
+	deck.clear();
+	makeDeck();
+    }
+
     public List<Card> getDeck() {
 	return deck;
     }

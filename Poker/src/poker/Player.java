@@ -25,6 +25,10 @@ public class Player
 	return name;
     }
 
+    public void resetHand(){
+	hand.clear();
+    }
+
     @Override public String toString() {
 	StringBuilder builder = new StringBuilder();
 	builder.append(name);

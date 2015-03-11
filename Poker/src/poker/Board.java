@@ -19,6 +19,10 @@ public class Board
 	return openCards;
     }
 
+    public void resetBoard(){
+	openCards.clear();
+    }
+
     @Override public String toString() {
     	StringBuilder builder = new StringBuilder();
     	builder.append("poker.Board");

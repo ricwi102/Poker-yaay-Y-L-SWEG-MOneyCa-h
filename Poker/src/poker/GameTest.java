@@ -12,10 +12,8 @@ public class GameTest
 
 	Holdem holdem = new Holdem(players,board);
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 10; i++) {
 	    holdem.nextStreet();
 	}
-
-
     }
 }

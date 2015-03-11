@@ -2,21 +2,27 @@ package poker;
 
 import java.util.Comparator;
 
-/*
 
-public class HandComparator implements Comparator<Card>
+
+public class HandComparator implements Comparator<PokerHand>
 {
-    public int compare(PokerHand hand1, PokerHand hand2){
+    static final int HANDSIZE = 5;
 
-	if(HandType.values(hand1.getHandType()) > HandType.values(hand2.getHandType())){
+    public int compare(PokerHand hand1, PokerHand hand2) {
+	if (hand1.getHandStrength() > hand2.getHandStrength()) {
 	    return -1;
-	}else if(card1.getValue() < card2.getValue()){
+	} else if (hand1.getHandStrength() < hand2.getHandStrength()) {
 	    return 1;
-	}else{
+	} else {
+	    for (int i = HANDSIZE; i >= 0; i--) {
+		if (hand1.getCards().get(i).getValue() > hand2.getCards().get(i).getValue()) {
+		    return -1;
+		} else if (hand1.getCards().get(i).getValue() < hand2.getCards().get(i).getValue()) {
+		    return 1;
+		}
+	    }
 	    return 0;
 	}
     }
-
 }
 
-*/
