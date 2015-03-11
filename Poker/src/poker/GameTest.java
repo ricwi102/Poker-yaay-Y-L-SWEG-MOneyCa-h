@@ -12,8 +12,8 @@ public class GameTest
 
 	Holdem holdem = new Holdem(players,board);
 
-	for (int i = 0; i < 10; i++) {
-	    holdem.nextStreet();
-	}
+	PokerFrame frame = new PokerFrame(holdem);
+	frame.pack();
+	frame.setVisible(true);
     }
 }

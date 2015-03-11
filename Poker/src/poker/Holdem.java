@@ -10,10 +10,12 @@ public class Holdem
     private Board board;
     private Deck deck;
     private int dealCounter;
+    private Player currentPlayer;
 
     public Holdem(final Player[] players, final Board board) {
 	this.players = players;
 	this.board = board;
+	currentPlayer = players[0];
 	dealCounter = 0;
 	deck = new Deck();
     }
@@ -138,29 +140,7 @@ public class Holdem
 	}
 	return null;
     }
-/*
-    private static List<Card> getStraight(List<Card> cards){
-	List<Card> testHand = new ArrayList<>();
-	sortHand(cards);
-	int cardsChecked = 0;
-	int testIndex = 0;
-	while(cardsChecked < cards.size()){
-	    if(testIndex +cardsChecked + 1 < cards.size() && cards.get(testIndex+cardsChecked).getValue() == cards.get(testIndex+cardsChecked + 1).getValue() - 1){
-		testHand.add(cards.get(testIndex+cardsChecked));
-		testIndex++;
-	    }else if(testHand.size() == 5){
-		return testHand;
-	    }else if(testHand.size() > 5){
-		return testHand;
-	    }else{
-		cardsChecked++;
-		testHand = new ArrayList<Card>();
-		testIndex = 0;
-	    }
-	}
-	return null;
-    }
-*/
+
     private List<Card> getStraight(List<Card> cards){
 	List<Card> testHand = new ArrayList<>();
 	sortHand(cards);
@@ -289,18 +269,22 @@ public class Holdem
 	switch(dealCounter){
 	    case 0:
 		dealCards();
+		System.out.println(board);
 		dealCounter++;
 		break;
 	    case 1:
 		dealFlop();
+		System.out.println(board);
 		dealCounter++;
 		break;
 	    case 2:
 		dealTurn();
+		System.out.println(board);
 		dealCounter++;
 		break;
 	    case 3:
 		dealRiver();
+		System.out.println(board);
 		dealCounter++;
 		break;
 	    case 4:
