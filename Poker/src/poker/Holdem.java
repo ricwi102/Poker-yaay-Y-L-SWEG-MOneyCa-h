@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,12 +12,14 @@ public class Holdem
     private Deck deck;
     private int dealCounter;
     private Player currentPlayer;
+    private int pot;
 
     public Holdem(final Player[] players, final Board board) {
 	this.players = players;
 	this.board = board;
 	currentPlayer = players[0];
 	dealCounter = 0;
+	pot = 0;
 	deck = new Deck();
     }
 
@@ -265,6 +268,62 @@ public class Holdem
 	}
     }
 
+    public boolean checkForWinner(){
+	int activePlayers = 0;
+	Player winningPlayer = null;
+	for (Player player : players) {
+	    if(player.isActive()) {
+		activePlayers++;
+		winningPlayer = player;
+	    }
+	    if(activePlayers > 1) break;
+	}
+	if(activePlayers == 1){
+	    System.out.println("Winner: " + winningPlayer.getName());
+	    resetGame();
+	    for (Player player : players) {
+		player.activate();
+	    }
+	    dealCounter = 0;
+	    return true;
+	}
+	return false;
+    }
+
+    public void nextPlayer(){
+
+	int currentPlayerPos = Arrays.asList(players).indexOf(currentPlayer);
+	boolean foundPlayer = false;
+	if(currentPlayerPos < players.length - 1){
+	    for (int i = currentPlayerPos + 1; i < players.length; i++) {
+		if(players[i].isActive()){
+		    currentPlayer = players[i];
+		    foundPlayer = true;
+		}
+	    }
+	    if(!foundPlayer){
+		nextStreet();
+		for (Player player : players) {
+		    if(player.isActive()){
+			currentPlayer = player;
+			break;
+		    }
+		}
+
+	    }
+	}else if(currentPlayerPos == players.length - 1){
+	    nextStreet();
+	    for (Player player : players) {
+		if(player.isActive()){
+		    currentPlayer = player;
+		    break;
+		}
+	    }
+	}
+	System.out.println("Current Player: " + currentPlayer.getName());
+    }
+
+
     public void nextStreet(){
 	switch(dealCounter){
 	    case 0:
@@ -290,7 +349,14 @@ public class Holdem
 	    case 4:
 		compareHands();
 		resetGame();
+		for (Player player : players) {
+		    player.activate();
+		}
 		dealCounter = 0;
 	}
+    }
+
+    public Player getCurrentPlayer() {
+    	return currentPlayer;
     }
 }

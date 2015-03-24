@@ -1,5 +1,6 @@
 package poker;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +8,14 @@ public class Player
 {
     private List<Card> hand;
     private String name;
-    public boolean isActive;
+    private int chips;
+    public boolean active;
 
     public Player(String name) {
 	hand = new ArrayList<Card>();
 	this.name = name;
-	isActive = true;
+	active = true;
+	chips = 2000;
     }
 
     public void addCard(Card card){
@@ -31,7 +34,22 @@ public class Player
 	hand.clear();
     }
 
+    public void activate(){ active = true;}
 
+    public void check(){}
+
+    public int bet(){
+	String input = JOptionPane.showInputDialog("Ammount to bet: ");
+	int ammount = Integer.parseInt(input);
+	chips -= ammount;
+	return ammount;
+    }
+
+    public void fold(){active = false;}
+
+    public boolean isActive(){
+	return active;
+    }
 
     @Override public String toString() {
 	StringBuilder builder = new StringBuilder();
