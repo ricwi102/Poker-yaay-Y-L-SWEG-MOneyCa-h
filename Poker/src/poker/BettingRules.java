@@ -1,5 +1,7 @@
 package poker;
 
+import java.util.List;
+
 public class BettingRules
 {
     private int latestBet;
@@ -10,6 +12,13 @@ public class BettingRules
 
     public boolean isLegalRaise(int raise) {
 	return raise >= 2 * latestBet;
+    }
+
+    public boolean hasUnresolvedRaise(Player[] players){
+        for (Player player : players) {
+            if(!player.hasCalled()) return true;
+        }
+        return false;
     }
 
     public void setLatestBet(final int latestBet) {

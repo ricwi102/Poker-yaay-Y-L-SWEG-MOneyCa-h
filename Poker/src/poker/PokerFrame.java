@@ -32,7 +32,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	nextStreet = new JButton("next street");
 	check = new JButton("check");
 	fold = new JButton("fold");
-	call = new JButton("call");
+	call = new JButton("call: 0");
 	raise = new JButton("Raise");
 	currentPlayerChips = new JLabel(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
 	pot = new JLabel("Pot: 0");
@@ -67,6 +67,7 @@ public class PokerFrame extends JFrame implements ActionListener
     private void updateChips(){
 	currentPlayerChips.setText(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
 	pot.setText("pot: " + holdem.getPot());
+	call.setText("call: " + holdem.getBettingRules().getLatestBet());
     }
 
 
@@ -88,14 +89,17 @@ public class PokerFrame extends JFrame implements ActionListener
 	}else if(e.getSource().equals(raise)) {
 	    int bet = holdem.getCurrentPlayer().bet();
 	    if (holdem.getBettingRules().isLegalRaise(bet)){
-		holdem.addToPot(bet);
+		holdem.addRaiseToPot(bet);
 	    	holdem.nextPlayer();
 	    	updateChips();
 	    }else{
 		JOptionPane.showMessageDialog(this,"Invalid ammount");
 	    }
 	}else if(e.getSource().equals(call)){
-	    holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
+	    int ammount = holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
+	    holdem.addCallToPot(ammount);
+	    holdem.nextPlayer();
+	    updateChips();
 	}
     }
 }

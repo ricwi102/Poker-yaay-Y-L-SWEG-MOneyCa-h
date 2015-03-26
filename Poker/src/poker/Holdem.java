@@ -116,43 +116,54 @@ public class Holdem extends PokerBase
 	return null;
     }
 
+
+    //Working on implementing the betting in the game flow. not quite working as intended yet
     public void nextPlayer(){
 	int currentPlayerPos = Arrays.asList(players).indexOf(currentPlayer);
 	boolean foundPlayer = false;
-	if(currentPlayerPos < players.length - 1){
-	    for (int i = currentPlayerPos + 1; i < players.length; i++) {
-		if(players[i].isActive()){
-		    currentPlayer = players[i];
-		    foundPlayer = true;
+	    if (currentPlayerPos < players.length - 1) {
+		for (int i = currentPlayerPos + 1; i < players.length; i++) {
+		    if (players[i].isActive()){
+			currentPlayer = players[i];
+			foundPlayer = true;
+		    }
 		}
-	    }
-	    if(!foundPlayer){
-		nextStreet();
+		if (!foundPlayer) {
+		    if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
+		    for (Player player : players) {
+			if (player.isActive()) {
+			    currentPlayer = player;
+			    break;
+			}
+		    }
+
+		}
+	    } else if (currentPlayerPos == players.length - 1) {
+		if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
 		for (Player player : players) {
-		    if(player.isActive()){
+		    if (player.isActive()) {
 			currentPlayer = player;
 			break;
 		    }
 		}
-
 	    }
-	}else if(currentPlayerPos == players.length - 1){
-	    nextStreet();
-	    for (Player player : players) {
-		if(player.isActive()){
-		    currentPlayer = player;
-		    break;
-		}
-	    }
-	}
-	System.out.println("Current Player: " + currentPlayer.getName());
+	    System.out.println("Current Player: " + currentPlayer.getName());
     }
 
-    public void addToPot(int chips){
+    public void addRaiseToPot(int chips){
 	if(bettingRules.isLegalRaise(chips)) {
 	    pot += chips;
 	    bettingRules.setLatestBet(chips);
+	    for (Player player : players) {
+		if(player.isActive() && !player.equals(currentPlayer)){
+		    player.setCalled(false);
+		}
+	    }
 	}
+    }
+
+    public void addCallToPot(int chips){
+	pot += chips;
     }
 
     public void nextStreet(){
