@@ -1,9 +1,12 @@
 package poker;
 
-import java.util.Collections;
-
-public class GameTest
+/**
+ * GameTest
+ */
+public final class GameTest
 {
+    private GameTest() {}
+
     public static void main(String[] args) {
 	Player[] players = new Player[2];
 	players[0] = new Player("Richard");

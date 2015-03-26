@@ -9,7 +9,7 @@ public class Player
     private List<Card> hand;
     private String name;
     private int chips;
-    public boolean active;
+    private boolean active;
 
     public Player(String name) {
 	hand = new ArrayList<Card>();
@@ -30,6 +30,8 @@ public class Player
 	return name;
     }
 
+    public int getChips() { return chips; }
+
     public void resetHand(){
 	hand.clear();
     }
@@ -39,10 +41,25 @@ public class Player
     public void check(){}
 
     public int bet(){
-	String input = JOptionPane.showInputDialog("Ammount to bet: ");
-	int ammount = Integer.parseInt(input);
-	chips -= ammount;
-	return ammount;
+        int ammount;
+        do {
+            String input = JOptionPane.showInputDialog("Ammount to bet: ");
+            ammount = Integer.parseInt(input);
+        } while (chips - ammount < 0);
+        chips -= ammount;
+        return ammount;
+
+    }
+
+    public int call(int ammount){
+        if(ammount < chips){
+            chips -= ammount;
+            return ammount;
+        }else{
+            ammount = chips;
+            chips = 0;
+            return ammount;
+        }
     }
 
     public void fold(){active = false;}
@@ -50,6 +67,8 @@ public class Player
     public boolean isActive(){
 	return active;
     }
+
+    public void addChips(int winnings){ chips += winnings;  }
 
     @Override public String toString() {
 	StringBuilder builder = new StringBuilder();

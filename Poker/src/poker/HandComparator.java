@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class HandComparator implements Comparator<PokerHand>
 {
-    static final int HANDSIZE = 5;
+    private static final int HANDSIZE = 5;
 
     public int compare(PokerHand hand1, PokerHand hand2) {
 	if (hand1.getHandStrength() > hand2.getHandStrength()) {

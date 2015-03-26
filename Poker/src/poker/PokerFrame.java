@@ -12,27 +12,45 @@ public class PokerFrame extends JFrame implements ActionListener
     private JButton nextStreet;
     private JButton check;
     private JButton fold;
+    private JButton raise;
+    private JButton call;
+    private JLabel currentPlayerChips;
+    private JLabel pot;
 
     public PokerFrame(final Holdem holdem) throws HeadlessException {
 	super("Pokr sweg, holdum YÅLÅ");
 	this.holdem = holdem;
-	this.setLayout(new BorderLayout(10,10));
+	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	createButtons();
 	createMenu();
     }
 
     private void createButtons(){
+	JPanel panel = new JPanel();
+	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
 	nextStreet = new JButton("next street");
 	check = new JButton("check");
 	fold = new JButton("fold");
+	call = new JButton("call");
+	raise = new JButton("Raise");
+	currentPlayerChips = new JLabel(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
+	pot = new JLabel("Pot: 0");
 
 	nextStreet.addActionListener(this);
 	check.addActionListener(this);
 	fold.addActionListener(this);
+	call.addActionListener(this);
+	raise.addActionListener(this);
 
-	this.add(nextStreet, BorderLayout.CENTER);
-	this.add(check, BorderLayout.LINE_START);
-	this.add(fold, BorderLayout.LINE_END);
+	panel.add(nextStreet);
+	panel.add(check);
+	panel.add(fold);
+	panel.add(call);
+	panel.add(raise);
+	panel.add(currentPlayerChips);
+	panel.add(pot);
+	this.add(panel);
     }
 
     private void createMenu(){
@@ -46,6 +64,11 @@ public class PokerFrame extends JFrame implements ActionListener
 
     }
 
+    private void updateChips(){
+	currentPlayerChips.setText(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
+	pot.setText("pot: " + holdem.getPot());
+    }
+
 
     public void actionPerformed(ActionEvent e) {
 	if (e.getSource().equals(item)) {
@@ -55,13 +78,24 @@ public class PokerFrame extends JFrame implements ActionListener
 	} else if (e.getSource().equals(check)){
 	    holdem.getCurrentPlayer().check();
 	    holdem.nextPlayer();
+	    updateChips();
 	}else if(e.getSource().equals(fold)){
 	    holdem.getCurrentPlayer().fold();
-	    if(!holdem.checkForWinner()) {
+	    if(holdem.checkForWinner() == null) {
 		holdem.nextPlayer();
 	    }
+	    updateChips();
+	}else if(e.getSource().equals(raise)) {
+	    int bet = holdem.getCurrentPlayer().bet();
+	    if (holdem.getBettingRules().isLegalRaise(bet)){
+		holdem.addToPot(bet);
+	    	holdem.nextPlayer();
+	    	updateChips();
+	    }else{
+		JOptionPane.showMessageDialog(this,"Invalid ammount");
+	    }
+	}else if(e.getSource().equals(call)){
+	    holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
 	}
     }
-
-
 }
