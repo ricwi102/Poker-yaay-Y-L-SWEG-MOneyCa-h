@@ -39,6 +39,10 @@ public class PokerBase
         return pot;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public BettingRules getBettingRules() {
         return bettingRules;
     }

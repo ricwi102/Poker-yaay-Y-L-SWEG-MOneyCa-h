@@ -7,10 +7,12 @@ public class PokerHand{
     private HandType handType;
     private List<Card> cards;
     private int handStrength;
+    private Player player;
 
-    public PokerHand(final HandType handType, final List<Card> cards) {
+    public PokerHand(final HandType handType, final List<Card> cards, final Player player) {
 	this.handType = handType;
 	this.cards = cards;
+        this.player = player;
         handStrength = handType.getValue();
     }
 
@@ -20,6 +22,10 @@ public class PokerHand{
 
     public HandType getHandType() {
 	return handType;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public List<Card> getCards() {

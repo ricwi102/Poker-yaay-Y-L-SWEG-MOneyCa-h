@@ -1,6 +1,9 @@
 package poker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Hold'em rules
@@ -17,7 +20,8 @@ public class Holdem extends PokerBase
 
 	public Holdem(final Player[] players, final Board board) {
 		super(players, board);
-		dealCounter = 0;
+		dealCounter = 1;
+		dealCards();
 	}
 
 	public static void main(String[] args) {
@@ -51,6 +55,35 @@ public class Holdem extends PokerBase
 	}
 
 	private void compareHands(){
+		List<PokerHand> bestHands = new ArrayList<PokerHand>();
+		for (Player player : players) {
+			if(player.isActive()) {
+				System.out.println(player);
+				bestHands.add(PokerHandCalc.getBestHand(player,board));
+			}
+		}
+		System.out.println(board);
+
+		Collections.sort(bestHands,new HandComparator());
+		PokerHand bestHand = bestHands.get(0);
+
+		for (PokerHand hand : bestHands) {
+			System.out.println("Best hand for " + hand.getPlayer().getName());
+			for(Card card : hand.getCards()){
+				System.out.println(card);
+			}
+		}
+
+		System.out.println("Best hand overall: ");
+		for (Card card : bestHand.getCards()) {
+			System.out.println(card);
+		}
+		System.out.println("Winner: " + bestHand.getPlayer().getName());
+		awardWinner(bestHand.getPlayer());
+
+	}
+
+/*	private void compareHands(){
 		for (Player player : players) {
 			System.out.println(player);
 		}
@@ -90,7 +123,7 @@ public class Holdem extends PokerBase
 		for (Card card : bestHand.getCards()) {
 			System.out.println(card);
 		}
-	}
+	}*/
 
 	public Player checkForWinner(){
 		int activePlayers = 0;
@@ -108,9 +141,10 @@ public class Holdem extends PokerBase
 			for (Player player : players) {
 				player.activate();
 			}
-			dealCounter = 0;
+			dealCounter = 1;
 			currentPlayer = players[0];
 			awardWinner(winningPlayer);
+			dealCards();
 			return winningPlayer;
 		}
 		return null;
@@ -123,15 +157,22 @@ public class Holdem extends PokerBase
 		boolean foundPlayer = false;
 		if (currentPlayerPos < players.length - 1) {
 			for (int i = currentPlayerPos + 1; i < players.length; i++) {
-				if (players[i].isActive() && !players[i].hasRaised()){
+				if (bettingRules.someoneRaised() && players[i].isActive() && !players[i].hasRaised() && !players[i].hasCalled()){
+					currentPlayer = players[i];
+					foundPlayer = true;
+				}else if(!bettingRules.someoneRaised() && players[i].isActive()){
 					currentPlayer = players[i];
 					foundPlayer = true;
 				}
+				if(foundPlayer) break;
 			}
 			if (!foundPlayer) {
 				if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
 				for (Player player : players) {
-					if (player.isActive() && !player.hasRaised()) {
+					if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
+						currentPlayer = player;
+						break;
+					}else if(!bettingRules.someoneRaised() && player.isActive()){
 						currentPlayer = player;
 						break;
 					}
@@ -141,7 +182,10 @@ public class Holdem extends PokerBase
 		} else if (currentPlayerPos == players.length - 1) {
 			if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
 			for (Player player : players) {
-				if (player.isActive() && !player.hasRaised()) {
+				if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
+					currentPlayer = player;
+					break;
+				}else if(!bettingRules.someoneRaised() && player.isActive()){
 					currentPlayer = player;
 					break;
 				}
@@ -154,6 +198,7 @@ public class Holdem extends PokerBase
 		if(bettingRules.isLegalRaise(chips)) {
 			pot += chips;
 			bettingRules.setLatestBet(chips);
+			bettingRules.setRaised(true);
 			for (Player player : players) {
 				if(player.isActive() && !player.equals(currentPlayer)){
 					player.setCalled(false);
@@ -171,6 +216,7 @@ public class Holdem extends PokerBase
 		for (Player player : players) {
 			player.newRound();
 		}
+		bettingRules.setRaised(false);
 	}
 
 	public void nextStreet(){
@@ -201,7 +247,8 @@ public class Holdem extends PokerBase
 				for (Player player : players) {
 					player.activate();
 				}
-				dealCounter = 0;
+				dealCounter = 1;
+				dealCards();
 		}
 		resetPlayerStatus();
 		bettingRules.setLatestBet(0);
