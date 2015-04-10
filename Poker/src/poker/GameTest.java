@@ -19,5 +19,6 @@ public final class GameTest
 		PokerFrame frame = new PokerFrame(holdem);
 		frame.pack();
 		frame.setVisible(true);
+
 	}
 }

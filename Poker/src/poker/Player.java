@@ -1,6 +1,5 @@
 package poker;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +8,11 @@ public class Player
     private List<Card> hand;
     private String name;
     private int chips;
+    private int activeBet;
     private boolean raised;
     private boolean called;
     private boolean active;
+    private PlayerPosition position;
 
     public Player(String name) {
         hand = new ArrayList<Card>();
@@ -19,6 +20,8 @@ public class Player
         active = true;
         called = true;
         raised = false;
+        position = PlayerPosition.STANDARD;
+        activeBet = 0;
         chips = 2000;
     }
 
@@ -35,6 +38,10 @@ public class Player
     }
 
     public int getChips() { return chips; }
+
+    public int getActiveBet() {return activeBet;}
+
+    public PlayerPosition getPosition() { return position;}
 
     public void resetHand(){
         hand.clear();
@@ -54,6 +61,8 @@ public class Player
         this.raised = hasRaised;
     }
 
+    public void setPosition(PlayerPosition position) {this.position = position;}
+
     public void activate(){ active = true;}
 
     public void check(){}
@@ -61,24 +70,20 @@ public class Player
     public void newRound(){
         called = true;
         raised = false;
+        activeBet = 0;
     }
 
-    public int bet(){
-        int ammount;
-        do {
-            String input = JOptionPane.showInputDialog("Ammount to bet: ");
-            ammount = Integer.parseInt(input);
-        } while (chips - ammount < 0);
+    public int bet(int ammount){
         chips -= ammount;
         called = true;
         raised = true;
+        activeBet += ammount;
         return ammount;
-
     }
 
     public int call(int ammount){
         if(ammount < chips){
-            chips -= ammount;
+            chips -= ammount - activeBet;
             called = true;
             raised = false;
             return ammount;

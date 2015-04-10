@@ -21,6 +21,22 @@ public class Holdem extends PokerBase
 	public Holdem(final Player[] players, final Board board) {
 		super(players, board);
 		dealCounter = 1;
+		bettingRules.setLatestBet(bigBlind);
+		if(players.length == 2){
+			players[0].setPosition(PlayerPosition.DEALER);
+			players[1].setPosition(PlayerPosition.SMALLBLIND);
+		}else if(players.length == 3){
+			players[0].setPosition(PlayerPosition.DEALER);
+			players[1].setPosition(PlayerPosition.SMALLBLIND);
+			players[2].setPosition(PlayerPosition.BIGBLIND);
+		}else{
+			players[0].setPosition(PlayerPosition.DEALER);
+			players[1].setPosition(PlayerPosition.SMALLBLIND);
+			players[2].setPosition(PlayerPosition.BIGBLIND);
+			for(int i = 3; i < players.length; i++){
+				players[i].setPosition(PlayerPosition.STANDARD);
+			}
+		}
 		dealCards();
 	}
 
@@ -32,6 +48,27 @@ public class Holdem extends PokerBase
 		for(int i = 0; i < 2; i++) {
 			for (Player player : players) {
 				player.addCard(deck.drawCard());
+			}
+		}
+		payBlinds();
+	}
+
+
+	private void payBlinds(){
+		for (Player player : players) {
+			if(player.getPosition() == PlayerPosition.BIGBLIND){
+				player.bet(bigBlind);
+				pot += bigBlind;
+				bettingRules.setLatestBet(bigBlind);
+				bettingRules.setRaised(true);
+			}else if(player.getPosition() == PlayerPosition.SMALLBLIND){
+				player.bet(smallBlind);
+				pot += smallBlind;
+				player.setCalled(false);
+				player.setRaised(false);
+			}else{
+				player.setCalled(false);
+				player.setRaised(false);
 			}
 		}
 	}
@@ -248,10 +285,12 @@ public class Holdem extends PokerBase
 					player.activate();
 				}
 				dealCounter = 1;
-				dealCards();
 		}
 		resetPlayerStatus();
 		bettingRules.setLatestBet(0);
+		if(dealCounter == 1){
+			dealCards();
+		}
 	}
 
 	public Player getCurrentPlayer() {

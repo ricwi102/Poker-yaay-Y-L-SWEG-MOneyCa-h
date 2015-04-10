@@ -11,6 +11,8 @@ public class PokerBase
     protected Deck deck;
     protected Player currentPlayer;
     protected int pot;
+    protected int smallBlind;
+    protected int bigBlind;
     protected BettingRules bettingRules;
 
     protected PokerBase(final Player[] players, final Board board) {
@@ -18,6 +20,8 @@ public class PokerBase
         this.board = board;
         bettingRules = new BettingRules();
         currentPlayer = players[0];
+        smallBlind = 10;
+        bigBlind = 20;
         pot = 0;
         deck = new Deck();
     }
