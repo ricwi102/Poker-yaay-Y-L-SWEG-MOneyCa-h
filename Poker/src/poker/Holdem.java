@@ -18,7 +18,7 @@ public class Holdem extends PokerBase
     /*private Player currentPlayer;
     private int pot;*/
 
-	public Holdem(final Player[] players, final Board board) {
+	public Holdem(final List<Player> players, final Board board) {
 		super(players, board);
 		dealCounter = 1;
 		bettingRules.setLatestBet(bigBlind);
@@ -128,7 +128,7 @@ public class Holdem extends PokerBase
 				player.activate();
 			}
 			dealCounter = 1;
-			currentPlayer = players[0];
+			currentPlayer = players.get(0);
 			awardWinner(winningPlayer);
 			dealCards();
 			return winningPlayer;
@@ -138,16 +138,16 @@ public class Holdem extends PokerBase
 
 
 	public void nextPlayer() {
-	    int currentPlayerPos = Arrays.asList(players).indexOf(currentPlayer);
-	    boolean foundPlayer = false;
-	    if (currentPlayerPos < players.length - 1) {
-		for (int i = currentPlayerPos + 1; i < players.length; i++) {
-		    if (bettingRules.someoneRaised() && players[i].isActive() && !players[i].hasRaised() &&
-			!players[i].hasCalled()) {
-			currentPlayer = players[i];
+	    int currentPlayerPos = players.indexOf(currentPlayer);
+	    if (currentPlayerPos < players.size() - 1) {
+		boolean foundPlayer = false;
+		for (int i = currentPlayerPos + 1; i < players.size(); i++) {
+		    if (bettingRules.someoneRaised() && players.get(i).isActive() && !players.get(i).hasRaised() &&
+			!players.get(i).hasCalled()) {
+			currentPlayer = players.get(i);
 			foundPlayer = true;
-		    } else if (!bettingRules.someoneRaised() && players[i].isActive()) {
-			currentPlayer = players[i];
+		    } else if (!bettingRules.someoneRaised() && players.get(i).isActive()) {
+			currentPlayer = players.get(i);
 			foundPlayer = true;
 		    }
 		    if (foundPlayer) break;
@@ -155,7 +155,7 @@ public class Holdem extends PokerBase
 		if (!foundPlayer) {
 		    nextPlayerHelp();
 		}
-	    } else if (currentPlayerPos == players.length - 1) {
+	    } else if (currentPlayerPos == players.size() - 1) {
 		nextPlayerHelp();
 	    }
 	    System.out.println("Current Player: " + currentPlayer.getName());
@@ -177,7 +177,10 @@ public class Holdem extends PokerBase
 		break;
 	    }
 	}
-	if(dealCounter == 1 && didNextStreet) updatePlayerPositions();
+	if(dealCounter == 1 && didNextStreet){
+	    updatePlayerPositions();
+	    dealCards();
+	}
     }
     public void addRaiseToPot(int chips){
 	pot += chips;
@@ -235,9 +238,6 @@ public class Holdem extends PokerBase
 		}
 		resetPlayerStatus();
 		bettingRules.setLatestBet(0);
-		if(dealCounter == 1){
-			dealCards();
-		}
 	}
 
 	public Player getCurrentPlayer() {

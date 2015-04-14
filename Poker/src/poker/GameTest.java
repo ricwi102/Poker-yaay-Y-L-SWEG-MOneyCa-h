@@ -1,5 +1,8 @@
 package poker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * GameTest
  */
@@ -8,11 +11,11 @@ public final class GameTest
 	private GameTest() {}
 
 	public static void main(String[] args) {
-		Player[] players = new Player[4];
-		players[0] = new Player("Richard");
-		players[1] = new Player("Johannes");
-		players[2] = new Player("Axel");
-	    	players[3] = new Player("Phil Ivey");
+		List<Player> players = new ArrayList<>();
+		players.add(new Player("Richard"));
+		players.add(new Player("Johannes"));
+		players.add(new Player("Axel"));
+	    	players.add(new Player("Phil Ivey"));
 		Board board = new Board();
 
 		Holdem holdem = new Holdem(players,board);

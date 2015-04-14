@@ -1,12 +1,15 @@
 package poker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Poker base that include the shared rules of all pokergames available with this program
  */
 
 public class PokerBase
 {
-    protected Player[] players;
+    protected List<Player> players;
     protected Board board;
     protected Deck deck;
     protected Player currentPlayer;
@@ -15,7 +18,7 @@ public class PokerBase
     protected int bigBlind;
     protected BettingRules bettingRules;
 
-    protected PokerBase(final Player[] players, final Board board) {
+    protected PokerBase(final List<Player> players, final Board board) {
         this.players = players;
         this.board = board;
         bettingRules = new BettingRules();
@@ -35,24 +38,29 @@ public class PokerBase
     }
 
     protected void updatePlayerPositions(){
-        Player[] newPlayers = new Player[players.length];
-        newPlayers[players.length - 1] = players[0];
-        for(int i = 0; i < players.length - 1; i++){
-            newPlayers[i] = players[i + 1];
+        List<Player> losers = new ArrayList<>();
+        for (Player player : players) {
+            if(player.getChips() <= 0) losers.add(player);
         }
-        players = newPlayers;
-        if(players.length == 2){
-            players[0].setPosition(PlayerPosition.DEALER);
-            players[1].setPosition(PlayerPosition.SMALLBLIND);
-            currentPlayer = this.players[1];
+
+        players.removeAll(losers);
+
+        System.out.println(players);
+        players.add(players.remove(0));
+        System.out.println(players);
+
+        if(players.size() == 2){
+            players.get(0).setPosition(PlayerPosition.DEALER);
+            players.get(1).setPosition(PlayerPosition.SMALLBLIND);
+            currentPlayer = this.players.get(1);
         }else{
-            players[0].setPosition(PlayerPosition.SMALLBLIND);
-            players[1].setPosition(PlayerPosition.BIGBLIND);
-            for(int i = 2; i < players.length; i++){
-                if (i == players.length - 1) players[i].setPosition(PlayerPosition.DEALER);
-                else players[i].setPosition(PlayerPosition.STANDARD);
+            players.get(0).setPosition(PlayerPosition.SMALLBLIND);
+            players.get(1).setPosition(PlayerPosition.BIGBLIND);
+            for(int i = 2; i < players.size(); i++){
+                if (i == players.size() - 1) players.get(i).setPosition(PlayerPosition.DEALER);
+                else players.get(i).setPosition(PlayerPosition.STANDARD);
             }
-            currentPlayer = this.players[2];
+            currentPlayer = this.players.get(2);
         }
     }
 

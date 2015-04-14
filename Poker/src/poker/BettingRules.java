@@ -16,7 +16,7 @@ public class BettingRules
 	return raise >= 2 * latestBet;
     }
 
-    public boolean hasUnresolvedRaise(Player[] players){
+    public boolean hasUnresolvedRaise(List<Player> players){
         for (Player player : players) {
             if(!player.hasCalled() && player.isActive()) return true;
         }
