@@ -89,7 +89,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		currentPlayerCards.setText(holdem.getCurrentPlayer().getName() + " Cards: " + holdem.getCurrentPlayer().getHand().get(0)
 				+ " " + holdem.getCurrentPlayer().getHand().get(1));
 		pot.setText("pot: " + holdem.getPot());
-		if(holdem.getBettingRules().someoneRaised()){
+		if(holdem.getBettingRules().someoneRaised() && holdem.getCurrentPlayer().getActiveBet() != holdem.bettingRules.getLatestBet()){
 			call.setEnabled(true);
 		}else{
 			call.setEnabled(false);
@@ -99,7 +99,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		}else{
 			check.setEnabled(false);
 		}
-		call.setText("call: " + holdem.getBettingRules().getLatestBet());
+		call.setText("call: " + (holdem.getBettingRules().getLatestBet() - holdem.getCurrentPlayer().getActiveBet()));
 	}
 
 
@@ -124,7 +124,7 @@ public class PokerFrame extends JFrame implements ActionListener
 				String input = JOptionPane.showInputDialog("Ammount to bet: ");
 				ammount = Integer.parseInt(input);
 			} while (holdem.getCurrentPlayer().getChips() - ammount < 0);
-			if (holdem.getBettingRules().isLegalRaise(ammount)){
+			if (holdem.getBettingRules().isLegalRaise(ammount + holdem.getCurrentPlayer().getActiveBet())){
 				int bet = holdem.getCurrentPlayer().bet(ammount);
 				holdem.addRaiseToPot(bet);
 				holdem.nextPlayer();

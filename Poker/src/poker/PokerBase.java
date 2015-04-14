@@ -19,7 +19,7 @@ public class PokerBase
         this.players = players;
         this.board = board;
         bettingRules = new BettingRules();
-        currentPlayer = players[0];
+        updatePlayerPositions();
         smallBlind = 10;
         bigBlind = 20;
         pot = 0;
@@ -32,6 +32,28 @@ public class PokerBase
     	for (Player player : players) {
     	    player.resetHand();
     	}
+    }
+
+    protected void updatePlayerPositions(){
+        Player[] newPlayers = new Player[players.length];
+        newPlayers[players.length - 1] = players[0];
+        for(int i = 0; i < players.length - 1; i++){
+            newPlayers[i] = players[i + 1];
+        }
+        players = newPlayers;
+        if(players.length == 2){
+            players[0].setPosition(PlayerPosition.DEALER);
+            players[1].setPosition(PlayerPosition.SMALLBLIND);
+            currentPlayer = this.players[1];
+        }else{
+            players[0].setPosition(PlayerPosition.SMALLBLIND);
+            players[1].setPosition(PlayerPosition.BIGBLIND);
+            for(int i = 2; i < players.length; i++){
+                if (i == players.length - 1) players[i].setPosition(PlayerPosition.DEALER);
+                else players[i].setPosition(PlayerPosition.STANDARD);
+            }
+            currentPlayer = this.players[2];
+        }
     }
 
     public void awardWinner(Player winner){

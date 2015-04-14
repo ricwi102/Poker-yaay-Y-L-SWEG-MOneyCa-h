@@ -18,7 +18,7 @@ public class BettingRules
 
     public boolean hasUnresolvedRaise(Player[] players){
         for (Player player : players) {
-            if(!player.hasCalled()) return true;
+            if(!player.hasCalled() && player.isActive()) return true;
         }
         return false;
     }

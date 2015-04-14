@@ -22,21 +22,7 @@ public class Holdem extends PokerBase
 		super(players, board);
 		dealCounter = 1;
 		bettingRules.setLatestBet(bigBlind);
-		if(players.length == 2){
-			players[0].setPosition(PlayerPosition.DEALER);
-			players[1].setPosition(PlayerPosition.SMALLBLIND);
-		}else if(players.length == 3){
-			players[0].setPosition(PlayerPosition.DEALER);
-			players[1].setPosition(PlayerPosition.SMALLBLIND);
-			players[2].setPosition(PlayerPosition.BIGBLIND);
-		}else{
-			players[0].setPosition(PlayerPosition.DEALER);
-			players[1].setPosition(PlayerPosition.SMALLBLIND);
-			players[2].setPosition(PlayerPosition.BIGBLIND);
-			for(int i = 3; i < players.length; i++){
-				players[i].setPosition(PlayerPosition.STANDARD);
-			}
-		}
+
 		dealCards();
 	}
 
@@ -54,6 +40,7 @@ public class Holdem extends PokerBase
 	}
 
 
+
 	private void payBlinds(){
 		for (Player player : players) {
 			if(player.getPosition() == PlayerPosition.BIGBLIND){
@@ -61,6 +48,8 @@ public class Holdem extends PokerBase
 				pot += bigBlind;
 				bettingRules.setLatestBet(bigBlind);
 				bettingRules.setRaised(true);
+			    	player.setRaised(false);
+			    	player.setCalled(false);
 			}else if(player.getPosition() == PlayerPosition.SMALLBLIND){
 				player.bet(smallBlind);
 				pot += smallBlind;
@@ -120,47 +109,7 @@ public class Holdem extends PokerBase
 
 	}
 
-/*	private void compareHands(){
-		for (Player player : players) {
-			System.out.println(player);
-		}
-		System.out.println(board);
-		PokerHand bestHand = new PokerHand();
-		PokerHand bestHand1 = PokerHandCalc.getBestHand(players[0], board);
-		PokerHand bestHand2 = PokerHandCalc.getBestHand(players[1], board);
-		if(bestHand1.getHandStrength() < bestHand2.getHandStrength()){
-			bestHand = bestHand2;
-			awardWinner(players[1]);
-		}else if(bestHand1.getHandStrength() > bestHand2.getHandStrength()) {
-			bestHand = bestHand1;
-			awardWinner(players[0]);
-		}else {
-			for (int i = 4; i >= 0; i--) {
-				if (bestHand1.getCards().get(i).getValue() < bestHand2.getCards().get(i).getValue()) {
-					bestHand = bestHand2;
-					awardWinner(players[1]);
-					break;
-				} else if (bestHand1.getCards().get(i).getValue() > bestHand2.getCards().get(i).getValue()) {
-					bestHand = bestHand1;
-					awardWinner(players[0]);
-					break;
-				}
-			}
-		}
 
-		System.out.println("Best hand for " + players[0].getName());
-		for (Card card : bestHand1.getCards()) {
-			System.out.println(card);
-		}
-		System.out.println("Best hand for " + players[1].getName());
-		for (Card card : bestHand2.getCards()) {
-			System.out.println(card);
-		}
-		System.out.println("Best hand overall: ");
-		for (Card card : bestHand.getCards()) {
-			System.out.println(card);
-		}
-	}*/
 
 	public Player checkForWinner(){
 		int activePlayers = 0;
@@ -188,62 +137,60 @@ public class Holdem extends PokerBase
 	}
 
 
-	//Working on implementing the betting in the game flow. not quite working as intended yet
-	public void nextPlayer(){
-		int currentPlayerPos = Arrays.asList(players).indexOf(currentPlayer);
-		boolean foundPlayer = false;
-		if (currentPlayerPos < players.length - 1) {
-			for (int i = currentPlayerPos + 1; i < players.length; i++) {
-				if (bettingRules.someoneRaised() && players[i].isActive() && !players[i].hasRaised() && !players[i].hasCalled()){
-					currentPlayer = players[i];
-					foundPlayer = true;
-				}else if(!bettingRules.someoneRaised() && players[i].isActive()){
-					currentPlayer = players[i];
-					foundPlayer = true;
-				}
-				if(foundPlayer) break;
-			}
-			if (!foundPlayer) {
-				if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
-				for (Player player : players) {
-					if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
-						currentPlayer = player;
-						break;
-					}else if(!bettingRules.someoneRaised() && player.isActive()){
-						currentPlayer = player;
-						break;
-					}
-				}
-
-			}
-		} else if (currentPlayerPos == players.length - 1) {
-			if(!bettingRules.hasUnresolvedRaise(players)) nextStreet();
-			for (Player player : players) {
-				if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
-					currentPlayer = player;
-					break;
-				}else if(!bettingRules.someoneRaised() && player.isActive()){
-					currentPlayer = player;
-					break;
-				}
-			}
+	public void nextPlayer() {
+	    int currentPlayerPos = Arrays.asList(players).indexOf(currentPlayer);
+	    boolean foundPlayer = false;
+	    if (currentPlayerPos < players.length - 1) {
+		for (int i = currentPlayerPos + 1; i < players.length; i++) {
+		    if (bettingRules.someoneRaised() && players[i].isActive() && !players[i].hasRaised() &&
+			!players[i].hasCalled()) {
+			currentPlayer = players[i];
+			foundPlayer = true;
+		    } else if (!bettingRules.someoneRaised() && players[i].isActive()) {
+			currentPlayer = players[i];
+			foundPlayer = true;
+		    }
+		    if (foundPlayer) break;
 		}
-		System.out.println("Current Player: " + currentPlayer.getName());
+		if (!foundPlayer) {
+		    nextPlayerHelp();
+		}
+	    } else if (currentPlayerPos == players.length - 1) {
+		nextPlayerHelp();
+	    }
+	    System.out.println("Current Player: " + currentPlayer.getName());
+
 	}
 
-	public void addRaiseToPot(int chips){
-		if(bettingRules.isLegalRaise(chips)) {
-			pot += chips;
-			bettingRules.setLatestBet(chips);
-			bettingRules.setRaised(true);
-			for (Player player : players) {
-				if(player.isActive() && !player.equals(currentPlayer)){
-					player.setCalled(false);
-					player.setRaised(false);
-				}
-			}
-		}
+    private void nextPlayerHelp() {
+	boolean didNextStreet = false;
+	if (!bettingRules.hasUnresolvedRaise(players)){
+	    nextStreet();
+	    didNextStreet = true;
 	}
+	for (Player player : players) {
+	    if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
+		currentPlayer = player;
+		break;
+	    } else if (!bettingRules.someoneRaised() && player.isActive()) {
+		currentPlayer = player;
+		break;
+	    }
+	}
+	if(dealCounter == 1 && didNextStreet) updatePlayerPositions();
+    }
+    public void addRaiseToPot(int chips){
+	pot += chips;
+	bettingRules.setLatestBet(currentPlayer.getActiveBet());
+	bettingRules.setRaised(true);
+	for (Player player : players) {
+	    if(player.isActive() && !player.equals(currentPlayer)){
+		player.setCalled(false);
+		player.setRaised(false);
+	    }
+	}
+    }
+
 
 	public void addCallToPot(int chips){
 		pot += chips;
@@ -251,7 +198,7 @@ public class Holdem extends PokerBase
 
 	private void resetPlayerStatus(){
 		for (Player player : players) {
-			player.newRound();
+		    player.newRound();
 		}
 		bettingRules.setRaised(false);
 	}

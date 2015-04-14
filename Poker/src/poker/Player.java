@@ -65,7 +65,10 @@ public class Player
 
     public void activate(){ active = true;}
 
-    public void check(){}
+    public void check(){
+        called = true;
+        raised = false;
+    }
 
     public void newRound(){
         called = true;
@@ -83,10 +86,12 @@ public class Player
 
     public int call(int ammount){
         if(ammount < chips){
-            chips -= ammount - activeBet;
+            int chipToPot = ammount - activeBet;
+            chips -= chipToPot;
+            activeBet = ammount;
             called = true;
             raised = false;
-            return ammount;
+            return chipToPot;
         }else{
             ammount = chips;
             called = true;
