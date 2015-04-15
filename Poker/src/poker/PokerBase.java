@@ -49,8 +49,10 @@ public class PokerBase
         players.add(players.remove(0));
         System.out.println(players);
 
-        if(players.size() == 2){
-            players.get(0).setPosition(PlayerPosition.DEALER);
+        if(players.size() == 1){
+            gameOver();
+        }else if(players.size() == 2){
+            players.get(0).setPosition(PlayerPosition.BIGBLIND);
             players.get(1).setPosition(PlayerPosition.SMALLBLIND);
             currentPlayer = this.players.get(1);
         }else{
@@ -62,6 +64,11 @@ public class PokerBase
             }
             currentPlayer = this.players.get(2);
         }
+    }
+
+    public void gameOver(){
+        System.out.println("Winner: " + players.get(0).getName() + ",  Yaaaaaaaaaay!! you won the whole game!! you are absolutely the best player");
+        System.exit(0);
     }
 
     public void awardWinner(Player winner){

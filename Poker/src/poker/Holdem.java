@@ -139,41 +139,46 @@ public class Holdem extends PokerBase
 
 	public void nextPlayer() {
 	    int currentPlayerPos = players.indexOf(currentPlayer);
+	    boolean foundPlayer = false;
 	    if (currentPlayerPos < players.size() - 1) {
-		boolean foundPlayer = false;
+
 		for (int i = currentPlayerPos + 1; i < players.size(); i++) {
 		    if (bettingRules.someoneRaised() && players.get(i).isActive() && !players.get(i).hasRaised() &&
-			!players.get(i).hasCalled()) {
+			!players.get(i).hasCalled() && players.get(i).getChips() > 0) {
 			currentPlayer = players.get(i);
 			foundPlayer = true;
-		    } else if (!bettingRules.someoneRaised() && players.get(i).isActive()) {
+		    } else if (!bettingRules.someoneRaised() && players.get(i).isActive() && players.get(i).getChips() > 0) {
 			currentPlayer = players.get(i);
 			foundPlayer = true;
 		    }
 		    if (foundPlayer) break;
 		}
 		if (!foundPlayer) {
-		    nextPlayerHelp();
+		    foundPlayer = nextPlayerHelp();
 		}
 	    } else if (currentPlayerPos == players.size() - 1) {
-		nextPlayerHelp();
+		foundPlayer = nextPlayerHelp();
 	    }
+	    if(!foundPlayer) nextPlayer();
 	    System.out.println("Current Player: " + currentPlayer.getName());
 
 	}
 
-    private void nextPlayerHelp() {
+    private boolean nextPlayerHelp() {
+	boolean foundPlayer = false;
 	boolean didNextStreet = false;
 	if (!bettingRules.hasUnresolvedRaise(players)){
 	    nextStreet();
 	    didNextStreet = true;
 	}
 	for (Player player : players) {
-	    if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled()) {
+	    if (bettingRules.someoneRaised() && player.isActive() && !player.hasRaised() && !player.hasCalled() && player.getChips() > 0) {
 		currentPlayer = player;
+		foundPlayer = true;
 		break;
-	    } else if (!bettingRules.someoneRaised() && player.isActive()) {
+	    } else if (!bettingRules.someoneRaised() && player.isActive() && player.getChips() > 0) {
 		currentPlayer = player;
+		foundPlayer = true;
 		break;
 	    }
 	}
@@ -181,6 +186,7 @@ public class Holdem extends PokerBase
 	    updatePlayerPositions();
 	    dealCards();
 	}
+	return foundPlayer;
     }
     public void addRaiseToPot(int chips){
 	pot += chips;
