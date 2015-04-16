@@ -1,23 +1,22 @@
 package poker;
 
 
-import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 
 public class Card
 {
-    private BufferedImage deckImage;
+
     private BufferedImage openImage;
     private int value;
     private CardColor color;
-    private final int width;
-    private final int height;
 
-    public Card(final int value, final CardColor color)  {
+
+    public Card(final int value, final CardColor color, final BufferedImage openImage)  {
 	this.value = value;
 	this.color = color;
+<<<<<<< HEAD
         width = 73;
         height = 98;
         /*
@@ -28,14 +27,14 @@ public class Card
         }
         getCardImage();*/
     }
+=======
+        this.openImage = openImage;
 
-    private void getCardImage(){
-        if(value == 14){
-            openImage = deckImage.getSubimage(0, color.getValue() * height, width, height);
-        }else {
-            openImage = deckImage.getSubimage((value - 1) * width, color.getValue() * height, width, height);
-        }
+
+>>>>>>> origin/master
+
     }
+
 
     public int getValue() {
 	return value;
