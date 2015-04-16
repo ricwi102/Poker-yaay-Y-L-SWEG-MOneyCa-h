@@ -13,6 +13,7 @@ public class PokerBase
     protected Board board;
     protected Deck deck;
     protected Player currentPlayer;
+    protected int dealCounter;
     protected int pot;
     protected int smallBlind;
     protected int bigBlind;
@@ -27,6 +28,7 @@ public class PokerBase
         smallBlind = 10;
         bigBlind = 20;
         pot = 0;
+        dealCounter = 1;
         deck = new Deck();
     }
 
@@ -41,8 +43,11 @@ public class PokerBase
     protected void resetGame(){
     	deck.shuffleDeck();
     	board.resetBoard();
+        dealCounter = 1;
     	for (Player player : players) {
     	    player.resetHand();
+            player.activate();
+            player.newRound();
     	}
     }
 

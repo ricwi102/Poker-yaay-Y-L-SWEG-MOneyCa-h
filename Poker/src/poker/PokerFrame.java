@@ -25,7 +25,7 @@ public class PokerFrame extends JFrame implements ActionListener
     public PokerFrame(final Holdem holdem) throws HeadlessException, IOException{
 	super("Pokr sweg, holdum YÅLÅ");
 	this.holdem = holdem;
-	component = new PokerComponent(holdem.getPlayers());
+	component = new PokerComponent(holdem);
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	this.setLayout(new BorderLayout());
 	createButtons();
@@ -111,8 +111,10 @@ public class PokerFrame extends JFrame implements ActionListener
 	}
 	if(holdem.getCurrentPlayer().getActiveBet() == holdem.getBettingRules().getLatestBet()){
 	    check.setEnabled(true);
+	    fold.setEnabled(false);
 	}else{
 	    check.setEnabled(false);
+	    fold.setEnabled(true);
 	}
 	call.setText("call: " + (holdem.getBettingRules().getLatestBet() - holdem.getCurrentPlayer().getActiveBet()));
 
@@ -131,9 +133,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	    updateUi();
 	}else if(e.getSource().equals(fold)){
 	    holdem.getCurrentPlayer().fold();
-	    if(holdem.checkForWinner() == null) {
-		holdem.nextPlayer();
-	    }
+	    holdem.checkForWinner();
 	    updateUi();
 	}else if(e.getSource().equals(raise)) {
 	    int ammount;

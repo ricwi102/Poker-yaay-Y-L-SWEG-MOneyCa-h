@@ -14,13 +14,12 @@ public class Holdem extends PokerBase
 	/*private Player[] players;
     private Board board;
     private Deck deck;*/
-	private int dealCounter;
+
     /*private Player currentPlayer;
     private int pot;*/
 
 	public Holdem(final List<Player> players, final Board board) {
 		super(players, board);
-		dealCounter = 1;
 		bettingRules.setLatestBet(bigBlind);
 
 		dealCards();
@@ -123,16 +122,13 @@ public class Holdem extends PokerBase
 		}
 		if(activePlayers == 1){
 			System.out.println("Winner: " + winningPlayer.getName());
-			resetGame();
-			for (Player player : players) {
-				player.activate();
-			}
-			dealCounter = 1;
-			currentPlayer = players.get(0);
-			awardWinner(winningPlayer);
-			dealCards();
+		    	awardWinner(winningPlayer);
+		    	resetGame();
+		    	updatePlayerPositions();
+		    	dealCards();
 			return winningPlayer;
 		}
+	    	nextPlayer();
 		return null;
 	}
 

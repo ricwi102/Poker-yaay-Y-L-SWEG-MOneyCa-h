@@ -5,7 +5,6 @@ import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import javax.imageio.ImageIO;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,33 +13,33 @@ import java.io.IOException;
 
 public class PokerComponent extends JComponent
 {
+    private Holdem holdem;
     private List<Player> players;
-    private List<BufferedImage> images;
-    private BufferedImage testImage;
+    private BufferedImage hiddenImage;
+    private BufferedImage foldedImage;
+    private final int cardWidth;
+    private final int cardHeight;
 
-    public PokerComponent(final List<Player> players) {
-        this.players = players;
-        images = new ArrayList<>();
+    public PokerComponent(final Holdem holdem) {
+        this.holdem = holdem;
+        players = holdem.getPlayers();
+        cardWidth = 64;
+        cardHeight = 116;
         try {
-            testImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/AceOfSpades.png"));
+            hiddenImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/CardBack.jpg"));
+            foldedImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/FoldedCardBack.jpg"));
         }catch(IOException e){
-            testImage = null;
+            hiddenImage = null;
+            foldedImage = null;
         }
-        addImages();
+
     }
 
 
     public Dimension getPreferedSize(){
-        return new Dimension(200,200);
+        return new Dimension(players.size()*2*cardWidth,cardHeight * 3);
     }
 
-    private void addImages(){
-        for (Player player : players) {
-            for(Card card : player.getHand()){
-                images.add(card.getImage());
-            }
-        }
-    }
 
 
     public void paintComponent(Graphics g){
@@ -51,19 +50,25 @@ public class PokerComponent extends JComponent
             int currentCard = 0;
             images = new ArrayList<>();
             for(Card card : player.getHand()){
-                images.add(card.getImage());
-                System.out.println("added image");
+                images.add(card.getOpenImage());
             }
             for(BufferedImage image : images){
-                g2.drawImage(image, (player.getTablePosition() * 2 + currentCard) * 160 ,0,null);
-                currentCard++;
+                if(player.equals(holdem.getCurrentPlayer())) {
+                    g2.drawImage(image, (player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                                 null);
+                    currentCard++;
+                }else if(!player.isActive()){
+                    g2.drawImage(foldedImage,(player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                                 null);
+                    currentCard++;
+                }else{
+                    g2.drawImage(hiddenImage,(player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                                                     null);
+                    currentCard++;
+                }
             }
         }
 
-       /* g2.drawImage(testImage,0,0,null);
-        if(testImage == null) {
-            System.out.println("null");
-        }*/
     }
 
 }
