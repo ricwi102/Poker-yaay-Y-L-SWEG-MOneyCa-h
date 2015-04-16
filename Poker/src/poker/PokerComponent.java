@@ -26,8 +26,8 @@ public class PokerComponent extends JComponent
         cardWidth = 64;
         cardHeight = 116;
         try {
-            hiddenImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/CardBack.jpg"));
-            foldedImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/FoldedCardBack.jpg"));
+            hiddenImage = ImageIO.read(new File("C:\\Users\\Runefjune\\Desktop\\Poker projekt\\Poker-yaay-Y-L-SWEG-MOneyCa-h\\Poker\\images\\CardBack.jpg"));
+            foldedImage = ImageIO.read(new File("C:\\Users\\Runefjune\\Desktop\\Poker projekt\\Poker-yaay-Y-L-SWEG-MOneyCa-h\\Poker\\images\\FoldedCardBack.jpg"));
         }catch(IOException e){
             hiddenImage = null;
             foldedImage = null;
