@@ -16,22 +16,9 @@ public class Card
     public Card(final int value, final CardColor color, final BufferedImage openImage)  {
 	this.value = value;
 	this.color = color;
-<<<<<<< HEAD
-        width = 73;
-        height = 98;
-        /*
-        try {
-            deckImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/Deck.jpg"));
-        }catch(IOException e){
-            deckImage = null;
-        }
-        getCardImage();*/
-    }
-=======
         this.openImage = openImage;
 
 
->>>>>>> origin/master
 
     }
 
