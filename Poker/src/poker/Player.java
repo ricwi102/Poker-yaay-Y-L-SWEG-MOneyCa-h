@@ -9,6 +9,7 @@ public class Player
     private String name;
     private int chips;
     private int activeBet;
+    private int tablePosition;
     private boolean raised;
     private boolean called;
     private boolean active;
@@ -20,6 +21,7 @@ public class Player
         active = true;
         called = true;
         raised = false;
+        tablePosition = 0;
         position = PlayerPosition.STANDARD;
         activeBet = 0;
         chips = 2000;
@@ -40,6 +42,8 @@ public class Player
     public int getChips() { return chips; }
 
     public int getActiveBet() {return activeBet;}
+
+    public int getTablePosition() { return tablePosition; }
 
     public PlayerPosition getPosition() { return position;}
 
@@ -62,6 +66,8 @@ public class Player
     }
 
     public void setPosition(PlayerPosition position) {this.position = position;}
+
+    public void setTablePosition(final int tablePosition) { this.tablePosition = tablePosition; }
 
     public void activate(){ active = true;}
 

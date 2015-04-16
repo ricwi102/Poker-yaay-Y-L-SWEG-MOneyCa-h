@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class PokerFrame extends JFrame implements ActionListener
 {
@@ -19,14 +20,23 @@ public class PokerFrame extends JFrame implements ActionListener
     private JLabel currentPlayerChips;
     private JLabel currentPlayerCards;
     private JLabel pot;
+    private PokerComponent component;
 
-    public PokerFrame(final Holdem holdem) throws HeadlessException {
+    public PokerFrame(final Holdem holdem) throws HeadlessException, IOException{
 	super("Pokr sweg, holdum YÅLÅ");
 	this.holdem = holdem;
+	component = new PokerComponent(holdem.getPlayers());
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	this.setLayout(new BorderLayout());
 	createButtons();
 	createMenu();
+	displayBoard();
 	updateUi();
+    }
+
+    private void displayBoard(){
+	component.setPreferredSize(component.getPreferedSize());
+	this.add(component,BorderLayout.PAGE_START);
     }
 
     private void createButtons(){
@@ -70,7 +80,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	panel.add(currentPlayerChips);
 	panel.add(currentPlayerCards);
 	panel.add(pot);
-	this.add(panel);
+	this.add(panel, BorderLayout.PAGE_END);
     }
 
     private void createMenu(){
@@ -105,6 +115,8 @@ public class PokerFrame extends JFrame implements ActionListener
 	    check.setEnabled(false);
 	}
 	call.setText("call: " + (holdem.getBettingRules().getLatestBet() - holdem.getCurrentPlayer().getActiveBet()));
+
+	component.repaint();
     }
 
 

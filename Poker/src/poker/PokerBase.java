@@ -22,11 +22,20 @@ public class PokerBase
         this.players = players;
         this.board = board;
         bettingRules = new BettingRules();
+        setTablePositions();
         updatePlayerPositions();
         smallBlind = 10;
         bigBlind = 20;
         pot = 0;
         deck = new Deck();
+    }
+
+    private void setTablePositions(){
+        int currentPosition = 0;
+        for (Player player : players) {
+            player.setTablePosition(currentPosition);
+            currentPosition++;
+        }
     }
 
     protected void resetGame(){
@@ -87,5 +96,7 @@ public class PokerBase
     public BettingRules getBettingRules() {
         return bettingRules;
     }
+
+    public List<Player> getPlayers() { return players; }
 }
 
