@@ -10,34 +10,26 @@ public class Player
     private int chips;
     private int activeBet;
     private int tablePosition;
-    private boolean raised;
-    private boolean called;
     private boolean active;
     private PlayerPosition position;
 
     public Player(String name) {
-        hand = new ArrayList<Card>();
+        hand = new ArrayList<>();
         this.name = name;
         active = true;
-        called = true;
-        raised = false;
         tablePosition = 0;
         position = PlayerPosition.STANDARD;
         activeBet = 0;
-        chips = 2000;
+        chips = 2*1000;
     }
 
     public void addCard(Card card){
         hand.add(card);
     }
 
-    public List<Card> getHand() {
-        return hand;
-    }
+    public List<Card> getHand() { return hand; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     public int getChips() { return chips; }
 
@@ -47,23 +39,7 @@ public class Player
 
     public PlayerPosition getPosition() { return position;}
 
-    public void resetHand(){
-        hand.clear();
-    }
-
-    public boolean hasCalled() {
-        return called;
-    }
-
-    public boolean hasRaised(){return raised;}
-
-    public void setCalled(final boolean hasCalled) {
-        this.called = hasCalled;
-    }
-
-    public void setRaised(final boolean hasRaised){
-        this.raised = hasRaised;
-    }
+    public void resetHand(){ hand.clear(); }
 
     public void setPosition(PlayerPosition position) {this.position = position;}
 
@@ -71,45 +47,31 @@ public class Player
 
     public void activate(){ active = true;}
 
-    public void check(){
-        called = true;
-        raised = false;
+    public void check(){ }
+
+    public void newRound(){ activeBet = 0; }
+
+    public int bet(int amount){
+        chips -= amount;
+        activeBet += amount;
+        return amount;
     }
 
-    public void newRound(){
-        called = true;
-        raised = false;
-        activeBet = 0;
-    }
-
-    public int bet(int ammount){
-        chips -= ammount;
-        called = true;
-        raised = true;
-        activeBet += ammount;
-        return ammount;
-    }
-
-    public int call(int ammount){
-        if(ammount < chips){
-            int chipToPot = ammount - activeBet;
+    public int call(int amount){
+        if(amount < chips){
+            int chipToPot = amount - activeBet;
             chips -= chipToPot;
-            activeBet = ammount;
-            called = true;
-            raised = false;
+            activeBet = amount;
             return chipToPot;
         }else{
-            ammount = chips;
-            called = true;
-            raised = false;
+            amount = chips;
             chips = 0;
-            return ammount;
+            return amount;
         }
     }
 
     public void fold(){
         active = false;
-        raised = false;
     }
 
     public boolean isActive(){

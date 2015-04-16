@@ -129,35 +129,35 @@ public class PokerFrame extends JFrame implements ActionListener
 	    holdem.nextStreet();
 	} else if (e.getSource().equals(check)){
 	    holdem.getCurrentPlayer().check();
-	    holdem.nextPlayer();
+	    holdem.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(fold)){
 	    holdem.getCurrentPlayer().fold();
-	    holdem.checkForWinner();
+	    holdem.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(raise)) {
-	    int ammount;
+	    int amount;
 	    do {
 		String input = JOptionPane.showInputDialog("Ammount to bet: ");
-		ammount = Integer.parseInt(input);
-	    } while (holdem.getCurrentPlayer().getChips() - ammount < 0);
-	    if (holdem.getBettingRules().isLegalRaise(ammount + holdem.getCurrentPlayer().getActiveBet())){
-		int bet = holdem.getCurrentPlayer().bet(ammount);
-		holdem.addRaiseToPot(bet);
-		holdem.nextPlayer();
+		amount = Integer.parseInt(input);
+	    } while (holdem.getCurrentPlayer().getChips() - amount < 0);
+	    if (holdem.getBettingRules().isLegalRaise(amount + holdem.getCurrentPlayer().getActiveBet())){
+		int bet = holdem.getCurrentPlayer().bet(amount);
+		holdem.raise(bet);
+		holdem.advanceGame();
 		updateUi();
 	    }else{
 		JOptionPane.showMessageDialog(this,"Invalid ammount");
 	    }
 	}else if(e.getSource().equals(call)){
-	    int ammount = holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
-	    holdem.addCallToPot(ammount);
-	    holdem.nextPlayer();
+	    int amount = holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
+	    holdem.addToPot(amount);
+	    holdem.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(allIn)){
-	    int ammount = holdem.getCurrentPlayer().bet(holdem.getCurrentPlayer().getChips());
-	    holdem.addRaiseToPot(ammount);
-	    holdem.nextPlayer();
+	    int amount = holdem.getCurrentPlayer().bet(holdem.getCurrentPlayer().getChips());
+	    holdem.raise(amount);
+	    holdem.advanceGame();
 	    updateUi();
 	}
     }

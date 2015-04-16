@@ -20,12 +20,13 @@ public class Card
 	this.color = color;
         width = 73;
         height = 98;
+        /*
         try {
             deckImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/Deck.jpg"));
         }catch(IOException e){
             deckImage = null;
         }
-        getCardImage();
+        getCardImage();*/
     }
 
     private void getCardImage(){

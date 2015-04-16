@@ -13,6 +13,7 @@ public class PokerBase
     protected Board board;
     protected Deck deck;
     protected Player currentPlayer;
+    protected Player latestBettingPlayer;
     protected int dealCounter;
     protected int pot;
     protected int smallBlind;
@@ -51,6 +52,13 @@ public class PokerBase
     	}
     }
 
+    protected void resetPlayerBets(){
+        for (Player player : players) {
+            player.newRound();
+        }
+    }
+
+
     protected void updatePlayerPositions(){
         List<Player> losers = new ArrayList<>();
         for (Player player : players) {
@@ -78,6 +86,7 @@ public class PokerBase
             }
             currentPlayer = this.players.get(2);
         }
+        latestBettingPlayer = currentPlayer;
     }
 
     public void gameOver(){
