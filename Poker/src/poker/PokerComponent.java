@@ -17,12 +17,14 @@ public class PokerComponent extends JComponent
     private List<Player> players;
     private BufferedImage hiddenImage;
     private BufferedImage foldedImage;
+    private Board board;
     private final int cardWidth;
     private final int cardHeight;
 
     public PokerComponent(final Holdem holdem) {
         this.holdem = holdem;
         players = holdem.getPlayers();
+        board = holdem.getBoard();
         cardWidth = 64;
         cardHeight = 116;
         try {
@@ -44,6 +46,11 @@ public class PokerComponent extends JComponent
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        drawPlayerCards(g);
+        drawOpenCards(g);
+    }
+
+    private void drawPlayerCards(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
         List<BufferedImage> images;
         for (Player player : players) {
@@ -63,12 +70,26 @@ public class PokerComponent extends JComponent
                     currentCard++;
                 }else{
                     g2.drawImage(hiddenImage,(player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
-                                                     null);
+                                 null);
                     currentCard++;
                 }
             }
         }
+    }
 
+    private void drawOpenCards(Graphics g){
+        Graphics2D g2 = (Graphics2D) g;
+        List<BufferedImage> images = new ArrayList<>();
+        int currentCard = 0;
+        final int spacing = 90;
+
+        for(Card card : board.getOpenCards()){
+            images.add(card.getOpenImage());
+        }
+        for(BufferedImage image : images){
+            g2.drawImage(image, currentCard*cardWidth, cardHeight + spacing, cardWidth, cardHeight, null);
+            currentCard++;
+        }
     }
 
 }
