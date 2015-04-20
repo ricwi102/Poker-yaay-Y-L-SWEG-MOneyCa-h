@@ -2,13 +2,19 @@ package poker;
 
 
 public class Ai {
-    private Player player;
+    private Holdem holdem;
+    private BettingRules bettingRules;
 
-    public Ai(Player player) {
-        this.player = player;
+    public Ai(Holdem holdem) {
+        this.holdem = holdem;
+        bettingRules = holdem.getBettingRules();
     }
 
-    public void decide(){
-
+    public String decide(Player player){
+        if(player.getActiveBet() == bettingRules.getLatestBet()){
+            return "check";
+        }else{
+            return "call";
+        }
     }
 }

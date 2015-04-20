@@ -4,13 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
 
 public class PokerFrame extends JFrame implements ActionListener
 {
     private Holdem holdem;
     private JMenuItem item;
-    private JButton nextStreet;
     private JButton check;
     private JButton fold;
     private JButton raise;
@@ -22,7 +21,7 @@ public class PokerFrame extends JFrame implements ActionListener
     private JLabel pot;
     private PokerComponent component;
 
-    public PokerFrame(final Holdem holdem) throws HeadlessException, IOException{
+    public PokerFrame(final Holdem holdem) throws HeadlessException{
 	super("Pokr sweg, holdum YÅLÅ");
 	this.holdem = holdem;
 	component = new PokerComponent(holdem);
@@ -43,7 +42,6 @@ public class PokerFrame extends JFrame implements ActionListener
 	JPanel panel = new JPanel();
 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-	nextStreet = new JButton("Next street");
 	check = new JButton("Check");
 	fold = new JButton("Fold");
 	call = new JButton("Call: 0");
@@ -60,17 +58,14 @@ public class PokerFrame extends JFrame implements ActionListener
 					+ " " + holdem.getCurrentPlayer().getHand().get(1));
 	pot = new JLabel("Pot: 0");
 
-	nextStreet.addActionListener(this);
 	check.addActionListener(this);
 	fold.addActionListener(this);
 	call.addActionListener(this);
 	raise.addActionListener(this);
 	allIn.addActionListener(this);
 
-	nextStreet.setEnabled(false);
 	call.setEnabled(false);
 
-	panel.add(nextStreet);
 	panel.add(check);
 	panel.add(fold);
 	panel.add(call);
@@ -125,8 +120,6 @@ public class PokerFrame extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e) {
 	if (e.getSource().equals(item)) {
 	    System.exit(0);
-	} else if (e.getSource().equals(nextStreet)) {
-	    holdem.nextStreet();
 	} else if (e.getSource().equals(check)){
 	    holdem.getCurrentPlayer().check();
 	    holdem.advanceGame();

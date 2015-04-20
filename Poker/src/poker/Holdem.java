@@ -97,6 +97,11 @@ public class Holdem extends PokerBase{
 	dealCards();
     }
 
+    private void checkForAction(){
+
+
+    }
+
 
     private void newStreet() {
 	resetPlayerBets();
@@ -109,9 +114,10 @@ public class Holdem extends PokerBase{
 	    currentPlayer = getFirstPlayer();
 	    latestBettingPlayer = currentPlayer;
 	    if (!(currentPlayer.getChips() > 0)) advanceGame();
-	    else System.out.println("Current Player: " + currentPlayer.getName());
-	    //else check for action
-
+	    else{
+		System.out.println("Current Player: " + currentPlayer.getName());
+		checkForAction();
+	    }
 	}
     }
 
@@ -129,7 +135,8 @@ public class Holdem extends PokerBase{
 	    currentPlayer = nextPlayer;
 	    if (currentPlayer.getChips() > 0) {
 		System.out.println("Current Player: " + currentPlayer.getName());
- 		//check for action
+
+ 		checkForAction();
 	    }else {
 		advanceGame();
 	    }

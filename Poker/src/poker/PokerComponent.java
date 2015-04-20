@@ -17,6 +17,7 @@ public class PokerComponent extends JComponent
     private List<Player> players;
     private BufferedImage hiddenImage;
     private BufferedImage foldedImage;
+    private BufferedImage buttonImage;
     private Board board;
     private int numberOfPlayers;
     private int cardsPerPlayer;
@@ -34,9 +35,11 @@ public class PokerComponent extends JComponent
         try {
             hiddenImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/CardBack.jpg"));
             foldedImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/FoldedCardBack.jpg"));
+            buttonImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/DealerButton.png"));
         }catch(IOException e){
             hiddenImage = null;
             foldedImage = null;
+            buttonImage = null;
         }
 
     }
@@ -57,11 +60,21 @@ public class PokerComponent extends JComponent
 
     private void drawPlayersAndChips(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        final int spaceFromCards = 18;
+        final int spaceFromCards = 16;
+        final int buttonSize = 16;
         for(Player player : players){
-            g2.setFont(new Font("Arial",Font.BOLD,18));
-            g2.drawString(player.getName(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + spaceFromCards);
-            g2.drawString(""+player.getActiveBet(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*2));
+            g2.setFont(new Font("Arial", Font.BOLD, 16));
+            g2.drawString(player.getName(), player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + (spaceFromCards*2));
+            g2.drawString("Chips: " + player.getChips(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*3));
+            g2.drawString("Bet: "+player.getActiveBet(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*4));
+            if(player.getPosition() == PlayerPosition.DEALER){
+                g2.drawImage(buttonImage, player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight, buttonSize, buttonSize,
+                             null);
+            }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
+                g2.drawString("SB",player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + spaceFromCards);
+            }else if(player.getPosition() == PlayerPosition.BIGBLIND){
+                g2.drawString("BB",player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + spaceFromCards);
+            }
         }
         g2.setFont(new Font("Arial",Font.BOLD,22));
         g2.drawString("Pot: "+holdem.getPot(),((numberOfPlayers*cardsPerPlayer*cardWidth)/2) -cardWidth,cardHeight +(spaceFromCards*6));
