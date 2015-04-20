@@ -31,7 +31,7 @@ public class Deck
 
     private void addCardImages(){
 	try{
-	    BufferedImage deckImage = ImageIO.read(new File("C:\\Users\\Runefjune\\Desktop\\Poker projekt\\Poker-yaay-Y-L-SWEG-MOneyCa-h\\Poker\\images\\Deck.jpg"));
+	    BufferedImage deckImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/Deck.jpg"));
 	    for(int i = 0; i < numberOfColors; i++){
 		for(int j = 0; j < numberOfValues; j++){
 		    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);

@@ -18,6 +18,8 @@ public class PokerComponent extends JComponent
     private BufferedImage hiddenImage;
     private BufferedImage foldedImage;
     private Board board;
+    private int numberOfPlayers;
+    private int cardsPerPlayer;
     private final int cardWidth;
     private final int cardHeight;
 
@@ -25,11 +27,13 @@ public class PokerComponent extends JComponent
         this.holdem = holdem;
         players = holdem.getPlayers();
         board = holdem.getBoard();
+        numberOfPlayers = players.size();
+        cardsPerPlayer = players.get(0).getHand().size();
         cardWidth = 64;
         cardHeight = 116;
         try {
-            hiddenImage = ImageIO.read(new File("C:\\Users\\Runefjune\\Desktop\\Poker projekt\\Poker-yaay-Y-L-SWEG-MOneyCa-h\\Poker\\images\\CardBack.jpg"));
-            foldedImage = ImageIO.read(new File("C:\\Users\\Runefjune\\Desktop\\Poker projekt\\Poker-yaay-Y-L-SWEG-MOneyCa-h\\Poker\\images\\FoldedCardBack.jpg"));
+            hiddenImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/CardBack.jpg"));
+            foldedImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/FoldedCardBack.jpg"));
         }catch(IOException e){
             hiddenImage = null;
             foldedImage = null;
@@ -48,11 +52,25 @@ public class PokerComponent extends JComponent
         super.paintComponent(g);
         drawPlayerCards(g);
         drawOpenCards(g);
+        drawPlayersAndChips(g);
+    }
+
+    private void drawPlayersAndChips(Graphics g){
+        Graphics2D g2 = (Graphics2D) g;
+        final int spaceFromCards = 18;
+        for(Player player : players){
+            g2.setFont(new Font("Arial",Font.BOLD,18));
+            g2.drawString(player.getName(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + spaceFromCards);
+            g2.drawString(""+player.getActiveBet(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*2));
+        }
+        g2.setFont(new Font("Arial",Font.BOLD,22));
+        g2.drawString("Pot: "+holdem.getPot(),((numberOfPlayers*cardsPerPlayer*cardWidth)/2) -cardWidth,cardHeight +(spaceFromCards*6));
     }
 
     private void drawPlayerCards(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
         List<BufferedImage> images;
+
         for (Player player : players) {
             int currentCard = 0;
             images = new ArrayList<>();
@@ -81,7 +99,7 @@ public class PokerComponent extends JComponent
         Graphics2D g2 = (Graphics2D) g;
         List<BufferedImage> images = new ArrayList<>();
         int currentCard = 0;
-        final int spacing = 90;
+        final int spacing = 110;
 
         for(Card card : board.getOpenCards()){
             images.add(card.getOpenImage());
