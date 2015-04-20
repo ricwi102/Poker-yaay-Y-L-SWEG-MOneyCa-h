@@ -19,10 +19,12 @@ public class PokerBase
     protected int smallBlind;
     protected int bigBlind;
     protected BettingRules bettingRules;
+    protected PokerFrame frame;
 
     protected PokerBase(final List<Player> players, final Board board) {
         this.players = players;
         this.board = board;
+        frame = null;
         bettingRules = new BettingRules();
         setTablePositions();
         updatePlayerPositions();
@@ -112,5 +114,7 @@ public class PokerBase
     }
 
     public List<Player> getPlayers() { return players; }
+
+    public void setFrame(final PokerFrame frame) { this.frame = frame; }
 }
 

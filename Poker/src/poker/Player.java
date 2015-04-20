@@ -7,6 +7,7 @@ public class Player
 {
     private List<Card> hand;
     private String name;
+    private String controller;
     private int chips;
     private int activeBet;
     private int tablePosition;
@@ -16,6 +17,18 @@ public class Player
     public Player(String name) {
         hand = new ArrayList<>();
         this.name = name;
+        controller = "player";
+        active = true;
+        tablePosition = 0;
+        position = PlayerPosition.STANDARD;
+        activeBet = 0;
+        chips = 2*1000;
+    }
+
+    public Player(final String name, final String controller) {
+        hand = new ArrayList<>();
+        this.name = name;
+        this.controller = controller;
         active = true;
         tablePosition = 0;
         position = PlayerPosition.STANDARD;
@@ -38,6 +51,8 @@ public class Player
     public int getTablePosition() { return tablePosition; }
 
     public PlayerPosition getPosition() { return position;}
+
+    public String getController() { return controller; }
 
     public void resetHand(){ hand.clear(); }
 

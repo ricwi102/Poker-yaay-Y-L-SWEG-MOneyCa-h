@@ -2,7 +2,7 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+
 /**
  * GameTest
  */
@@ -14,7 +14,7 @@ public final class GameTest
 	List<Player> players = new ArrayList<>();
 	players.add(new Player("Richard"));
 	players.add(new Player("Johannes"));
-	players.add(new Player("Axel"));
+	players.add(new Player("Axel","ai"));
 	players.add(new Player("Phil Ivey"));
 
 
@@ -28,6 +28,7 @@ public final class GameTest
 
 	frame.pack();
 	frame.setVisible(true);
+	holdem.checkForAction();
 
     }
 }

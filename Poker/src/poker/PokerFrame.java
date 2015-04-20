@@ -30,6 +30,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	createButtons();
 	createMenu();
 	displayBoard();
+	holdem.setFrame(this);
 	updateUi();
     }
 
@@ -89,7 +90,7 @@ public class PokerFrame extends JFrame implements ActionListener
 
     }
 
-    private void updateUi(){
+    public void updateUi(){
 	StringBuilder openCards = new StringBuilder();
 	for(Card card : holdem.getBoard().getOpenCards()){
 	    openCards.append(card);
@@ -101,19 +102,34 @@ public class PokerFrame extends JFrame implements ActionListener
 	pot.setText("pot: " + holdem.getPot());
 	if(holdem.getBettingRules().someoneRaised() && holdem.getCurrentPlayer().getActiveBet() != holdem.bettingRules.getLatestBet()){
 	    call.setEnabled(true);
+	    raise.setEnabled(true);
+	    allIn.setEnabled(true);
 	}else{
 	    call.setEnabled(false);
+	    raise.setEnabled(true);
+	    allIn.setEnabled(true);
 	}
 	if(holdem.getCurrentPlayer().getActiveBet() == holdem.getBettingRules().getLatestBet()){
 	    check.setEnabled(true);
 	    fold.setEnabled(false);
+	    raise.setEnabled(true);
+	    allIn.setEnabled(true);
 	}else{
 	    check.setEnabled(false);
 	    fold.setEnabled(true);
+	    raise.setEnabled(true);
+	    allIn.setEnabled(true);
 	}
 	call.setText("call: " + (holdem.getBettingRules().getLatestBet() - holdem.getCurrentPlayer().getActiveBet()));
-
+	if(holdem.getCurrentPlayer().getController().equals("ai")){
+	    check.setEnabled(false);
+	    fold.setEnabled(false);
+	    raise.setEnabled(false);
+	    call.setEnabled(false);
+	    allIn.setEnabled(false);
+	}
 	component.repaint();
+	System.out.println("UPDATED UI");
     }
 
 

@@ -10,10 +10,12 @@ import java.util.List;
 
 public class Holdem extends PokerBase{
 
+    private Ai ai;
+
     public Holdem(final List<Player> players, final Board board) {
 	super(players, board);
 	bettingRules.setLatestBet(bigBlind);
-
+	ai = new Ai(this);
 	dealCards();
     }
 
@@ -97,9 +99,24 @@ public class Holdem extends PokerBase{
 	dealCards();
     }
 
-    private void checkForAction(){
-
-
+    public void checkForAction(){
+	frame.updateUi();
+	if(currentPlayer.getController().equals("ai")){
+	    String decition = ai.decide(currentPlayer);
+	    switch(decition) {
+		case "check":
+		    currentPlayer.check();
+		    advanceGame();
+		    break;
+		case "call":
+		    int amount = currentPlayer.call(bettingRules.getLatestBet());
+		    addToPot(amount);
+		    advanceGame();
+		    break;
+		default:
+		    System.out.println("AI DECIDES WRONG");
+	    }
+	}
     }
 
 
@@ -123,7 +140,6 @@ public class Holdem extends PokerBase{
 
 
     public void advanceGame(){
-
 	Player nextPlayer = nextActivePlayer(currentPlayer);
 
 	if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
@@ -135,7 +151,6 @@ public class Holdem extends PokerBase{
 	    currentPlayer = nextPlayer;
 	    if (currentPlayer.getChips() > 0) {
 		System.out.println("Current Player: " + currentPlayer.getName());
-
  		checkForAction();
 	    }else {
 		advanceGame();
