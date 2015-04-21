@@ -11,7 +11,7 @@ public class SameKindComparator implements Comparator<List<Card>>
 	    return -1;
 	}else if(list1.size() < list2.size()){
 	    return 1;
-	}else{
+	}else if(!list1.isEmpty()){
 	    if (list1.get(0).getValue() > list2.get(0).getValue()) {
 		return -1;
 	    } else if (list1.get(0).getValue() < list2.get(0).getValue()) {
@@ -20,5 +20,6 @@ public class SameKindComparator implements Comparator<List<Card>>
 		return 0;
 	    }
 	}
+	return 0;
     }
 }

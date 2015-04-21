@@ -21,6 +21,7 @@ public class PokerBase
     protected BettingRules bettingRules;
     protected PokerFrame frame;
 
+
     protected PokerBase(final List<Player> players, final Board board) {
         this.players = players;
         this.board = board;

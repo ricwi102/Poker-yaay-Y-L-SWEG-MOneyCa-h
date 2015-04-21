@@ -1,5 +1,7 @@
 package poker;
 
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -33,9 +35,15 @@ public class PokerComponent extends JComponent
         cardWidth = 64;
         cardHeight = 116;
         try {
-            hiddenImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/CardBack.jpg"));
-            foldedImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/FoldedCardBack.jpg"));
-            buttonImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/DealerButton.png"));
+            URL url1 = getClass().getResource("images/CardBack.jpg");
+            File file1 = new File(url1.getPath());
+            URL url2 = getClass().getResource("images/FoldedCardBack.jpg");
+            File file2 = new File(url2.getPath());
+            URL url3 = getClass().getResource("images/DealerButton.png");
+            File file3 = new File(url3.getPath());
+            hiddenImage = ImageIO.read(file1);
+            foldedImage = ImageIO.read(file2);
+            buttonImage = ImageIO.read(file3);
         }catch(IOException e){
             hiddenImage = null;
             foldedImage = null;
@@ -48,7 +56,6 @@ public class PokerComponent extends JComponent
     public Dimension getPreferedSize(){
         return new Dimension(players.size()*2*cardWidth,cardHeight * 3);
     }
-
 
 
     public void paintComponent(Graphics g){
@@ -99,7 +106,7 @@ public class PokerComponent extends JComponent
                     g2.drawImage(foldedImage,(player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
                                  null);
                     currentCard++;
-                }else{
+                } else{
                     g2.drawImage(hiddenImage,(player.getTablePosition() * 2 + currentCard) * cardWidth, 0, cardWidth, cardHeight,
                                  null);
                     currentCard++;

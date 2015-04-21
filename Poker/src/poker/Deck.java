@@ -1,5 +1,6 @@
 package poker;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +32,9 @@ public class Deck
 
     private void addCardImages(){
 	try{
-	    BufferedImage deckImage = ImageIO.read(new File("/home/johmy592/java/projekt/Poker-yaay-Y-L-SWEG-MOneyCa-h/Poker/images/Deck.jpg"));
+	    URL url1 = getClass().getResource("images/Deck.jpg");
+	    File file1 = new File(url1.getPath());
+	    BufferedImage deckImage = ImageIO.read(file1);
 	    for(int i = 0; i < numberOfColors; i++){
 		for(int j = 0; j < numberOfValues; j++){
 		    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);

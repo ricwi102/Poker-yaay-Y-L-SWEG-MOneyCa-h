@@ -21,6 +21,7 @@ public class PokerFrame extends JFrame implements ActionListener
     private JLabel pot;
     private PokerComponent component;
 
+
     public PokerFrame(final Holdem holdem) throws HeadlessException{
 	super("Pokr sweg, holdum YÅLÅ");
 	this.holdem = holdem;
@@ -170,4 +171,6 @@ public class PokerFrame extends JFrame implements ActionListener
 	    updateUi();
 	}
     }
+
+
 }

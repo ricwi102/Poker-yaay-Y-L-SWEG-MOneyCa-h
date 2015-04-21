@@ -52,13 +52,6 @@ public class Holdem extends PokerBase{
 	}
     }
 
-    private void dealTurn(){
-	dealOneCard();
-    }
-
-    private void dealRiver(){
-	dealOneCard();
-    }
 
     private void dealOneCard(){
 	board.addCard(deck.drawCard());
@@ -90,20 +83,20 @@ public class Holdem extends PokerBase{
 	}
 	System.out.println("Winner: " + bestHand.getPlayer().getName());
 	awardWinner(bestHand.getPlayer());
-
     }
 
     public void newRound() {
 	resetGame();
 	updatePlayerPositions();
 	dealCards();
+	checkForAction();
     }
 
     public void checkForAction(){
 	frame.updateUi();
 	if(currentPlayer.getController().equals("ai")){
-	    String decition = ai.decide(currentPlayer);
-	    switch(decition) {
+	    String decision = ai.decide(currentPlayer);
+	    switch(decision) {
 		case "check":
 		    currentPlayer.check();
 		    advanceGame();
@@ -114,7 +107,8 @@ public class Holdem extends PokerBase{
 		    advanceGame();
 		    break;
 		default:
-		    System.out.println("AI DECIDES WRONG");
+		    System.out.println("NOT A VALID PLAYER IN AI");
+		    advanceGame();
 	    }
 	}
     }
@@ -211,12 +205,12 @@ public class Holdem extends PokerBase{
 		dealCounter++;
 		break;
 	    case 2:
-		dealTurn();
+		dealOneCard();
 		System.out.println(board);
 		dealCounter++;
 		break;
 	    case 3:
-		dealRiver();
+		dealOneCard();
 		System.out.println(board);
 		dealCounter++;
 		break;
