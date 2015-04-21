@@ -1,19 +1,18 @@
 package client_test;
-import javafx.event.ActionEvent;
 
 import java.net.*;
 import java.io.*;
 
 public class ClientExempel{
-    private Socket socket;
+
     private PrintWriter out;
     private BufferedReader in;
 
 
 
     public void listenSocket(int port){
-    //Create socket connection
        try{
+         Socket socket;
          socket = new Socket(InetAddress.getLocalHost(), port);
          out = new PrintWriter(socket.getOutputStream(), true);
          in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -29,8 +28,12 @@ public class ClientExempel{
     public void read(TestFrame frame){
         while(true){
             try{
-                String line = in.readLine();
-                frame.updateTextSquare(line);
+                String command = in.readLine();
+                String[] splitUp = command.split("&");
+
+                if (splitUp[0].equals("TEXT")){
+                    frame.updateTextSquare(splitUp[1]);
+                }
             }catch (IOException e) {
                 System.out.println("Read failed");
                 System.exit(-1);

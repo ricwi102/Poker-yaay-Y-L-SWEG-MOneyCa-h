@@ -24,7 +24,7 @@ public class ClientWorker implements Runnable {
     }
 
     public void run(){
-	String line;
+
 	BufferedReader in = null;
 	out = null;
 	try{
@@ -34,12 +34,12 @@ public class ClientWorker implements Runnable {
 	    System.out.println("in or out failed");
 	    System.exit(-1);
 	}
-
 	while(true){
 	    try{
+		String line;
 		line = in.readLine();
 		for (ClientWorker clientWorker : clients) {
-		    clientWorker.getOut().println(line);
+		    clientWorker.getOut().println("TEXT&" + line);
 		}
 
 		frame.updateTextSquare(line);
@@ -49,6 +49,8 @@ public class ClientWorker implements Runnable {
 	    }
 	}
     }
+
+
 
     public PrintWriter getOut() {
 	return out;
