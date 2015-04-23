@@ -13,7 +13,7 @@ public class ClientKeyAdapter extends KeyAdapter{
 	this.frame = frame;
     }
 
-    public void keyPressed(KeyEvent evt) {
+    @Override public void keyPressed(KeyEvent evt) {
         if(evt.getKeyCode() == KeyEvent.VK_ENTER || evt.getKeyCode() == KeyEvent.VK_TAB){
 	    frame.nextTextSquare();
         }

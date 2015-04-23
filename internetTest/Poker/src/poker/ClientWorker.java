@@ -14,18 +14,11 @@ public class ClientWorker implements Runnable{
     private PrintWriter out;
     private Player player;
     private PokerBase pokerRules;
-    private boolean host;
-    private boolean startGame;
 
     ClientWorker(Socket client) {
 	this.client = client;
-	host = false;
-	startGame = false;
+
     }
-
-    public void setHost() {host = true;}
-
-    public boolean getStartGame(){ return startGame;}
 
     public void addClientWorkers(List<ClientWorker> clients){
 	this.clients = clients;
@@ -45,6 +38,19 @@ public class ClientWorker implements Runnable{
 
     public void run(){
 
+	BufferedReader in = getInAndOutput();
+	while(true){
+	    try{
+		String[] command;
+		command = in.readLine().split("&");
+		recieveOptions(command);
+	    }catch (IOException e) {
+		System.out.println("Read failed");
+		System.exit(-1);
+	    }
+	}
+    }
+    protected BufferedReader getInAndOutput(){
 	BufferedReader in = null;
 	out = null;
 	try{
@@ -54,69 +60,58 @@ public class ClientWorker implements Runnable{
 	    System.out.println("in or out failed");
 	    System.exit(-1);
 	}
-	while(true){
-	    try{
-		String[] command;
-		command = in.readLine().split("&");
+	return in;
+    }
 
-		switch (command[0]){
-		    case "TEXT":
-			for (ClientWorker clientWorker : clients) {
-			    clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
-			}
-			break;
-		    case "BET":
-			int bet = Integer.parseInt(command[1]);
-			if(player.equals(pokerRules.getCurrentPlayer())){
-			    if(pokerRules.raise(bet)){
-				sendUpdate();
-			    }else{
-				sendError("Can't bet that ammount");
-			    }
-			}
-			break;
-		    case "CALL":
-			if(player.equals(pokerRules.getCurrentPlayer())){
-			    if(pokerRules.call()){
-				sendUpdate();
-			    }else{
-				sendError("There is nothing to call");
-			    }
-			}
-			break;
-		    case "CHECK":
-			if(player.equals(pokerRules.getCurrentPlayer())){
-			    if(pokerRules.check()){
-				sendUpdate();
-			    }else{
-				sendError("There is an active bet, you can't check");
-			    }
-			}
-			break;
-		    case "FOLD":
-			if(player.equals(pokerRules.getCurrentPlayer())){
-			    pokerRules.fold();
-			}
-			break;
-		    case "NEWPLAYER":
-			player = new Player(command[1]);
-			break;
-		    case "STARTGAME":
-			if (host) {
-			    startGame = true;
-			}
-			break;
-		    case "LOGIN":
-			//if we in the future want to save chips
-			break;
+    protected void recieveOptions(String[] command){
+	switch (command[0]){
+	    case "TEXT":
+		for (ClientWorker clientWorker : clients) {
+		    clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
 		}
-
-
-	    }catch (IOException e) {
-		System.out.println("Read failed");
-		System.exit(-1);
-	    }
+		break;
+	    case "BET":
+		int bet = Integer.parseInt(command[1]);
+		if(player.equals(pokerRules.getCurrentPlayer())){
+		    if(pokerRules.raise(bet)){
+			sendUpdate();
+		    }else{
+			sendError("Can't bet that ammount");
+		    }
+		}
+		break;
+	    case "CALL":
+		if(player.equals(pokerRules.getCurrentPlayer())){
+		    if(pokerRules.call()){
+			sendUpdate();
+		    }else{
+			sendError("There is nothing to call");
+		    }
+		}
+		break;
+	    case "CHECK":
+		if(player.equals(pokerRules.getCurrentPlayer())){
+		    if(pokerRules.check()){
+			sendUpdate();
+		    }else{
+			sendError("There is an active bet, you can't check");
+		    }
+		}
+		break;
+	    case "FOLD":
+		if(player.equals(pokerRules.getCurrentPlayer())){
+		    pokerRules.fold();
+		}
+		break;
+	    case "NEWPLAYER":
+		player = new Player(command[1]);
+		break;
+	    case "LOGIN":
+		//if we in the future want to save chips
+		break;
 	}
+
+
     }
 
     public PrintWriter getOut() {
@@ -124,6 +119,8 @@ public class ClientWorker implements Runnable{
     }
 
     public Player getPlayer() { return player; }
+
+    public PokerBase getPokerRules() { return pokerRules; }
 }
 
 

@@ -10,14 +10,36 @@ import java.util.List;
 
 public class Holdem extends PokerBase{
 
-    public Holdem(final List<Player> players, final Board board) {
-	super(players, board);
-	bettingRules.setLatestBet(bigBlind);
 
+
+    public Holdem(final Board board, BettingRules bettingRules) {
+	super(board, bettingRules);
+	bettingRules.setLatestBet(bigBlind);
 	dealCards();
     }
 
+    public Holdem(final Board board) {
+    	super(board, new BettingRules());
+    	bettingRules.setLatestBet(bigBlind);
+    	dealCards();
+    }
+
+
+
+
     public static void main(String[] args) {}
+
+
+    public void startGame(final List<Player> players){
+	super.startGame(players);
+	if (bettingRules == null){
+	    bettingRules = getRecomendedBettingRules();
+	}
+    }
+
+    private BettingRules getRecomendedBettingRules(){
+	return new BettingRules();
+    }
 
     private void dealCards(){
 	for(int i = 0; i < 2; i++) {
