@@ -8,7 +8,7 @@ import java.util.List;
 public class ServerManager extends Thread{
     private ServerSocket server;
     private List<ClientWorker> clients;
-    private ClientWorker host;
+    private ClientHost host;
 
     public ServerManager() { clients = new ArrayList<>(); }
 
@@ -22,7 +22,7 @@ public class ServerManager extends Thread{
 	System.exit(0);
     }
 
-    public void listenSocket(int port) {
+    public PokerBase listenSocket(int port) {
 	try {
 	    server = new ServerSocket(port);
 	} catch (IOException e) {
@@ -30,13 +30,32 @@ public class ServerManager extends Thread{
 	    System.exit(-1);
 	}
 	while (true) {
-	    if (host != null && host.getStartGame() && clientsHavePlayers()) ;
+	    if (host != null && host.getStartGame() && clientsHavePlayers()) {
+		switch(host.getGameMode()){
+		    case "HOLDEM":
+			if (host.getBettingRules() != null){
+			    return new Holdem(new Board(), host.getBettingRules());
+			}else{
+			    return new Holdem(new Board());
+			}
+		    case "OMAHA":
+			if (host.getBettingRules() != null){
+			    return new Holdem(new Board(), host.getBettingRules());
+			}else{
+			    return new Holdem(new Board());//change to omaha later
+			}
+		}
+		return new Holdem(new Board(), host.getBettingRules());
+	    }
 	    try {
 		ClientWorker worker;
-		worker = new ClientWorker(server.accept());
 		if (host == null){
-		    worker.setHost();
-		    host = worker;
+		    worker = new ClientHost(server.accept());
+		    host = (ClientHost)worker;
+		    System.out.println("Host Found");
+		}else{
+		    worker = new ClientWorker(server.accept());
+		    System.out.println("Client added!");
 		}
 		clients.add(worker);
 		worker.addClientWorkers(clients);
@@ -54,6 +73,10 @@ public class ServerManager extends Thread{
 	    if (client.getPlayer() == null) return false;
 	}
 	return true;
+    }
+
+    public List<ClientWorker> getClients() {
+	return clients;
     }
 }
 

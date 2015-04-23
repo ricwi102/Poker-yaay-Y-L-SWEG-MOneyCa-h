@@ -15,10 +15,10 @@ public class Client
     private JFrame frame;
     private PrintWriter out;
     private BufferedReader in;
+    private boolean host = false;
 
-    public Client(final GameInfo gameInfo, ClientFrame frame) {
+    public Client(final GameInfo gameInfo) {
 	this.gameInfo = gameInfo;
-	this.frame = frame;
     }
 
     public void listenSocket(int port, InetAddress address) {
@@ -29,14 +29,12 @@ public class Client
 	    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	} catch (UnknownHostException e) {
 	    System.out.println("Unknown host");
-	    System.exit(1);
 	} catch (IOException e) {
 	    System.out.println("No I/O");
-	    System.exit(1);
 	}
     }
 
-    public void read() {
+    public void read(ClientFrame frame) {
 	while (true) {
 	    try {
 		String[] command = in.readLine().split("&");
@@ -48,15 +46,24 @@ public class Client
 		    case "ADDPLAYER":
 			if (command.length > 2){
 			    gameInfo.addYou(command[1], Integer.parseInt(command[2]));
-			} else
-			gameInfo.addPlayer(command[1], Integer.parseInt(command[2]));
-
-			break;
+			} else {
+			    gameInfo.addPlayer(command[1], Integer.parseInt(command[2]));
+			} break;
 		    case "VALID":
 
 			break;
 		    case "ERROR":
 
+			break;
+		    case "STARTGAME":
+			frame.startGame();
+			break;
+		    case "HOST":
+			if (command[1].equals("TRUE")) host = true;
+			System.out.println(command[1]);
+			System.out.println(host);
+			frame.lobbyFrame();
+			frame.pack();
 			break;
 
 
@@ -71,4 +78,8 @@ public class Client
 	    }
 	}
     }
+
+    public boolean isHost() { return host; }
+
+    public PrintWriter getOut() { return out; }
 }

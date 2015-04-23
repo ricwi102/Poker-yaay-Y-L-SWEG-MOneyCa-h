@@ -7,10 +7,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 public class ClientFrame extends JFrame implements ActionListener
 {
+    private Client client;
     private ClientKeyAdapter keyAdapter;
     private GameInfo gameInfo;
     private JMenuItem item;
@@ -20,29 +23,30 @@ public class ClientFrame extends JFrame implements ActionListener
     private JButton call;
     private JButton allIn;
     private JButton connect;
+    private JButton startGame;
     private JLabel communityCards;
     private JLabel pot;
-    private JTextArea ip;
-    private JTextArea port;
+    private JTextField ip;
+    private JTextField port;
     private ClientComponent component;
 
-    public ClientFrame(final GameInfo gameInfo) throws HeadlessException, IOException{
+    public ClientFrame(final GameInfo gameInfo, Client client) throws HeadlessException, IOException{
 	super("Pokr sweg, holdum YÅLÅ");
 	this.gameInfo = gameInfo;
+	this.client = client;
 	component = new ClientComponent(gameInfo);
 	keyAdapter = new ClientKeyAdapter(this);
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	this.setLayout(new BorderLayout());
 	createButtons();
 	createMenu();
-	displayBoard();
-	updateUi();
+	//displayBoard();
     }
-
+/*
     private void displayBoard(){
 	component.setPreferredSize(component.getPreferedSize());
 	this.add(component,BorderLayout.PAGE_START);
-    }
+    }*/
 
     private void createButtons(){
 
@@ -52,7 +56,8 @@ public class ClientFrame extends JFrame implements ActionListener
 	call = new JButton();
 	raise = new JButton();
 	allIn = new JButton();
-	connect = new JButton();
+	connect = new JButton("Connect to server");
+	startGame = new JButton("Start Game");
 
 
 	check.addActionListener(this);
@@ -61,11 +66,12 @@ public class ClientFrame extends JFrame implements ActionListener
 	raise.addActionListener(this);
 	allIn.addActionListener(this);
 	connect.addActionListener(this);
+	startGame.addActionListener(this);
 
 	communityCards = new JLabel();
 
-	ip = new JTextArea(1, 2*10);
-	port = new JTextArea(1, 10);
+	ip = new JTextField(2*10);
+	port = new JTextField(10);
 
 	ip.addKeyListener(keyAdapter);
 	port.addKeyListener(keyAdapter);
@@ -85,6 +91,8 @@ public class ClientFrame extends JFrame implements ActionListener
 	menuBar.add(menu);
 	setJMenuBar(menuBar);
     }
+
+
 
     public void startGame(){
 	this.removeAll();
@@ -112,13 +120,63 @@ public class ClientFrame extends JFrame implements ActionListener
    	updateUi();
     }
 
+    public void lobbyFrame(){
+	Container cont = getContentPane();
+	cont.removeAll();
+
+	JPanel panel = new JPanel();
+	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+	//if (client.isHost()){
+	panel.add(startGame);
+	//}
+
+	cont.add(panel, BorderLayout.PAGE_END);
+
+
+
+	cont.doLayout();
+	cont.update(getGraphics());
+
+
+
+    }
+
     public void connectToServerFrame(){
-	this.removeAll();
+	Container cont = getContentPane();
+	cont.removeAll();
+
+	JPanel panel = new JPanel();
+	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+	panel.add(ip);
+	panel.add(Box.createRigidArea(new Dimension(5,5)));
+	panel.add(port);
+	panel.add(Box.createRigidArea(new Dimension(5,5)));
+	panel.add(connect);
+
+	cont.add(panel, BorderLayout.PAGE_END);
+
+
+	cont.doLayout();
+	cont.update(getGraphics());
+
     }
 
 
-    private void connectToServer(){
+    private void connectToServer() {
+	int serverPort = Integer.parseInt(port.getText());
 
+	try {
+	    InetAddress address = InetAddress.getByName(ip.getText());
+	    client.listenSocket(serverPort, address);
+	    lobbyFrame();
+	    client.read(this);
+
+	} catch (UnknownHostException exc){
+	    System.err.println("UnknownHostException: " + exc.getMessage());
+	    JOptionPane.showMessageDialog(null, "Unknown Host");
+	}
 
     }
 
@@ -184,11 +242,13 @@ public class ClientFrame extends JFrame implements ActionListener
 
 	    updateUi();
 	}else if(source.equals(allIn)){
-	    int amount = gameInfo.getCurrentPlayer().bet(gameInfo.getCurrentPlayer().getChips());
 
 	    updateUi();
 	}else if(source.equals(connect)){
+	    connectToServer();
 
+	}else if(source.equals(startGame)){
+	    client.getOut().println("STARTGAME");
 	}
     }
 }
