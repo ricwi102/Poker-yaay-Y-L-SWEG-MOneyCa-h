@@ -83,7 +83,11 @@ public class PokerBase
         for (Player player : players) {
             if(player.isActive()) {
                 System.out.println(player);
-                bestHands.add(PokerHandCalc.getBestHand(player,board));
+                if(player.getHand().size() == 4) {
+                    bestHands.add(PokerHandCalc.getBestOmahaHand(player, board));
+                }else{
+                    bestHands.add(PokerHandCalc.getBestHoldemHand(player, board));
+                }
             }
         }
         System.out.println(board);

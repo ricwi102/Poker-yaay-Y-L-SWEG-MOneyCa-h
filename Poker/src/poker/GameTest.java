@@ -22,7 +22,7 @@ public final class GameTest
 
 	Board board = new Board();
 
-	PokerBase pokerBase = new Omaha(players,board);
+	PokerBase pokerBase = new Holdem(players,board);
 
 	PokerFrame frame = new PokerFrame(pokerBase);
 
