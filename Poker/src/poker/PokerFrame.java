@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class PokerFrame extends JFrame implements ActionListener
 {
-    private Holdem holdem;
+    private PokerBase pokerBase;
     private JMenuItem item;
     private JButton check;
     private JButton fold;
@@ -22,16 +22,16 @@ public class PokerFrame extends JFrame implements ActionListener
     private PokerComponent component;
 
 
-    public PokerFrame(final Holdem holdem) throws HeadlessException{
+    public PokerFrame(final PokerBase pokerBase) throws HeadlessException{
 	super("Pokr sweg, holdum YÅLÅ");
-	this.holdem = holdem;
-	component = new PokerComponent(holdem);
+	this.pokerBase = pokerBase;
+	component = new PokerComponent(pokerBase);
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	this.setLayout(new BorderLayout());
 	createButtons();
 	createMenu();
 	displayBoard();
-	holdem.setFrame(this);
+	pokerBase.setFrame(this);
 	updateUi();
     }
 
@@ -51,13 +51,15 @@ public class PokerFrame extends JFrame implements ActionListener
 	allIn = new JButton("All in");
 
 	StringBuilder openCards = new StringBuilder();
-	for(Card card : holdem.getBoard().getOpenCards()){
+	for(Card card : pokerBase.getBoard().getOpenCards()){
 	    openCards.append(card);
 	    openCards.append(" ");}
 	communityCards = new JLabel("Community Cards: " + openCards );
-	currentPlayerChips = new JLabel(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
-	currentPlayerCards = new JLabel(holdem.getCurrentPlayer().getName() + " Cards: " + holdem.getCurrentPlayer().getHand().get(0)
-					+ " " + holdem.getCurrentPlayer().getHand().get(1));
+	currentPlayerChips = new JLabel(
+		pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
+	currentPlayerCards = new JLabel(
+		pokerBase.getCurrentPlayer().getName() + " Cards: " + pokerBase.getCurrentPlayer().getHand().get(0)
+					+ " " + pokerBase.getCurrentPlayer().getHand().get(1));
 	pot = new JLabel("Pot: 0");
 
 	check.addActionListener(this);
@@ -93,15 +95,17 @@ public class PokerFrame extends JFrame implements ActionListener
 
     public void updateUi(){
 	StringBuilder openCards = new StringBuilder();
-	for(Card card : holdem.getBoard().getOpenCards()){
+	for(Card card : pokerBase.getBoard().getOpenCards()){
 	    openCards.append(card);
 	    openCards.append(" ");}
 	communityCards.setText("Community Cards: " + openCards );
-	currentPlayerChips.setText(holdem.getCurrentPlayer().getName() + ", Chips: " + holdem.getCurrentPlayer().getChips());
-	currentPlayerCards.setText(holdem.getCurrentPlayer().getName() + " Cards: " + holdem.getCurrentPlayer().getHand().get(0)
-				   + " " + holdem.getCurrentPlayer().getHand().get(1));
-	pot.setText("pot: " + holdem.getPot());
-	if(holdem.getBettingRules().someoneRaised() && holdem.getCurrentPlayer().getActiveBet() != holdem.bettingRules.getLatestBet()){
+	currentPlayerChips.setText(
+		pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
+	currentPlayerCards.setText(
+		pokerBase.getCurrentPlayer().getName() + " Cards: " + pokerBase.getCurrentPlayer().getHand().get(0)
+				   + " " + pokerBase.getCurrentPlayer().getHand().get(1));
+	pot.setText("pot: " + pokerBase.getPot());
+	if(pokerBase.getBettingRules().someoneRaised() && pokerBase.getCurrentPlayer().getActiveBet() != pokerBase.bettingRules.getLatestBet()){
 	    call.setEnabled(true);
 	    raise.setEnabled(true);
 	    allIn.setEnabled(true);
@@ -110,7 +114,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	    raise.setEnabled(true);
 	    allIn.setEnabled(true);
 	}
-	if(holdem.getCurrentPlayer().getActiveBet() == holdem.getBettingRules().getLatestBet()){
+	if(pokerBase.getCurrentPlayer().getActiveBet() == pokerBase.getBettingRules().getLatestBet()){
 	    check.setEnabled(true);
 	    fold.setEnabled(false);
 	    raise.setEnabled(true);
@@ -121,12 +125,15 @@ public class PokerFrame extends JFrame implements ActionListener
 	    raise.setEnabled(true);
 	    allIn.setEnabled(true);
 	}
-	call.setText("call: " + (holdem.getBettingRules().getLatestBet() - holdem.getCurrentPlayer().getActiveBet()));
-	if(holdem.getCurrentPlayer().getController().equals("ai")){
+	call.setText("call: " + (pokerBase.getBettingRules().getLatestBet() - pokerBase.getCurrentPlayer().getActiveBet()));
+	if(pokerBase.getCurrentPlayer().getController().equals("ai")){
 	    check.setEnabled(false);
 	    fold.setEnabled(false);
 	    raise.setEnabled(false);
 	    call.setEnabled(false);
+	    allIn.setEnabled(false);
+	}
+	if(pokerBase.getBettingRules() instanceof PotLimit){
 	    allIn.setEnabled(false);
 	}
 	component.repaint();
@@ -138,36 +145,40 @@ public class PokerFrame extends JFrame implements ActionListener
 	if (e.getSource().equals(item)) {
 	    System.exit(0);
 	} else if (e.getSource().equals(check)){
-	    holdem.getCurrentPlayer().check();
-	    holdem.advanceGame();
+	    pokerBase.getCurrentPlayer().check();
+	    pokerBase.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(fold)){
-	    holdem.getCurrentPlayer().fold();
-	    holdem.advanceGame();
+	    pokerBase.getCurrentPlayer().fold();
+	    pokerBase.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(raise)) {
 	    int amount;
 	    do {
 		String input = JOptionPane.showInputDialog("Ammount to bet: ");
 		amount = Integer.parseInt(input);
-	    } while (holdem.getCurrentPlayer().getChips() - amount < 0);
-	    if (holdem.getBettingRules().isLegalRaise(amount + holdem.getCurrentPlayer().getActiveBet())){
-		int bet = holdem.getCurrentPlayer().bet(amount);
-		holdem.raise(bet);
-		holdem.advanceGame();
+	    } while (pokerBase.getCurrentPlayer().getChips() - amount < 0);
+	    if (pokerBase.getBettingRules().isLegalRaise(amount + pokerBase.getCurrentPlayer().getActiveBet())){
+		int bet = pokerBase.getCurrentPlayer().bet(amount);
+		pokerBase.raise(bet);
+		pokerBase.advanceGame();
 		updateUi();
 	    }else{
-		JOptionPane.showMessageDialog(this,"Invalid ammount");
+		if(pokerBase.getBettingRules() instanceof NoLimit) {
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet");
+		}else{
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet but less than the pot");
+		}
 	    }
 	}else if(e.getSource().equals(call)){
-	    int amount = holdem.getCurrentPlayer().call(holdem.getBettingRules().getLatestBet());
-	    holdem.addToPot(amount);
-	    holdem.advanceGame();
+	    int amount = pokerBase.getCurrentPlayer().call(pokerBase.getBettingRules().getLatestBet());
+	    pokerBase.addToPot(amount);
+	    pokerBase.advanceGame();
 	    updateUi();
 	}else if(e.getSource().equals(allIn)){
-	    int amount = holdem.getCurrentPlayer().bet(holdem.getCurrentPlayer().getChips());
-	    holdem.raise(amount);
-	    holdem.advanceGame();
+	    int amount = pokerBase.getCurrentPlayer().bet(pokerBase.getCurrentPlayer().getChips());
+	    pokerBase.raise(amount);
+	    pokerBase.advanceGame();
 	    updateUi();
 	}
     }

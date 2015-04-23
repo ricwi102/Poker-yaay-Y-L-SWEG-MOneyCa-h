@@ -1,19 +1,15 @@
 package poker;
 
 
-import java.awt.event.*;
-
-import javax.swing.*;
-
 public class Ai {
-    private Holdem holdem;
+    private PokerBase pokerType;
     private BettingRules bettingRules;
 
 
 
-    public Ai(Holdem holdem) {
-        this.holdem = holdem;
-        bettingRules = holdem.getBettingRules();
+    public Ai(PokerBase pokerType) {
+        this.pokerType = pokerType;
+        bettingRules = pokerType.getBettingRules();
     }
 
     public String decide(Player player) {
