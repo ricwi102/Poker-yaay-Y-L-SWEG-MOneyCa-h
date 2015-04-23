@@ -32,7 +32,7 @@ public class Deck
 
     private void addCardImages(){
 	try{
-	    URL url1 = getClass().getResource("images/Deck.jpg");
+	    URL url1 = getClass().getResource("images" + File.separator + "Deck.jpg");
 	    File file1 = new File(url1.getPath());
 	    BufferedImage deckImage = ImageIO.read(file1);
 	    for(int i = 0; i < numberOfColors; i++){

@@ -12,7 +12,7 @@ public class Holdem extends PokerBase{
 
 
     public Holdem(final List<Player> players, final Board board) {
-	super(players, board);
+	super(players, board,new NoLimit());
 	ai = new Ai(this);
 	dealCards();
     }

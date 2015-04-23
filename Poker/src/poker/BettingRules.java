@@ -1,34 +1,18 @@
 package poker;
 
-import java.util.List;
-
-public class BettingRules
+public interface BettingRules
 {
-    private int latestBet;
-    private boolean raised;
+    public boolean isLegalRaise(int raise);
 
-    public BettingRules() {
-        latestBet = 0;
-        raised = false;
-    }
+    public void setLatestBet(int latestBet);
 
-    public boolean isLegalRaise(int raise) {
-	return raise >= 2 * latestBet;
-    }
+    public int getLatestBet();
 
-    public void setLatestBet(final int latestBet) {
-	this.latestBet = latestBet;
-    }
+    public boolean someoneRaised();
 
-    public int getLatestBet() {
-	return latestBet;
-    }
+    public void setRaised(boolean raised);
 
-    public boolean someoneRaised() {
-        return raised;
-    }
+    public void setPot(int pot);
 
-    public void setRaised(boolean raised) {
-        this.raised = raised;
-    }
+    public void setMinimumBet(int minimumBet);
 }

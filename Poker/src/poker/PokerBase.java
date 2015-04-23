@@ -24,21 +24,21 @@ public class PokerBase
     protected Ai ai;
 
 
-    protected PokerBase(final List<Player> players, final Board board) {
+    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
         this.players = players;
         this.board = board;
+        smallBlind = 10;
+        bigBlind = 20;
+        pot = 0;
+        dealCounter = 1;
         frame = null;
-        bettingRules = new BettingRules();
+        this.bettingRules = bettingRules;
+        bettingRules.setMinimumBet(bigBlind);
         deck = new Deck();
         ai = new Ai(this);
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
-        smallBlind = 10;
-        bigBlind = 20;
-        pot = 0;
-        dealCounter = 1;
-        bettingRules.setLatestBet(bigBlind);
     }
 
     private void setTablePositions(){
@@ -55,14 +55,15 @@ public class PokerBase
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
                 player.bet(bigBlind);
-                pot += bigBlind;
+                addToPot(bigBlind);
                 bettingRules.setLatestBet(bigBlind);
                 bettingRules.setRaised(true);
             }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
                 player.bet(smallBlind);
-                pot += smallBlind;
+                addToPot(smallBlind);
             }
         }
+        bettingRules.setPot(pot);
     }
 
     private void dealFlop(){
@@ -138,8 +139,6 @@ public class PokerBase
 
     private void newStreet() {
         resetPlayerBets();
-
-
         Player nextPlayer = nextActivePlayerWithChips(currentPlayer);
         if (nextPlayer.equals( nextActivePlayerWithChips(nextPlayer))) {
             nextStreet();
@@ -206,7 +205,9 @@ public class PokerBase
     public void raise(int chips) {
         addToPot(chips);
         latestBettingPlayer = currentPlayer;
+        bettingRules.setRaised(true);
         bettingRules.setLatestBet(currentPlayer.getActiveBet());
+        bettingRules.setPot(pot);
     }
 
     public void addToPot(int chips) {
@@ -267,6 +268,7 @@ public class PokerBase
         for (Player player : players) {
             player.newRound();
         }
+        bettingRules.setRaised(false);
     }
 
 

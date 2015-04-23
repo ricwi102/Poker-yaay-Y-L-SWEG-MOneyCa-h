@@ -35,11 +35,11 @@ public class PokerComponent extends JComponent
         cardWidth = 64;
         cardHeight = 116;
         try {
-            URL url1 = getClass().getResource("images/CardBack.jpg");
+            URL url1 = getClass().getResource("images"+File.separator+"CardBack.jpg");
             File file1 = new File(url1.getPath());
-            URL url2 = getClass().getResource("images/FoldedCardBack.jpg");
+            URL url2 = getClass().getResource("images"+ File.separator+ "FoldedCardBack.jpg");
             File file2 = new File(url2.getPath());
-            URL url3 = getClass().getResource("images/DealerButton.png");
+            URL url3 = getClass().getResource("images"+ File.separator + "DealerButton.png");
             File file3 = new File(url3.getPath());
             hiddenImage = ImageIO.read(file1);
             foldedImage = ImageIO.read(file2);

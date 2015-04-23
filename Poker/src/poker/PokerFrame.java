@@ -133,6 +133,9 @@ public class PokerFrame extends JFrame implements ActionListener
 	    call.setEnabled(false);
 	    allIn.setEnabled(false);
 	}
+	if(pokerBase.getBettingRules() instanceof PotLimit){
+	    allIn.setEnabled(false);
+	}
 	component.repaint();
 	System.out.println("UPDATED UI");
     }
@@ -161,7 +164,11 @@ public class PokerFrame extends JFrame implements ActionListener
 		pokerBase.advanceGame();
 		updateUi();
 	    }else{
-		JOptionPane.showMessageDialog(this,"Invalid ammount");
+		if(pokerBase.getBettingRules() instanceof NoLimit) {
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet");
+		}else{
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet but less than the pot");
+		}
 	    }
 	}else if(e.getSource().equals(call)){
 	    int amount = pokerBase.getCurrentPlayer().call(pokerBase.getBettingRules().getLatestBet());

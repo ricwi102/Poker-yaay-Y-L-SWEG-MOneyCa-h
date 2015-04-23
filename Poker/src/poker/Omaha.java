@@ -5,7 +5,7 @@ import java.util.List;
 public class Omaha extends PokerBase
 {
     public Omaha(final List<Player> players, final Board board) {
-	super(players, board);
+	super(players, board, new PotLimit());
 	dealCards();
 	ai = new Ai(this);
     }
