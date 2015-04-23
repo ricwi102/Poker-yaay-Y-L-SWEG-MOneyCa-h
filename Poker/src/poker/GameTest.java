@@ -22,13 +22,13 @@ public final class GameTest
 
 	Board board = new Board();
 
-	Holdem holdem = new Holdem(players,board);
+	PokerBase pokerBase = new Omaha(players,board);
 
-	PokerFrame frame = new PokerFrame(holdem);
+	PokerFrame frame = new PokerFrame(pokerBase);
 
 	frame.pack();
 	frame.setVisible(true);
-	holdem.checkForAction();
+	pokerBase.checkForAction();
 
     }
 }

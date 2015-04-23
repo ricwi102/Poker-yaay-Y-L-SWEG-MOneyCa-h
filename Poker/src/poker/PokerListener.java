@@ -5,13 +5,13 @@ import java.awt.event.ActionListener;
 
 public class PokerListener implements ActionListener
 {
-    private Holdem holdem;
+    private PokerBase pokerBase;
 
-    public PokerListener(Holdem holdem) {
-	this.holdem = holdem;
+    public PokerListener(PokerBase pokerBase) {
+	this.pokerBase = pokerBase;
     }
 
     public void actionPerformed(ActionEvent e) {
-   	holdem.nextStreet();
+   	pokerBase.nextStreet();
        }
 }
