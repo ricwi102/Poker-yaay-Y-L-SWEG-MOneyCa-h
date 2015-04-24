@@ -10,6 +10,7 @@ public class Player
     private String controller;
     private int chips;
     private int activeBet;
+    private int totalBetThisRound;
     private int tablePosition;
     private boolean active;
     private PlayerPosition position;
@@ -22,6 +23,7 @@ public class Player
         tablePosition = 0;
         position = PlayerPosition.STANDARD;
         activeBet = 0;
+        totalBetThisRound = 0;
         chips = 2*1000;
     }
 
@@ -54,7 +56,11 @@ public class Player
 
     public String getController() { return controller; }
 
+    public int getTotalBetThisRound() { return totalBetThisRound; }
+
     public void resetHand(){ hand.clear(); }
+
+    public void setTotalBetThisRound(final int totalBetThisRound) { this.totalBetThisRound = totalBetThisRound; }
 
     public void setPosition(PlayerPosition position) {this.position = position;}
 
@@ -64,11 +70,14 @@ public class Player
 
     public void check(){ }
 
+    public void resetTotalBet(){ totalBetThisRound = 0;}
+
     public void newRound(){ activeBet = 0; }
 
     public int bet(int amount){
         chips -= amount;
         activeBet += amount;
+        totalBetThisRound += amount;
         return amount;
     }
 
@@ -77,10 +86,13 @@ public class Player
             int chipToPot = amount - activeBet;
             chips -= chipToPot;
             activeBet = amount;
+            totalBetThisRound += chipToPot;
             return chipToPot;
         }else{
             amount = chips;
             chips = 0;
+            activeBet += amount;
+            totalBetThisRound += amount;
             return amount;
         }
     }

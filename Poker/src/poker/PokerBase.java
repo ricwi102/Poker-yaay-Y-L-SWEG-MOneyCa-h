@@ -80,6 +80,7 @@ public class PokerBase
 
     private void compareHands(){
         List<PokerHand> bestHands = new ArrayList<>();
+        boolean mustSplitPot = false;
         for (Player player : players) {
             if(player.isActive()) {
                 System.out.println(player);
@@ -94,6 +95,11 @@ public class PokerBase
 
         Collections.sort(bestHands, new HandComparator());
         PokerHand bestHand = bestHands.get(0);
+        for(int i = 1; i < bestHands.size(); i++){
+            if(bestHands.get(i).getPlayer().getTotalBetThisRound() > bestHand.getPlayer().getTotalBetThisRound()){
+                mustSplitPot = true;
+            }
+        }
 
         for (PokerHand hand : bestHands) {
             System.out.println("Best hand for " + hand.getPlayer().getName());
@@ -107,7 +113,38 @@ public class PokerBase
             System.out.println(card);
         }
         System.out.println("Winner: " + bestHand.getPlayer().getName());
-        awardWinner(bestHand.getPlayer());
+        if(mustSplitPot){
+            calculateSidePots(bestHands,players);
+        }else {
+            awardWinner(bestHand.getPlayer(), pot);
+        }
+    }
+
+    private void calculateSidePots(List<PokerHand> bestHands, List<Player> players){
+        int currentPot = 0;
+        Player currentBestPlayer = bestHands.get(0).getPlayer();
+        List<PokerHand> higherBettingPlayerHands = new ArrayList<>();
+        List<Player> higherBettingPlayers = new ArrayList<>();
+        for(Player player : players){
+            if(player.getTotalBetThisRound() <= currentBestPlayer.getTotalBetThisRound()){
+                currentPot += player.getTotalBetThisRound();
+            }else{
+                currentPot += currentBestPlayer.getTotalBetThisRound();
+                player.setTotalBetThisRound(player.getTotalBetThisRound() - currentBestPlayer.getTotalBetThisRound());
+                higherBettingPlayers.add(player);
+            }
+        }
+        for(PokerHand bestHand : bestHands){
+            if(higherBettingPlayers.contains(bestHand.getPlayer())){
+                higherBettingPlayerHands.add(bestHand);
+            }
+        }
+        awardWinner(currentBestPlayer,currentPot);
+        if(!higherBettingPlayerHands.isEmpty()){
+            System.out.println("Higher betting players: " + higherBettingPlayers);
+            Collections.sort(higherBettingPlayerHands, new HandComparator());
+            calculateSidePots(higherBettingPlayerHands,higherBettingPlayers);
+        }
     }
 
     public void newRound() {
@@ -162,11 +199,12 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            awardWinner(nextPlayer);
+            awardWinner(nextPlayer, pot);
             newRound();
         }else if (nextPlayer.equals(latestBettingPlayer)) {
             nextStreet();
         }else {
+            if(!latestBettingPlayer.isActive()){ latestBettingPlayer = nextActivePlayer(latestBettingPlayer); }
             currentPlayer = nextPlayer;
             if (currentPlayer.getChips() > 0) {
                 System.out.println("Current Player: " + currentPlayer.getName());
@@ -214,6 +252,8 @@ public class PokerBase
         bettingRules.setPot(pot);
     }
 
+
+
     public void addToPot(int chips) {
         pot += chips;
     }
@@ -244,9 +284,6 @@ public class PokerBase
             case 4:
                 compareHands();
                 resetGame();
-                for (Player player : players) {
-                    player.activate();
-                }
                 newRound();
         }
         if (dealCounter != 1) newStreet();
@@ -265,6 +302,7 @@ public class PokerBase
             player.resetHand();
             player.activate();
             player.newRound();
+            player.resetTotalBet();
         }
     }
 
@@ -311,9 +349,10 @@ public class PokerBase
         System.exit(0);
     }
 
-    public void awardWinner(Player winner){
-        winner.addChips(pot);
-        pot = 0;
+    public void awardWinner(Player winner, int amount){
+        System.out.println(winner.getName() + " wins " + amount + " chips");
+        winner.addChips(amount);
+        pot -= amount;
     }
 
     public int getPot(){

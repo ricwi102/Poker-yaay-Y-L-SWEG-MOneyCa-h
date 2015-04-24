@@ -12,9 +12,9 @@ public final class GameTest
 
     public static void main(String[] args) {
 	List<Player> players = new ArrayList<>();
-	players.add(new Player("Richard","ai"));
+	players.add(new Player("Richard"));
 	players.add(new Player("Johannes"));
-	players.add(new Player("Axel","ai"));
+	players.add(new Player("Axel"));
 	players.add(new Player("Phil Ivey"));
 
 
