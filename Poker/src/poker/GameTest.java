@@ -11,6 +11,7 @@ public final class GameTest
     private GameTest() {}
 
     public static void main(String[] args) {
+	/*
 	List<Player> players = new ArrayList<>();
 	players.add(new Player("Richard"));
 	players.add(new Player("Johannes"));
@@ -29,6 +30,11 @@ public final class GameTest
 	frame.pack();
 	frame.setVisible(true);
 	pokerBase.checkForAction();
+	*/
+
+	StartMenuFrame frame = new StartMenuFrame();
+	frame.pack();
+	frame.setVisible(true);
 
     }
 }

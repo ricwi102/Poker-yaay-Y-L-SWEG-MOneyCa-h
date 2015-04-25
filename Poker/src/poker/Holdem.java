@@ -11,8 +11,8 @@ import java.util.List;
 public class Holdem extends PokerBase{
 
 
-    public Holdem(final List<Player> players, final Board board) {
-	super(players, board,new NoLimit());
+    public Holdem(final List<Player> players, final Board board, final BettingRules bettingRules) {
+	super(players, board,bettingRules);
 	ai = new Ai(this);
 	dealCards();
     }

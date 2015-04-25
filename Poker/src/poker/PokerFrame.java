@@ -28,12 +28,13 @@ public class PokerFrame extends JFrame implements ActionListener
 	component = new PokerComponent(pokerBase);
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	this.setLayout(new BorderLayout());
+	pokerBase.setFrame(this);
 	createButtons();
 	createMenu();
 	displayBoard();
-	pokerBase.setFrame(this);
 	updateUi();
     }
+
 
     private void displayBoard(){
 	component.setPreferredSize(component.getPreferedSize());
