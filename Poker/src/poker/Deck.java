@@ -1,5 +1,6 @@
 package poker;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Deck
 
     private void addCardImages(){
 	try{
-	    URL url1 = getClass().getResource("images" + File.separator + "Deck.jpg");
+	    URI url1 = getClass().getResource("images" + File.separator + "Deck.jpg").toURI();
 	    File file1 = new File(url1.getPath());
 	    BufferedImage deckImage = ImageIO.read(file1);
 	    for(int i = 0; i < numberOfColors; i++){
@@ -40,7 +41,7 @@ public class Deck
 		    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);
 		}
 	    }
-	}catch(IOException e){
+	}catch(Exception e){
 	    BufferedImage deckImage = null;
 	}
 

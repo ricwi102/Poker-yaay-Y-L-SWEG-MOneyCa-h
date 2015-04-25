@@ -165,9 +165,12 @@ public class PokerFrame extends JFrame implements ActionListener
 		updateUi();
 	    }else{
 		if(pokerBase.getBettingRules() instanceof NoLimit) {
-		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet");
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least doulbe the latest bet" + "\n" +
+							"minimum amount: " +
+							pokerBase.getBettingRules().getLatestBet() * 2);
 		}else{
-		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least equal to the latest bet but less than the pot");
+		    JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least double the latest bet but less than twice the pot" + "\n" +
+							"Valid ammounts: " + pokerBase.getBettingRules().getLatestBet() * 2 + " - " + pokerBase.getPot() * 2);
 		}
 	    }
 	}else if(e.getSource().equals(call)){

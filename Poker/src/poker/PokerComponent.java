@@ -1,6 +1,8 @@
 package poker;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +37,21 @@ public class PokerComponent extends JComponent
         cardWidth = 64;
         cardHeight = 116;
         try {
-            URL url1 = getClass().getResource("images"+File.separator+"CardBack.jpg");
+            URI url1 = getClass().getResource("images" + File.separator + "CardBack.jpg").toURI();
             File file1 = new File(url1.getPath());
-            URL url2 = getClass().getResource("images"+ File.separator+ "FoldedCardBack.jpg");
+
+            URI url2 = getClass().getResource("images"+ File.separator+ "FoldedCardBack.jpg").toURI();
             File file2 = new File(url2.getPath());
-            URL url3 = getClass().getResource("images"+ File.separator + "DealerButton.png");
+
+            URI url3 = getClass().getResource("images"+ File.separator + "DealerButton.png").toURI();
             File file3 = new File(url3.getPath());
+
+
             hiddenImage = ImageIO.read(file1);
             foldedImage = ImageIO.read(file2);
             buttonImage = ImageIO.read(file3);
-        }catch(IOException e){
+        }catch(IOException | URISyntaxException e){
+            System.out.println("could not find image");
             hiddenImage = null;
             foldedImage = null;
             buttonImage = null;
