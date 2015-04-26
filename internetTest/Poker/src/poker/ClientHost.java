@@ -9,9 +9,10 @@ import java.util.Collection;
 
 public class ClientHost extends ClientWorker{
     private boolean startGame;
-    private String gameMode;
-    private BettingRules bettingRules;
+    private String gameMode = "HOLDEM";
+    private String bettingRules = "NO_LIMIT";//No limit when implemented
     private static final Collection<String> GAME_MODES = Arrays.asList("HOLDEM", "OMAHA");//add all poker modes
+	private static final Collection<String> BETTING_RULES = Arrays.asList("NO_LIMIT", "POT_LIMIT");
 
     public ClientHost(final Socket client) {
 	super(client);
@@ -20,7 +21,7 @@ public class ClientHost extends ClientWorker{
 
     public String getGameMode() { return gameMode; }
 
-    public BettingRules getBettingRules() { return bettingRules; }
+    public String getBettingRules() { return bettingRules; }
 
     public boolean getStartGame(){ return startGame;}
 
@@ -50,20 +51,12 @@ public class ClientHost extends ClientWorker{
 	    	if (GAME_MODES.contains(command[1])) gameMode = command[1];
 	    	break;
 	    case "BETRULES":
-		switch (command[1]) {
-		    case "NOLIMIT":
-			bettingRules = new BettingRules();
+			if (BETTING_RULES.contains(command[1])) bettingRules = command[1];
 			break;
-		    case "POTLIMIT":
-			//bettingRules = new PotLimit();
-			break;
-		    default:
-		}
-		break;
+
 	    case "STARTGAME":
 		startGame = true;
-
-	}
+		}
     }
 }
 

@@ -9,10 +9,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client
+public class Client implements Runnable
 {
     private GameInfo gameInfo;
-    private JFrame frame;
+    private ClientFrame frame;
     private PrintWriter out;
     private BufferedReader in;
     private boolean host = false;
@@ -34,50 +34,55 @@ public class Client
 	}
     }
 
-    public void read(ClientFrame frame) {
+    public void run() {
 	while (true) {
 	    try {
-		String[] command = in.readLine().split("&");
+            String[] command = in.readLine().split("&");
 
-		switch (command[0]){
-		    case "TEXT":
+            switch (command[0]){
+                case "TEXT":
 
-			break;
-		    case "ADDPLAYER":
-			if (command.length > 2){
-			    gameInfo.addYou(command[1], Integer.parseInt(command[2]));
-			} else {
-			    gameInfo.addPlayer(command[1], Integer.parseInt(command[2]));
-			} break;
-		    case "VALID":
+                break;
+                case "UPDATE":
+                    switch (command[1]){
+                        case "PLAYERS":
+                            break;
+                        case "CHIPS":
+                            break;
+                    }
+                case "ADDPLAYER":
+                    if (command.length > 3){
+                        System.out.println("SERVER ADDED PLAYER, YOU");
+                        gameInfo.addYou(command[1], Integer.parseInt(command[2]));
+                        frame.lobbyFrame();
+                    } else {
+                        System.out.println("server added player, someone else");
+                        gameInfo.addPlayer(command[1], Integer.parseInt(command[2]));
+                    }
+                    frame.getLobbyComponent().updatePlayersInLobby(gameInfo.getPlayers());
+                    break;
+                case "VALID":
 
-			break;
-		    case "ERROR":
+                break;
+                case "ERROR":
 
-			break;
-		    case "STARTGAME":
-			frame.startGame();
-			break;
-		    case "HOST":
-			if (command[1].equals("TRUE")) host = true;
-			System.out.println(command[1]);
-			System.out.println(host);
-			frame.lobbyFrame();
-			frame.pack();
-			break;
-
-
-
-
-
-
-		}
+                break;
+                case "STARTGAME":
+                    frame.startGame();
+                    break;
+                case "HOST":
+                    if (command[1].equals("TRUE")) host = true;
+                    System.out.println(host);
+                    break;
+            }
 	    } catch (IOException e) {
 		System.out.println("Read failed");
 		System.exit(-1);
 	    }
 	}
     }
+
+    public void addFrame(ClientFrame frame){this.frame = frame;}
 
     public boolean isHost() { return host; }
 

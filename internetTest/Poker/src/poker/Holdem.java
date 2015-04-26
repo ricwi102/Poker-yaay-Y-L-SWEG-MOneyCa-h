@@ -12,14 +12,14 @@ public class Holdem extends PokerBase{
 
 
 
-    public Holdem(final Board board, BettingRules bettingRules) {
-	super(board, bettingRules);
+    public Holdem(final Board board, BettingRules bettingRules, List<Player> players) {
+	super(board, bettingRules, players);
 	bettingRules.setLatestBet(bigBlind);
 	dealCards();
     }
 
-    public Holdem(final Board board) {
-    	super(board, new BettingRules());
+    public Holdem(final Board board, List<Player> players) {
+    	super(board, new BettingRules(), players);
     	bettingRules.setLatestBet(bigBlind);
     	dealCards();
     }
@@ -30,12 +30,6 @@ public class Holdem extends PokerBase{
     public static void main(String[] args) {}
 
 
-    public void startGame(final List<Player> players){
-	super.startGame(players);
-	if (bettingRules == null){
-	    bettingRules = getRecomendedBettingRules();
-	}
-    }
 
     private BettingRules getRecomendedBettingRules(){
 	return new BettingRules();

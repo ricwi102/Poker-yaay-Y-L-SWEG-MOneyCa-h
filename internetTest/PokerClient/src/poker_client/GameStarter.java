@@ -7,20 +7,19 @@ public class GameStarter{
 
 
     public static void main(String[] args) throws IOException{
-	GameInfo gameInfo = new GameInfo();
-	Client client = new Client(gameInfo);
-	ClientFrame clientFrame = new ClientFrame(gameInfo, client);
+        GameInfo gameInfo = new GameInfo();
+        Client client = new Client(gameInfo);
+        ClientFrame clientFrame = new ClientFrame(gameInfo, client);
+        client.addFrame(clientFrame);
 
 
-	clientFrame.connectToServerFrame();
+        clientFrame.connectToServerFrame();
 
-	clientFrame.pack();
-	clientFrame.setVisible(true);
-
-
-
-
+        clientFrame.pack();
+        clientFrame.setVisible(true);
 
 
     }
 }
+
+

@@ -21,9 +21,10 @@ public class PokerBase
     protected BettingRules bettingRules;
 
 
-    protected PokerBase(final Board board, final BettingRules bettingRules) {
+    protected PokerBase(final Board board, final BettingRules bettingRules, final List<Player> players) {
         this.board = board;
         this.bettingRules = bettingRules;
+        this.players = players;
         smallBlind = 10;
         bigBlind = 20;
         pot = 0;
@@ -32,8 +33,7 @@ public class PokerBase
 
     }
 
-    protected void startGame(final List<Player> players){
-        this.players = players;
+    protected void startGame(){
         setTablePositions();
         updatePlayerPositions();
     }

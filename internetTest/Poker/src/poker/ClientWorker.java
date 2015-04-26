@@ -32,6 +32,8 @@ public class ClientWorker implements Runnable{
 	out.println("ERROR&" + error);
     }
 
+	private void sendSuccess(String success) { out.println("SUCCESS&" + success); }
+
     private void sendUpdate(){
 
     }
@@ -50,6 +52,7 @@ public class ClientWorker implements Runnable{
 	    }
 	}
     }
+
     protected BufferedReader getInAndOutput(){
 	BufferedReader in = null;
 	out = null;
@@ -64,54 +67,74 @@ public class ClientWorker implements Runnable{
     }
 
     protected void recieveOptions(String[] command){
-	switch (command[0]){
-	    case "TEXT":
-		for (ClientWorker clientWorker : clients) {
-		    clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
-		}
-		break;
-	    case "BET":
-		int bet = Integer.parseInt(command[1]);
-		if(player.equals(pokerRules.getCurrentPlayer())){
-		    if(pokerRules.raise(bet)){
-			sendUpdate();
-		    }else{
-			sendError("Can't bet that ammount");
-		    }
-		}
-		break;
-	    case "CALL":
-		if(player.equals(pokerRules.getCurrentPlayer())){
-		    if(pokerRules.call()){
-			sendUpdate();
-		    }else{
-			sendError("There is nothing to call");
-		    }
-		}
-		break;
-	    case "CHECK":
-		if(player.equals(pokerRules.getCurrentPlayer())){
-		    if(pokerRules.check()){
-			sendUpdate();
-		    }else{
-			sendError("There is an active bet, you can't check");
-		    }
-		}
-		break;
-	    case "FOLD":
-		if(player.equals(pokerRules.getCurrentPlayer())){
-		    pokerRules.fold();
-		}
-		break;
-	    case "NEWPLAYER":
-		player = new Player(command[1]);
-		break;
-	    case "LOGIN":
-		//if we in the future want to save chips
-		break;
-	}
+        switch (command[0]){
+            case "TEXT":
+            for (ClientWorker clientWorker : clients) {
+                clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
+            }
+            break;
+            case "BET":
+            int bet = Integer.parseInt(command[1]);
+            if(player.equals(pokerRules.getCurrentPlayer())){
+                if(pokerRules.raise(bet)){
+                sendUpdate();
+                }else{
+                sendError("Can't bet that ammount");
+                }
+            }
+            break;
+            case "CALL":
+            if(player.equals(pokerRules.getCurrentPlayer())){
+                if(pokerRules.call()){
+                sendUpdate();
+                }else{
+                sendError("There is nothing to call");
+                }
+            }
+            break;
+            case "CHECK":
+            if(player.equals(pokerRules.getCurrentPlayer())){
+                if(pokerRules.check()){
+                sendUpdate();
+                }else{
+                sendError("There is an active bet, you can't check");
+                }
+            }
+            break;
+            case "FOLD":
+            if(player.equals(pokerRules.getCurrentPlayer())){
+                pokerRules.fold();
+            }
+            break;
+            case "NEWPLAYER":
+                if (!(hasPlayer() || playerWithName(command[1]))) {
+                    System.out.println("player added");
+                    player = new Player(command[1]);
+                    out.println("ADDPLAYER&" + command[1] + "&2000&YOU");
+                    for (ClientWorker worker : clients) {
+                        if (!worker.equals(this) && worker.getPlayer() != null){
+                            out.println("ADDPLAYER&" + worker.getPlayer().getName() + "&" + worker.getPlayer().getChips());
+                            worker.getOut().println("ADDPLAYER&" + command[1] + "&2000");
+                        }
+                    }
+                }
+                break;
+            case "LOGIN":
+            //if we in the future want to save chips
+            break;
+        }
+    }
 
+    private boolean playerWithName(String name){
+        for (ClientWorker clientWorker : clients) {
+            if (clientWorker.getPlayer() != null && clientWorker.getPlayer().getName().equals(name)){
+                return true;
+            }
+        } return false;
+    }
 
+    private boolean HasPlayer(){
+        return player != null;
     }
 
     public PrintWriter getOut() {
