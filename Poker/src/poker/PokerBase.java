@@ -11,6 +11,7 @@ import java.util.List;
 public class PokerBase
 {
     protected List<Player> players;
+    protected List<Player> lostPlayers;
     protected Board board;
     protected Deck deck;
     protected Player currentPlayer;
@@ -22,11 +23,14 @@ public class PokerBase
     protected BettingRules bettingRules;
     protected PokerFrame frame;
     protected Ai ai;
+    protected boolean isGameOver;
 
 
     protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
         this.players = players;
         this.board = board;
+        lostPlayers = new ArrayList<>();
+        isGameOver = false;
         smallBlind = 10;
         bigBlind = 20;
         pot = 0;
@@ -54,13 +58,24 @@ public class PokerBase
     protected void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
-                player.bet(bigBlind);
-                addToPot(bigBlind);
+                if(player.getChips() > bigBlind) {
+                    player.bet(bigBlind);
+                    addToPot(bigBlind);
+                }else{
+                    player.bet(player.getChips());
+                    addToPot(player.getChips());
+                }
                 bettingRules.setLatestBet(bigBlind);
                 bettingRules.setRaised(true);
             }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
-                player.bet(smallBlind);
-                addToPot(smallBlind);
+                if(player.getChips() > smallBlind) {
+                    player.bet(smallBlind);
+                    addToPot(smallBlind);
+                }else{
+                    player.bet(player.getChips());
+                    addToPot(player.getChips());
+                }
+
             }
         }
         bettingRules.setPot(pot);
@@ -150,9 +165,11 @@ public class PokerBase
     public void newRound() {
         resetGame();
         updatePlayerPositions();
-        dealCards();
-        payBlinds();
-        checkForAction();
+        if(!isGameOver) {
+            dealCards();
+            payBlinds();
+            checkForAction();
+        }
     }
 
 
@@ -320,6 +337,7 @@ public class PokerBase
             if(player.getChips() <= 0) losers.add(player);
         }
 
+        lostPlayers.addAll(losers);
         players.removeAll(losers);
 
         System.out.println(players);
@@ -327,6 +345,8 @@ public class PokerBase
         System.out.println(players);
 
         if(players.size() == 1){
+            isGameOver = true;
+            lostPlayers.addAll(players);
             gameOver();
         }else if(players.size() == 2){
             players.get(0).setPosition(PlayerPosition.BIGBLIND);
@@ -346,7 +366,12 @@ public class PokerBase
 
     public void gameOver(){
         System.out.println("Winner: " + players.get(0).getName() + ",  Yaaaaaaaaaay!! you won the whole game!! you are absolutely the best player");
-        System.exit(0);
+        Collections.reverse(lostPlayers);
+        GameOverFrame newFrame = new GameOverFrame(lostPlayers);
+        newFrame.pack();
+        newFrame.setVisible(true);
+        frame.setVisible(false);
+        frame.dispose();
     }
 
     public void awardWinner(Player winner, int amount){

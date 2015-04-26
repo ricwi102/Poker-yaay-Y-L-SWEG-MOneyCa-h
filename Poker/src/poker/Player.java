@@ -82,7 +82,7 @@ public class Player
     }
 
     public int call(int amount){
-        if(amount < chips){
+        if(amount - activeBet < chips){
             int chipToPot = amount - activeBet;
             chips -= chipToPot;
             activeBet = amount;

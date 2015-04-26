@@ -98,7 +98,9 @@ public class PokerFrame extends JFrame implements ActionListener
 	StringBuilder openCards = new StringBuilder();
 	for(Card card : pokerBase.getBoard().getOpenCards()){
 	    openCards.append(card);
-	    openCards.append(" ");}
+	    openCards.append(" ");
+	}
+	/*
 	communityCards.setText("Community Cards: " + openCards );
 	currentPlayerChips.setText(
 		pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
@@ -106,6 +108,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		pokerBase.getCurrentPlayer().getName() + " Cards: " + pokerBase.getCurrentPlayer().getHand().get(0)
 				   + " " + pokerBase.getCurrentPlayer().getHand().get(1));
 	pot.setText("pot: " + pokerBase.getPot());
+	*/
 	if(pokerBase.getBettingRules().someoneRaised() && pokerBase.getCurrentPlayer().getActiveBet() != pokerBase.bettingRules.getLatestBet()){
 	    call.setEnabled(true);
 	    raise.setEnabled(true);

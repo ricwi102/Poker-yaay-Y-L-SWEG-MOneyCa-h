@@ -17,12 +17,14 @@ public class StartMenuFrame extends JFrame implements ActionListener
     private JButton omaha;
     private JButton holdem;
     private JButton addPlayer;
+    private JButton addAiPlayer;
     private JLabel gameRules;
     private JLabel bettingStructure;
     private JLabel playerLabel;
     private GameType gameType;
     private BettingRules bettingRules;
-    List<Player> players;
+    private List<Player> players;
+    private boolean hasNonAiPlayer;
 
     public StartMenuFrame() throws HeadlessException {
 	super("Main menu");
@@ -31,6 +33,21 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	bettingRules = new NoLimit();
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	this.setLayout(new BorderLayout());
+	hasNonAiPlayer = false;
+	gameRules = new JLabel("Game type: " + "Texas Holem");
+	gameRules.setFont(new Font("Arial", Font.BOLD, 16));
+	bettingStructure = new JLabel("Betting structure: " + "No Limit");
+	bettingStructure.setFont(new Font("Arial", Font.BOLD, 16));
+	playerLabel = new JLabel("Players: " + 0);
+	playerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+	potLimit = new JButton("Pot Limit");
+	noLimit = new JButton("No Limit");
+	omaha = new JButton("Omaha");
+	holdem = new JButton("Texas Holdem");
+	addPlayer = new JButton("Add Player");
+	addAiPlayer = new JButton("Add AI player");
+	startGame = new JButton("Start Game!");
+
 	createStartButtons();
     }
 
@@ -63,27 +80,17 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	Component spacing = Box.createRigidArea(new Dimension(0,16));
 	final int frameWidth = 400;
 	final int frameHeight = 400;
-	gameRules = new JLabel("Game type: " + "Texas Holem");
-	gameRules.setFont(new Font("Arial", Font.BOLD, 16));
-	bettingStructure = new JLabel("Betting structure: " + "No Limit");
-	bettingStructure.setFont(new Font("Arial", Font.BOLD, 16));
-	playerLabel = new JLabel("Players: " + 0);
-	playerLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
 	JPanel panel = new JPanel();
 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-	potLimit = new JButton("Pot Limit");
-	noLimit = new JButton("No Limit");
-	omaha = new JButton("Omaha");
-	holdem = new JButton("Texas Holdem");
-	addPlayer = new JButton("Add Player");
-	startGame = new JButton("Start Game!");
+
 
 	potLimit.addActionListener(this);
 	noLimit.addActionListener(this);
 	omaha.addActionListener(this);
 	holdem.addActionListener(this);
 	addPlayer.addActionListener(this);
+	addAiPlayer.addActionListener(this);
 	startGame.addActionListener(this);
 
 	panel.add(gameRules);
@@ -94,6 +101,7 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	panel.add(potLimit);
 	panel.add(playerLabel);
 	panel.add(addPlayer);
+	panel.add(addAiPlayer);
 	panel.add(spacing);
 	panel.add(startGame);
 	panel.setPreferredSize(new Dimension(frameWidth,frameHeight));
@@ -122,9 +130,16 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	    if(name != null) {
 		players.add(new Player(name));
 		playerLabel.setText("Players: " + players);
+		hasNonAiPlayer = true;
+	    }
+	}else if(e.getSource().equals(addAiPlayer)) {
+	    String name = JOptionPane.showInputDialog("Player name: ");
+	    if (name != null) {
+		players.add(new Player(name,"ai"));
+		playerLabel.setText("Players: " + players);
 	    }
 	}else if(e.getSource().equals(startGame)){
-	    if(players.size() >= 2){
+	    if(players.size() >= 2 && hasNonAiPlayer){
 		if(gameType == GameType.HOLDEM){
 		    Board board = new Board();
 		    Holdem holdem = new Holdem(players,board,bettingRules);
@@ -145,7 +160,7 @@ public class StartMenuFrame extends JFrame implements ActionListener
 		    dispose();
 		}
 	    }else{
-		JOptionPane.showMessageDialog(this,"Must have at least 2 players");
+		JOptionPane.showMessageDialog(this, "Must have at least 2 players, and at least 1 non AI player");
 	    }
 	}
     }

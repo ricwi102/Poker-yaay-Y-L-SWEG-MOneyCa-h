@@ -61,7 +61,12 @@ public class PokerComponent extends JComponent
 
 
     public Dimension getPreferedSize(){
-        return new Dimension(players.size()*cardsPerPlayer*cardWidth,cardHeight * 3);
+        final int numberOfOpenCards = 5;
+        if(players.size()*cardsPerPlayer*cardWidth > cardWidth*numberOfOpenCards) {
+            return new Dimension(players.size() * cardsPerPlayer * cardWidth, cardHeight * 3);
+        }else{
+            return new Dimension(cardWidth*numberOfOpenCards, cardHeight * 3);
+        }
     }
 
 
