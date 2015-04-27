@@ -2,7 +2,7 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+
 /**
  * GameTest
  */
@@ -10,7 +10,8 @@ public final class GameTest
 {
     private GameTest() {}
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+	/*
 	List<Player> players = new ArrayList<>();
 	players.add(new Player("Richard"));
 	players.add(new Player("Johannes"));
@@ -22,10 +23,16 @@ public final class GameTest
 
 	Board board = new Board();
 
-	Holdem holdem = new Holdem(board);
+	PokerBase pokerBase = new Omaha(players,board);
 
-	PokerFrame frame = new PokerFrame(holdem);
+	PokerFrame frame = new PokerFrame(pokerBase);
 
+	frame.pack();
+	frame.setVisible(true);
+	pokerBase.checkForAction();
+	*/
+
+	StartMenuFrame frame = new StartMenuFrame();
 	frame.pack();
 	frame.setVisible(true);
 
