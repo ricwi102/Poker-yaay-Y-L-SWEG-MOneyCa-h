@@ -39,17 +39,18 @@ public class ClientWorker implements Runnable{
 
     public void run(){
 
-	BufferedReader in = getInAndOutput();
-	while(true){
-	    try{
-		String[] command;
-		command = in.readLine().split("&");
-		recieveOptions(command);
-	    }catch (IOException e) {
-		System.out.println("Read failed");
-		System.exit(-1);
-	    }
-	}
+        BufferedReader in = getInAndOutput();
+        while (true) {
+            try {
+                String[] command;
+                command = in.readLine().split("&");
+                recieveOptions(command);
+            } catch (IOException e) {
+                System.out.println("Read failed");
+                System.exit(-1);
+            }
+        }
+
     }
 
     protected BufferedReader getInAndOutput(){
@@ -72,7 +73,7 @@ public class ClientWorker implements Runnable{
                 clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
             }
             break;
-            case "BET":
+            case "RAISE":
             int bet = Integer.parseInt(command[1]);
             if(player.equals(pokerRules.getCurrentPlayer())){
                 if(pokerRules.raise(bet)){
@@ -128,7 +129,7 @@ public class ClientWorker implements Runnable{
             builder.append(card);
             builder.append("%");
         }
-        out.println("UPDATE&YOU&" + player.getHand());
+        out.println(builder);
     }
 
     private boolean playerWithName(String name){
@@ -145,8 +146,6 @@ public class ClientWorker implements Runnable{
     }
 
     public Player getPlayer() { return player; }
-
-    public PokerBase getPokerRules() { return pokerRules; }
 }
 
 

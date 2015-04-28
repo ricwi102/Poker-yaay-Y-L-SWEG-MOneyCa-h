@@ -121,12 +121,11 @@ public class ClientFrame extends JFrame{
         }else{
             pokerRules = new Holdem(players, board, bettingRules);
         }
-        pokerRules.setMultiplayer(true);
+        pokerRules.startMultiplayer();
         client.addPokerRules(pokerRules);
         PokerFrame frame = new PokerFrame(pokerRules, client);
         frame.pack();
         frame.setVisible(true);
-        pokerRules.checkForAction();
         setVisible(false);
         dispose();
     }

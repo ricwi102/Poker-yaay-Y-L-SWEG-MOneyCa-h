@@ -30,6 +30,7 @@ public class PokerBase
     protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
         this.players = players;
         this.board = board;
+        this.bettingRules = bettingRules;
         lostPlayers = new ArrayList<>();
         isGameOver = false;
         multiplayer = false;
@@ -37,14 +38,19 @@ public class PokerBase
         bigBlind = 20;
         pot = 0;
         dealCounter = 1;
-        frame = null;
-        this.bettingRules = bettingRules;
         bettingRules.setMinimumBet(bigBlind);
         deck = new Deck();
         ai = new Ai(this);
+    }
+
+    public void startSingleplayer(){
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
+    }
+
+    public void startMultiplayer(){
+        multiplayer = true;
     }
 
     private void setTablePositions(){
@@ -325,7 +331,7 @@ public class PokerBase
         }
     }
 
-    protected void resetPlayerBets(){
+    public void resetPlayerBets(){
         for (Player player : players) {
             player.newRound();
         }
@@ -376,6 +382,7 @@ public class PokerBase
         frame.dispose();
     }
 
+
     public void awardWinner(Player winner, int amount){
         System.out.println(winner.getName() + " wins " + amount + " chips");
         winner.addChips(amount);
@@ -395,6 +402,8 @@ public class PokerBase
     }
 
     public List<Player> getPlayers() { return players; }
+
+    public PokerFrame getFrame() { return frame; }
 
     public boolean isMultiplayer() { return multiplayer; }
 

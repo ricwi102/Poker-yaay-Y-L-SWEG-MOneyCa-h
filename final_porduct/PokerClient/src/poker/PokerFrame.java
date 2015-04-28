@@ -43,6 +43,7 @@ public class PokerFrame extends JFrame implements ActionListener
    	this.pokerBase = pokerBase;
 	this.client = client;
    	component = new PokerComponent(pokerBase);
+	component.addClient(client);
    	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
    	this.setLayout(new BorderLayout());
    	pokerBase.setFrame(this);
@@ -68,17 +69,10 @@ public class PokerFrame extends JFrame implements ActionListener
 	raise = new JButton("Raise");
 	allIn = new JButton("All in");
 
-	StringBuilder openCards = new StringBuilder();
-	for(Card card : pokerBase.getBoard().getOpenCards()){
-	    openCards.append(card);
-	    openCards.append(" ");}
-	communityCards = new JLabel("Community Cards: " + openCards );
-	currentPlayerChips = new JLabel(
-		pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
-	currentPlayerCards = new JLabel(
-		pokerBase.getCurrentPlayer().getName() + " Cards: " + pokerBase.getCurrentPlayer().getHand().get(0)
-					+ " " + pokerBase.getCurrentPlayer().getHand().get(1));
-	pot = new JLabel("Pot: 0");
+	communityCards = new JLabel();
+	currentPlayerChips = new JLabel();
+	currentPlayerCards = new JLabel();
+	pot = new JLabel();
 
 	check.addActionListener(this);
 	fold.addActionListener(this);
@@ -112,53 +106,56 @@ public class PokerFrame extends JFrame implements ActionListener
     }
 
     public void updateUi(){
-	StringBuilder openCards = new StringBuilder();
-	for(Card card : pokerBase.getBoard().getOpenCards()){
-	    openCards.append(card);
-	    openCards.append(" ");
-	}
+	if (pokerBase.getCurrentPlayer() != null) {
 
-	communityCards.setText("Community Cards: " + openCards );
-	currentPlayerChips.setText(
-		pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
-	currentPlayerCards.setText(
-		pokerBase.getCurrentPlayer().getName() + " Cards: " + pokerBase.getCurrentPlayer().getHand().get(0)
-				   + " " + pokerBase.getCurrentPlayer().getHand().get(1));
-	pot.setText("pot: " + pokerBase.getPot());
+	    StringBuilder openCards = new StringBuilder();
+	    for(Card card : pokerBase.getBoard().getOpenCards()){
+	        openCards.append(card);
+	        openCards.append(" ");
+	    }
 
-	if(pokerBase.getBettingRules().someoneRaised() && pokerBase.getCurrentPlayer().getActiveBet() != pokerBase.bettingRules.getLatestBet()){
-	    call.setEnabled(true);
-	    raise.setEnabled(true);
-	    allIn.setEnabled(true);
-	}else{
-	    call.setEnabled(false);
-	    raise.setEnabled(true);
-	    allIn.setEnabled(true);
+
+	    communityCards.setText("Community Cards: " + openCards);
+	    currentPlayerChips
+		    .setText(pokerBase.getCurrentPlayer().getName() + ", Chips: " + pokerBase.getCurrentPlayer().getChips());
+	    pot.setText("pot: " + pokerBase.getPot());
+
+	    if (pokerBase.isMultiplayer() && !pokerBase.getCurrentPlayer().equals(client.getYou())) {
+		call.setEnabled(false);
+		raise.setEnabled(false);
+		allIn.setEnabled(false);
+		check.setEnabled(false);
+		fold.setEnabled(false);
+	    } else {
+		if (pokerBase.getCurrentPlayer().getActiveBet() < pokerBase.bettingRules.getLatestBet()) {
+		    call.setEnabled(true);
+		    raise.setEnabled(true);
+		    allIn.setEnabled(true);
+		    check.setEnabled(false);
+		    fold.setEnabled(true);
+		} else {
+		    call.setEnabled(false);
+		    raise.setEnabled(true);
+		    allIn.setEnabled(true);
+		    check.setEnabled(true);
+		    fold.setEnabled(false);
+		}
+	    }
+
+	    call.setText("call: " + (pokerBase.getBettingRules().getLatestBet() - pokerBase.getCurrentPlayer().getActiveBet()));
+	    if (pokerBase.getCurrentPlayer().getController().equals("ai")) {
+		check.setEnabled(false);
+		fold.setEnabled(false);
+		raise.setEnabled(false);
+		call.setEnabled(false);
+		allIn.setEnabled(false);
+	    }
+	    if (pokerBase.getBettingRules() instanceof PotLimit) {
+		allIn.setEnabled(false);
+	    }
+	    component.repaint();
+	    System.out.println("UPDATED UI");
 	}
-	if(pokerBase.getCurrentPlayer().getActiveBet() == pokerBase.getBettingRules().getLatestBet()){
-	    check.setEnabled(true);
-	    fold.setEnabled(false);
-	    raise.setEnabled(true);
-	    allIn.setEnabled(true);
-	}else{
-	    check.setEnabled(false);
-	    fold.setEnabled(true);
-	    raise.setEnabled(true);
-	    allIn.setEnabled(true);
-	}
-	call.setText("call: " + (pokerBase.getBettingRules().getLatestBet() - pokerBase.getCurrentPlayer().getActiveBet()));
-	if(pokerBase.getCurrentPlayer().getController().equals("ai")){
-	    check.setEnabled(false);
-	    fold.setEnabled(false);
-	    raise.setEnabled(false);
-	    call.setEnabled(false);
-	    allIn.setEnabled(false);
-	}
-	if(pokerBase.getBettingRules() instanceof PotLimit){
-	    allIn.setEnabled(false);
-	}
-	component.repaint();
-	System.out.println("UPDATED UI");
     }
 
 

@@ -54,26 +54,19 @@ public class ServerManager extends Thread {
                 }
             }*/
             try {
-                System.out.println(1);
                 ClientWorker worker;
                 if (host == null) {
-                    System.out.println(2);
                     worker = new ClientHost(server.accept());
                     host = (ClientHost) worker;
                     System.out.println("Host Found");
                 } else {
-                    System.out.println(3);
                     worker = new ClientWorker(server.accept());
                     System.out.println("Client added!");
                 }
-                System.out.println(4);
                 clients.add(worker);
                 worker.addClientWorkers(clients);
-                System.out.println(5);
                 Thread t = new Thread(worker);
-                System.out.println(6);
                 t.start();
-                System.out.println(7);
             } catch (IOException e) {
                 System.out.println("Accept failed: " + port);
                 System.exit(-1);

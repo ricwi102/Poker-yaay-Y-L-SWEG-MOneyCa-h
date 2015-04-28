@@ -80,8 +80,9 @@ public class ClientHost extends ClientWorker
 		    client.getOut().println("STARTGAME&" + gameMode + "&" + bettingRules);
 		    client.addPokerRules(pokerRules);
 		}
-		pokerRules.checkForAction();
 		pokerRules.addClients(clients);
+		pokerRules.sendUpdateNewRound();
+		pokerRules.checkForAction();
 	}
     }
 

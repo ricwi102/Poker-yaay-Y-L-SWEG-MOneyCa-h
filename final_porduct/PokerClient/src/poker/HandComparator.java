@@ -2,9 +2,7 @@ package poker;
 
 import java.util.Comparator;
 
-/**
- * Something not quite working when players have the same hand, seems to just be returning 0
- */
+
 
 public class HandComparator implements Comparator<PokerHand>
 {

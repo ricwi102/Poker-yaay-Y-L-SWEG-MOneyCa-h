@@ -6,8 +6,12 @@ public class Omaha extends PokerBase
 {
     public Omaha(final List<Player> players, final Board board, final BettingRules bettingRules) {
 	super(players, board, bettingRules);
+    }
+
+    @Override public void startSingleplayer() {
+	super.startSingleplayer();
 	dealCards();
-	ai = new Ai(this);
+	checkForAction();
     }
 
     @Override protected void dealCards() {

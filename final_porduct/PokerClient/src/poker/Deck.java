@@ -1,52 +1,21 @@
 package poker;
 
-import java.net.URI;
-import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 
 public class Deck
 {
     private List<Card> deck;
-    private int numberOfValues;
-    private int numberOfColors;
-    private BufferedImage[][] deckImages;
-    private final int cardWidth;
-    private final int cardHeight;
 
 
     public Deck() {
 	deck = new ArrayList<Card>();
-	numberOfValues = 13;
-	numberOfColors = 4;
-	cardWidth = 73;
-	cardHeight = 98;
-	deckImages = new BufferedImage[numberOfColors][numberOfValues];
-	//addCardImages();
 	makeDeck();
     }
-/*
-    private void addCardImages(){
-	try{
-	    URI url1 = getClass().getResource("images" + File.separator + "Deck.jpg").toURI();
-	    File file1 = new File(url1.getPath());
-	    BufferedImage deckImage = ImageIO.read(file1);
-	    for(int i = 0; i < numberOfColors; i++){
-		for(int j = 0; j < numberOfValues; j++){
-		    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);
-		}
-	    }
-	}catch(Exception e){
-	    BufferedImage deckImage = null;
-	}
 
-    }
-    */
     
     private void makeDeck(){
 	final int values = 14;

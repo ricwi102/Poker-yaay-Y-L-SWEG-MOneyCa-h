@@ -4,6 +4,7 @@ import poker.Card;
 import poker.CardColor;
 import poker.Player;
 import poker.PokerBase;
+import poker.PlayerPosition;
 
 
 import java.io.BufferedReader;
@@ -41,75 +42,154 @@ public class Client implements Runnable
     }
 
     public void run() {
-	while (true) {
-	    try {
-            String[] command = in.readLine().split("&");
+        while (true) {
+            try {
+                System.out.println("READLINE");
+                String[] command = in.readLine().split("&");
 
-            switch (command[0]){
-                case "TEXT":
+                switch (command[0]){
+                    case "TEXT":
 
-                break;
-                case "UPDATE":
-                    switch (command[1]){
-                        case "CURRENTPLAYER":
-                            for (Player player : players) {
-                                if (command[2].equals(player.getName())){
-                                    pokerRules.setCurrentPlayer(player);
+                        break;
+                    case "UPDATE":
+                        switch (command[1]){
+                            case "CURRENTPLAYER":
+                                for (Player player : players) {
+                                    if (command[2].equals(player.getName())){
+                                        pokerRules.setCurrentPlayer(player);
+                                    }
                                 }
-                            }
-                            break;
-                        case "PLAYER":
-                            for (Player player : players) {
-                                if (command[2].equals(player.getName())){
-                                    player.setChips(Integer.parseInt(command[3]));
-                                    player.setActiveBet(Integer.parseInt(command[4]));
-                                    player.setActive(Boolean.parseBoolean(command[5]));
+                                break;
+                            case "PLAYER":
+                                for (Player player : players) {
+                                    if (command[2].equals(player.getName())){
+                                        player.setChips(Integer.parseInt(command[3]));
+                                        player.setActiveBet(Integer.parseInt(command[4]));
+                                        player.setActive(Boolean.parseBoolean(command[5]));
+                                        switch (command[6]) {
+                                            case "BIGBLIND":
+                                                player.setPosition(PlayerPosition.BIGBLIND);
+                                                break;
+                                            case "SMALLBLIND":
+                                                player.setPosition(PlayerPosition.SMALLBLIND);
+                                                break;
+                                            case "DEALER":
+                                                player.setPosition(PlayerPosition.DEALER);
+                                                break;
+                                            default:
+                                                player.setPosition(PlayerPosition.STANDARD);
+                                                break;
+                                        }
+                                    }
                                 }
+                                break;
+                            case "CARDS":
+                                switch (command[2]){
+                                    case "PLAYER":
+                                        for (Player player : players) {
+                                            if (player.getName().equals(command[3])){
+                                                if (command.length > 4){
+                                                    player.setHand(getCardsFromCommand(command[4]));
+                                                }else{
+                                                    player.resetHand();
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    case "BOARD":
+                                        break;
+                                }
+
+                                break;
+                            case "BOARD":
+                                if (command.length > 2){
+                                    pokerRules.getBoard().setOpenCards(getCardsFromCommand(command[2]));
+                                }else{
+                                    pokerRules.getBoard().resetBoard();
+                                }
+
+                                break;
+                            case "POT":
+                                pokerRules.setPot(Integer.parseInt(command[2]));
+                                pokerRules.getBettingRules().setLatestBet(Integer.parseInt(command[3]));
+                                break;
+                            case "YOU":
+                                if (command[2].equals("CARDS")) {
+                                    you.setHand(getCardsFromCommand(command[3]));
+                                }
+                                break;
+                            case "NEWSTREET":
+                                pokerRules.resetPlayerBets();
+                                pokerRules.getBettingRules().setLatestBet(0);
+                                break;
+                            case "TABLEPOSITIONS":
+                                System.out.println(1);
+                                String[] playerInfo = command[2].split("%");
+                                for (String pInfo : playerInfo) {
+                                    System.out.println(2);
+                                    String[] position = pInfo.split("#");
+                                    for (Player player : players) {
+                                        System.out.println(3);
+                                        if (player.getName().equals(position[0])){
+                                            System.out.println(4);
+                                            System.out.println("HEJ: " + position[1]);
+                                            player.setTablePosition(Integer.parseInt(position[1]));
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+
+
+                        }
+                        break;
+                    case "ADDPLAYER":
+                        if (command.length > 3){
+                            System.out.println("SERVER ADDED PLAYER, YOU");
+                            you = new Player(command[1]);
+                            players.add(you);
+                            frame.lobbyFrame();
+                        } else {
+                            System.out.println("server added player, someone else");
+                            players.add(new Player(command[1]));
+                        }
+                        frame.getLobbyComponent().updatePlayersInLobby(players);
+                        break;
+                    case "REMOVEPLAYER":
+                        if(you.getName().equals(command[1])){
+                            pokerRules.gameOver();
+                        }
+                        for (Player player : players) {
+                            if (player.getName().equals(command[1])){
+                                players.remove(player);
+                                break;
                             }
-                            break;
-                        case "BOARD":
-                            pokerRules.getBoard().setOpenCards(getCardsFromCommand(command[2]));
-                            break;
-                        case "POT":
-                            pokerRules.setPot(Integer.parseInt(command[2]));
-                            break;
-                        case "YOU":
-                            you.setHand(getCardsFromCommand(command[2]));
-                            break;
+                        }
+                        break;
+                    case "VALID":
 
-                    }
-                    break;
-                case "ADDPLAYER":
-                    if (command.length > 3){
-                        System.out.println("SERVER ADDED PLAYER, YOU");
-                        you = new Player(command[1]);
-                        players.add(you);
-                        frame.lobbyFrame();
-                    } else {
-                        System.out.println("server added player, someone else");
-                        players.add(new Player(command[1]));
-                    }
-                    frame.getLobbyComponent().updatePlayersInLobby(players);
-                    break;
-                case "VALID":
+                        break;
+                    case "ERROR":
 
-                break;
-                case "ERROR":
+                        break;
+                    case "STARTGAME":
+                        frame.startGame(command[1], command[2], players);
+                        break;
+                    case "HOST":
+                        if (command[1].equals("TRUE")) host = true;
+                        System.out.println(host);
+                        break;
+                }
+                if (pokerRules != null && pokerRules.getFrame() != null){
+                    pokerRules.getFrame().updateUi();
+                }
 
-                break;
-                case "STARTGAME":
-                    frame.startGame(command[1], command[2], players);
-                    break;
-                case "HOST":
-                    if (command[1].equals("TRUE")) host = true;
-                    System.out.println(host);
-                    break;
+            } catch (IOException e) {
+                System.out.println("Read failed");
+                System.exit(-1);
             }
-	    } catch (IOException e) {
-		System.out.println("Read failed");
-		System.exit(-1);
-	    }
-	}
+        }
     }
 
     public List<Card> getCardsFromCommand(String command){
@@ -134,6 +214,8 @@ public class Client implements Runnable
         }
         return cards;
     }
+
+    public Player getYou() { return you; }
 
     public void addFrame(ClientFrame frame){this.frame = frame;}
 

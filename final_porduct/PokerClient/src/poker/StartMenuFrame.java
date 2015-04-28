@@ -167,7 +167,7 @@ public class StartMenuFrame extends JFrame implements ActionListener
 		    PokerFrame frame = new PokerFrame(holdem);
 		    frame.pack();
 		    frame.setVisible(true);
-		    holdem.checkForAction();
+		    holdem.startSingleplayer();
 		    setVisible(false);
 		    dispose();
 		}else if(gameType == GameType.OMAHA){
@@ -176,7 +176,7 @@ public class StartMenuFrame extends JFrame implements ActionListener
 		    PokerFrame frame = new PokerFrame(omaha);
 		    frame.pack();
 		    frame.setVisible(true);
-		    omaha.checkForAction();
+		    omaha.startSingleplayer();
 		    setVisible(false);
 		    dispose();
 		}

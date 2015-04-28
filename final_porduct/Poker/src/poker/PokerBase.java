@@ -164,13 +164,23 @@ public class PokerBase
     }
 
     public void newRound() {
+        sendOutAllCards();
+
+        try {
+            Thread.sleep(10 * 1000);
+        }catch (InterruptedException e){
+            System.out.println("Interrupted action");
+        }
+
+        sendResetAllCards();
+
         resetGame();
         updatePlayerPositions();
         if(!isGameOver) {
             dealCards();
             sendPlayerCards();
             payBlinds();
-            sendUpdateAllPlayers();
+            sendUpdateNewRound();
             checkForAction();
         }
     }
@@ -200,6 +210,7 @@ public class PokerBase
 
 
     private void newStreet() {
+        sendUpdateNewStreet();
         resetPlayerBets();
         Player nextPlayer = nextActivePlayerWithChips(currentPlayer);
         if (nextPlayer.equals( nextActivePlayerWithChips(nextPlayer))) {
@@ -311,23 +322,52 @@ public class PokerBase
 
     private void sendUpdateCurrentPlayer(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&PLAYER" + currentPlayer.getName() + "&" + currentPlayer.getChips() + "&"
-                                    +currentPlayer.getActiveBet() + "&" + currentPlayer.isActive());
+            client.getOut().println("UPDATE&PLAYER&" + currentPlayer.getName() + "&" + currentPlayer.getChips() + "&"
+                                    + currentPlayer.getActiveBet() + "&" + currentPlayer.isActive() + "&" +
+                                    currentPlayer.getPosition());
+        }
+    }
+
+    private void sendOutAllCards(){
+        for (ClientWorker client : clients) {
+            for (Player player : players) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("UPDATE&CARDS&PLAYER&");
+                builder.append(player.getName());
+                builder.append("&");
+                for (Card card: player.getHand()){
+                    builder.append(card);
+                    builder.append("%");
+                }
+                client.getOut().println(builder);
+            }
+        }
+    }
+
+    private void sendResetAllCards(){
+        for (ClientWorker client : clients) {
+            for (Player player : players) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("UPDATE&CARDS&PLAYER&");
+                builder.append(player.getName());
+                client.getOut().println(builder);
+            }
         }
     }
 
     private void sendUpdateAllPlayers(){
         for (Player player : players) {
             for (ClientWorker client : clients) {
-                client.getOut().println("UPDATE&PLAYER" + player.getName() + "&" + player.getChips() + "&"
-                                        +player.getActiveBet() + "&" + player.isActive());
+                client.getOut().println("UPDATE&PLAYER&" + player.getName() + "&" + player.getChips() + "&"
+                                        + player.getActiveBet() + "&" + player.isActive() + "&" +
+                                        player.getPosition());
             }
         }
     }
 
     private void sendUpdatePot(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&POT" + pot);
+            client.getOut().println("UPDATE&POT&" + pot + "&" + bettingRules.getLatestBet());
         }
     }
 
@@ -346,6 +386,34 @@ public class PokerBase
     private void sendCurrentPlayer(){
         for (ClientWorker client : clients) {
             client.getOut().println("UPDATE&CURRENTPLAYER&" + currentPlayer.getName());
+        }
+    }
+
+    private void sendUpdateNewStreet(){
+        for (ClientWorker client : clients) {
+            client.getOut().println("UPDATE&NEWSTREET");
+        }
+    }
+
+
+    public void sendUpdateNewRound(){
+        sendPlayerCards();
+        sendUpdateAllPlayers();
+        sendCurrentPlayer();
+        sendUpdatePot();
+        sendUpdateBoardCards();
+    }
+
+    private void sendTablePositions(){
+        StringBuilder builder = new StringBuilder();
+        for (Player player : players) {
+            builder.append(player.getName());
+            builder.append("#");
+            builder.append(player.getTablePosition());
+            builder.append("%");
+        }
+        for (ClientWorker client : clients) {
+            client.getOut().println("UPDATE&TABLEPOSITIONS&" + builder);
         }
     }
 
@@ -382,7 +450,6 @@ public class PokerBase
                 break;
             case 4:
                 compareHands();
-                resetGame();
                 newRound();
         }
         sendUpdateBoardCards();
@@ -420,6 +487,16 @@ public class PokerBase
         for (Player player : players) {
             if(player.getChips() <= 0) losers.add(player);
         }
+
+        if (clients != null) {
+            for (ClientWorker client : clients) {
+                for (Player loser : losers) {
+                    client.getOut().println("REMOVEPLAYER&" + loser.getName());
+                }
+            }
+        }
+
+
 
         lostPlayers.addAll(losers);
         players.removeAll(losers);
@@ -465,6 +542,7 @@ public class PokerBase
 
     public void addClients(List<ClientWorker> clients){
         this.clients = clients;
+        sendTablePositions();
     }
 
     public int getPot(){

@@ -1,9 +1,10 @@
 package poker;
 
 
+import poker_client.Client;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -23,13 +24,15 @@ public class PokerComponent extends JComponent
     private BufferedImage foldedImage;
     private BufferedImage buttonImage;
     private BufferedImage[][] deckImages;
+    private Client client;
     private static final int NUMBEROFCOLORS = 4;
     private static final int NUMBEROFVALUES = 13;
     private Board board;
     private int numberOfPlayers;
     private int cardsPerPlayer;
-    private final int cardWidth;
-    private final int cardHeight;
+    private static final int CARD_WIDTH = 64;
+    private static final int CARD_HEIGHT = 116;
+    private static final int SPACE_BETWEEN_PLAYERS = 15;
 
     public PokerComponent(final PokerBase pokerBase) {
         this.pokerBase = pokerBase;
@@ -37,9 +40,11 @@ public class PokerComponent extends JComponent
         players = pokerBase.getPlayers();
         board = pokerBase.getBoard();
         numberOfPlayers = players.size();
-        cardsPerPlayer = players.get(0).getHand().size();
-        cardWidth = 64;
-        cardHeight = 116;
+        if(pokerBase instanceof Omaha){
+            cardsPerPlayer = 4;
+        }else {
+            cardsPerPlayer = 2;
+        }
         try {
             URI url1 = getClass().getResource("images" + File.separator + "CardBack.jpg").toURI();
             File file1 = new File(url1.getPath());
@@ -76,7 +81,7 @@ public class PokerComponent extends JComponent
         	    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);
         	}
             }
-       	}catch(Exception e){
+       	}catch(URISyntaxException |IOException e){
        	    BufferedImage deckImage = null;
        	}
     }
@@ -84,10 +89,10 @@ public class PokerComponent extends JComponent
 
     public Dimension getPreferedSize(){
         final int numberOfOpenCards = 5;
-        if(players.size()*cardsPerPlayer*cardWidth > cardWidth*numberOfOpenCards) {
-            return new Dimension(players.size() * cardsPerPlayer * cardWidth, cardHeight * 3);
+        if(players.size()*cardsPerPlayer* CARD_WIDTH + SPACE_BETWEEN_PLAYERS * (players.size() - 1) > CARD_WIDTH *numberOfOpenCards) {
+            return new Dimension(players.size()*cardsPerPlayer* CARD_WIDTH + SPACE_BETWEEN_PLAYERS * (players.size() - 1), CARD_HEIGHT * 3);
         }else{
-            return new Dimension(cardWidth*numberOfOpenCards, cardHeight * 3);
+            return new Dimension(CARD_WIDTH *numberOfOpenCards, CARD_HEIGHT * 3);
         }
     }
 
@@ -105,20 +110,21 @@ public class PokerComponent extends JComponent
         final int buttonSize = 16;
         for(Player player : players){
             g2.setFont(new Font("Arial", Font.BOLD, 16));
-            g2.drawString(player.getName(), player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + (spaceFromCards*2));
-            g2.drawString("Chips: " + player.getChips(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*3));
-            g2.drawString("Bet: "+player.getActiveBet(), player.getTablePosition() * cardWidth * cardsPerPlayer , cardHeight + (spaceFromCards*4));
+            g2.drawString(player.getName(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + (spaceFromCards*2));
+            g2.drawString("Chips: " + player.getChips(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS) , CARD_HEIGHT + (spaceFromCards*3));
+            g2.drawString("Bet: "+player.getActiveBet(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + (spaceFromCards*4));
             if(player.getPosition() == PlayerPosition.DEALER){
-                g2.drawImage(buttonImage, player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight, buttonSize, buttonSize,
+                g2.drawImage(buttonImage, player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT, buttonSize, buttonSize,
                              null);
             }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
-                g2.drawString("SB",player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + spaceFromCards);
+                g2.drawString("SB",player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + spaceFromCards);
             }else if(player.getPosition() == PlayerPosition.BIGBLIND){
-                g2.drawString("BB",player.getTablePosition() * cardWidth * cardsPerPlayer, cardHeight + spaceFromCards);
+                g2.drawString("BB",player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + spaceFromCards);
             }
         }
         g2.setFont(new Font("Arial",Font.BOLD,22));
-        g2.drawString("Pot: "+ pokerBase.getPot(),((numberOfPlayers*cardsPerPlayer*cardWidth)/2) -cardWidth,cardHeight +(spaceFromCards*6));
+        g2.drawString("Pot: "+ pokerBase.getPot(),((numberOfPlayers*cardsPerPlayer* CARD_WIDTH)/2) - CARD_WIDTH,
+                      CARD_HEIGHT +(spaceFromCards*6));
     }
 
     private void drawPlayerCards(Graphics g){
@@ -135,18 +141,33 @@ public class PokerComponent extends JComponent
                     images.add(deckImages[card.getColor().getValue()][0]);
                 }
             }
+
             for(BufferedImage image : images){
-                if(player.equals(pokerBase.getCurrentPlayer())) {
-                    g2.drawImage(image, (player.getTablePosition() * cardsPerPlayer + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                if((!pokerBase.isMultiplayer() && player.equals(pokerBase.getCurrentPlayer())) ||
+                   (pokerBase.isMultiplayer() && !images.isEmpty())) {
+                    g2.drawImage(image, (player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
+                                        + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, CARD_WIDTH,
+                                 CARD_HEIGHT,
                                  null);
                     currentCard++;
                 }else if(!player.isActive()){
-                    g2.drawImage(foldedImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                    g2.drawImage(foldedImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
+                                             + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0,
+                                 CARD_WIDTH, CARD_HEIGHT,
                                  null);
                     currentCard++;
                 } else{
-                    g2.drawImage(hiddenImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * cardWidth, 0, cardWidth, cardHeight,
+                    g2.drawImage(hiddenImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
+                                             + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0,
+                                 CARD_WIDTH, CARD_HEIGHT,
                                  null);
+                    currentCard++;
+                }
+            }
+            if(images.isEmpty()){
+                for(int i = 0; i < cardsPerPlayer; i++){
+                    g2.drawImage(hiddenImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
+                                             + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, CARD_WIDTH, CARD_HEIGHT, null);
                     currentCard++;
                 }
             }
@@ -167,9 +188,13 @@ public class PokerComponent extends JComponent
             }
         }
         for(BufferedImage image : images){
-            g2.drawImage(image, currentCard*cardWidth, cardHeight + spacing, cardWidth, cardHeight, null);
+            g2.drawImage(image, currentCard* CARD_WIDTH, CARD_HEIGHT + spacing, CARD_WIDTH, CARD_HEIGHT, null);
             currentCard++;
         }
+    }
+
+    public void addClient(Client client){
+        this.client = client;
     }
 
 }
