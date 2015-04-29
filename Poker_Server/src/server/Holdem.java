@@ -1,0 +1,26 @@
+package server;
+
+import java.util.List;
+
+/**
+ * Hold'em rules
+ */
+
+public class Holdem extends PokerBase{
+
+
+    public Holdem(final List<Player> players, final Board board, final BettingRules bettingRules) {
+	super(players, board,bettingRules);
+	ai = new Ai(this);
+	dealCards();
+    }
+
+    @Override protected void dealCards() {
+	super.dealCards();
+	for(int i = 0; i < 2; i++) {
+	    for (Player player : players) {
+		player.addCard(deck.drawCard());
+	    }
+	}
+    }
+}
