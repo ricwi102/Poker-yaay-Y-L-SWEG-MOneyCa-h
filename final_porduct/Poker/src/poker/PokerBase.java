@@ -167,7 +167,7 @@ public class PokerBase
         sendOutAllCards();
 
         try {
-            Thread.sleep(10 * 1000);
+            Thread.sleep(6000);
         }catch (InterruptedException e){
             System.out.println("Interrupted action");
         }

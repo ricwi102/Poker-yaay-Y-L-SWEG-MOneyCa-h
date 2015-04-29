@@ -144,7 +144,7 @@ public class PokerComponent extends JComponent
 
             for(BufferedImage image : images){
                 if((!pokerBase.isMultiplayer() && player.equals(pokerBase.getCurrentPlayer())) ||
-                   (pokerBase.isMultiplayer() && !images.isEmpty())) {
+                   (pokerBase.isMultiplayer() && !images.isEmpty() && player.isActive())) {
                     g2.drawImage(image, (player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
                                         + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, CARD_WIDTH,
                                  CARD_HEIGHT,
@@ -164,12 +164,28 @@ public class PokerComponent extends JComponent
                     currentCard++;
                 }
             }
-            if(images.isEmpty()){
+            if(images.isEmpty() && player.isActive()){
                 for(int i = 0; i < cardsPerPlayer; i++){
                     g2.drawImage(hiddenImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
                                              + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, CARD_WIDTH, CARD_HEIGHT, null);
                     currentCard++;
                 }
+            }else if(images.isEmpty() && !player.isActive()){
+                for(int i = 0; i < cardsPerPlayer; i++){
+                    g2.drawImage(foldedImage,(player.getTablePosition() * cardsPerPlayer + currentCard) * CARD_WIDTH
+                                             + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, CARD_WIDTH, CARD_HEIGHT, null);
+                    currentCard++;
+                }
+            }
+            if(player.equals(pokerBase.getCurrentPlayer())){
+                int thickness = 2;
+                Stroke oldStroke = g2.getStroke();
+                g2.setColor(Color.RED);
+                g2.setStroke(new BasicStroke(thickness));
+                g2.drawRect(player.getTablePosition() * cardsPerPlayer * CARD_WIDTH
+                             + player.getTablePosition() * SPACE_BETWEEN_PLAYERS, 0, cardsPerPlayer* CARD_WIDTH, CARD_HEIGHT);
+                g2.setColor(Color.BLACK);
+                g2.setStroke(oldStroke);
             }
         }
     }
