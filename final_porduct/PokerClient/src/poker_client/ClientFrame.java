@@ -139,6 +139,8 @@ public class ClientFrame extends JFrame{
 
         cardLayout.show(layouts, LOBBY);
 
+
+
     }
 
     public void addPlayerFrame() {
@@ -178,7 +180,6 @@ public class ClientFrame extends JFrame{
             Thread t = new Thread(client);
             t.start();
             client.getOut().println("NEWPLAYER&" + connectComponent.getPlayerNameText());
-            lobbyFrame();
 
         } catch (UnknownHostException exc) {
             System.err.println("UnknownHostException: " + exc.getMessage());
@@ -262,11 +263,23 @@ public class ClientFrame extends JFrame{
         } else if (source.equals(lobbyComponent.getStartGame())){
             client.getOut().println("STARTGAME");
 
-        }/* else if (source.equals()){
+        } else if (source.equals(lobbyComponent.getGameOptions())){
+            String option = (String) lobbyComponent.getGameOptions().getSelectedItem();
+            if (option.equals("Omaha")){
+                client.getOut().println("GAMERULES&OMAHA");
+            } else {
+                client.getOut().println("GAMERULES&HOLDEM");
+            }
 
-        } else if (source.equals()){
+        } else if (source.equals(lobbyComponent.getBetOptions())){
+            String option = (String) lobbyComponent.getBetOptions().getSelectedItem();
+            if (option.equals("Pot Limit")){
+                client.getOut().println("BETRULES&POTLIMIT");
+            } else {
+                client.getOut().println("BETRULES&NOLIMIT");
+            }
 
-        }*/
+        }
     }
 
     public boolean isConnected() {

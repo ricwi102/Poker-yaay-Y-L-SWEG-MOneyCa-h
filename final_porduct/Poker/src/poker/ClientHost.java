@@ -15,7 +15,7 @@ public class ClientHost extends ClientWorker
     private String gameMode = "HOLDEM";
     private String bettingRules = "NO_LIMIT";//No limit when implemented
     private static final Collection<String> GAME_MODES = Arrays.asList("HOLDEM", "OMAHA");//add all poker modes
-    private static final Collection<String> BETTING_RULES = Arrays.asList("NO_LIMIT", "POT_LIMIT");
+    private static final Collection<String> BETTING_RULES = Arrays.asList("NOLIMIT", "POTLIMIT");
 
     public ClientHost(final Socket client) {
 	super(client);
@@ -49,25 +49,36 @@ public class ClientHost extends ClientWorker
 
     private void hostOptions(String[] command) {
 	switch (command[0]) {
-	    case "RULES":
-		if (GAME_MODES.contains(command[1])) gameMode = command[1];
+	    case "GAMERULES":
+		if (GAME_MODES.contains(command[1])) {
+		    gameMode = command[1];
+		    for (ClientWorker client : clients) {
+		    	client.getOut().println("GAMERULES&" + gameMode);
+		    }
+		}
 		break;
 	    case "BETRULES":
-		if (BETTING_RULES.contains(command[1])) bettingRules = command[1];
+		if (BETTING_RULES.contains(command[1])) {
+		    bettingRules = command[1];
+		    for (ClientWorker client : clients) {
+			client.getOut().println("BETRULES&" + bettingRules);
+		    }
+
+		}
 		break;
 
 	    case "STARTGAME":
 		BettingRules bettingRules;
-		switch (getBettingRules()) {
-		    case "POT_LIMIT":
+		switch (this.bettingRules) {
+		    case "POTLIMIT":
 			bettingRules = new PotLimit();
 			break;
-		    case "NO_LIMIT":
+		    case "NOLIMIT":
 		    default:
 			bettingRules = new NoLimit();
 		}
 		PokerBase pokerRules;
-		switch (getGameMode()) {
+		switch (gameMode) {
 		    case "OMAHA":
 			pokerRules = new Omaha(getClientPlayers(), new Board(), bettingRules);
 			break;

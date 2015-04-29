@@ -167,8 +167,11 @@ public class Client implements Runnable
                             }
                         }
                         break;
-                    case "VALID":
-
+                    case "GAMERULES":
+                        frame.getLobbyComponent().setGameMode(command[1], host);
+                        break;
+                    case "BETRULES":
+                        frame.getLobbyComponent().setBetRules(command[1], host);
                         break;
                     case "ERROR":
 
