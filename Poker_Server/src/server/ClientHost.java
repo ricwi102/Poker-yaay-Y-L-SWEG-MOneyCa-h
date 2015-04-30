@@ -88,7 +88,7 @@ public class ClientHost extends ClientWorker
 			break;
 		    }
 		for (ClientWorker client : clients) {
-		    client.getOut().println("STARTGAME&" + gameMode + "&" + bettingRules);
+		    client.getOut().println("STARTGAME&" + gameMode + "&" + this.bettingRules);
 		    client.addPokerRules(pokerRules);
 		}
 		pokerRules.addClients(clients);

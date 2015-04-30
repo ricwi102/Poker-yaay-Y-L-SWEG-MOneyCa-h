@@ -115,7 +115,11 @@ public class Client implements Runnable
                                 break;
                             case "YOU":
                                 if (command[2].equals("CARDS")) {
-                                    you.setHand(getCardsFromCommand(command[3]));
+                                    if(command.length > 2) {
+                                        you.setHand(getCardsFromCommand(command[3]));
+                                    } else {
+                                        you.resetHand();
+                                    }
                                 }
                                 break;
                             case "NEWSTREET":
@@ -156,14 +160,20 @@ public class Client implements Runnable
                         frame.getLobbyComponent().updatePlayersInLobby(players);
                         break;
                     case "REMOVEPLAYER":
-                        if(you.getName().equals(command[1])){
-                            pokerRules.gameOver();
-                        }
                         for (Player player : players) {
                             if (player.getName().equals(command[1])){
-                                players.remove(player);
+                                pokerRules.addPlayerToLosers(players.remove(players.indexOf(player)));
                                 break;
                             }
+                        }
+
+
+                        if ((players.size() == 1 && players.contains(you))|| you.getName().equals(command[1])){
+                            if (players.size() == 1){
+                                pokerRules.addPlayerToLosers(players.get(0));
+                            }
+                            pokerRules.gameOver();
+                            System.out.println("Game over: " + you.getName());
                         }
                         break;
                     case "GAMERULES":

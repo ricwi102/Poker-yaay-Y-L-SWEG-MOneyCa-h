@@ -22,6 +22,8 @@ public class NoLimit implements BettingRules
         }
     }
 
+    public boolean isLegalAllIn(){ return true;}
+
     public void setLatestBet(final int latestBet) { this.latestBet = latestBet;}
 
     public int getLatestBet() {

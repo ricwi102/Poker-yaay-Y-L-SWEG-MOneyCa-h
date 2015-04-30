@@ -150,7 +150,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		call.setEnabled(false);
 		allIn.setEnabled(false);
 	    }
-	    if (pokerBase.getBettingRules() instanceof PotLimit) {
+	    if (!pokerBase.getBettingRules().isLegalAllIn()) {
 		allIn.setEnabled(false);
 	    }
 	    component.repaint();
@@ -215,13 +215,15 @@ public class PokerFrame extends JFrame implements ActionListener
 		pokerBase.advanceGame();
 	    }
 	    updateUi();
-	}else if(e.getSource().equals(allIn)){
-	    if (pokerBase.isMultiplayer()){
-	    	client.getOut().println("ALL_IN");
-	    }else {
-		int amount = pokerBase.getCurrentPlayer().bet(pokerBase.getCurrentPlayer().getChips());
-		pokerBase.raise(amount);
-		pokerBase.advanceGame();
+	}else if(e.getSource().equals(allIn)) {
+	    if (pokerBase.getBettingRules().isLegalAllIn()) {
+		if (pokerBase.isMultiplayer()) {
+		    client.getOut().println("ALLIN");
+		} else {
+		    int amount = pokerBase.getCurrentPlayer().bet(pokerBase.getCurrentPlayer().getChips());
+		    pokerBase.raise(amount);
+		    pokerBase.advanceGame();
+		}
 	    }
 	    updateUi();
 	}

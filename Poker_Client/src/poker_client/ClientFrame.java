@@ -112,7 +112,7 @@ public class ClientFrame extends JFrame{
 
     public void startGame(String gameMode, String betRules, List<Player> players) {
         BettingRules bettingRules;
-        if (betRules.equals("POT_LIMIT")){
+        if (betRules.equals("POTLIMIT")){
             bettingRules = new PotLimit();
         }else{
             bettingRules = new NoLimit();

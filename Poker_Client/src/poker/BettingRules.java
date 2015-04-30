@@ -4,6 +4,8 @@ public interface BettingRules
 {
     public boolean isLegalRaise(int raise);
 
+    public boolean isLegalAllIn();
+
     public void setLatestBet(int latestBet);
 
     public int getLatestBet();

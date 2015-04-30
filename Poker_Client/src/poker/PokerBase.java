@@ -139,7 +139,15 @@ public class PokerBase
         if(mustSplitPot){
             calculateSidePots(bestHands,players);
         }else {
-            awardWinner(bestHand.getPlayer(), pot);
+            List<Player> playersWithSameHand = new ArrayList<>();
+            playersWithSameHand.add(bestHands.get(0).getPlayer());
+            HandComparator comparator = new HandComparator();
+            for (int i = 1; i < bestHands.size(); i++) {
+                if (comparator.compare(bestHands.get(0), bestHands.get(i)) == 0){
+                    playersWithSameHand.add(bestHands.get(i).getPlayer());
+                }
+            }
+            awardWinner(playersWithSameHand, pot);
         }
     }
 
@@ -162,7 +170,9 @@ public class PokerBase
                 higherBettingPlayerHands.add(bestHand);
             }
         }
-        awardWinner(currentBestPlayer,currentPot);
+        List<Player> winners = new ArrayList<>();
+        winners.add(currentBestPlayer);
+        awardWinner(winners,currentPot);
         if(!higherBettingPlayerHands.isEmpty()){
             System.out.println("Higher betting players: " + higherBettingPlayers);
             Collections.sort(higherBettingPlayerHands, new HandComparator());
@@ -176,7 +186,11 @@ public class PokerBase
         if(!isGameOver) {
             dealCards();
             payBlinds();
-            checkForAction();
+            if (!checkCurrentPlayerForChips()){
+                advanceGame();
+            } else {
+                checkForAction();
+            }
         }
     }
 
@@ -224,7 +238,9 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            awardWinner(nextPlayer, pot);
+            List<Player> winners = new ArrayList<>();
+            winners.add(nextPlayer);
+            awardWinner(winners, pot);
             newRound();
         }else if (nextPlayer.equals(latestBettingPlayer)) {
             nextStreet();
@@ -347,12 +363,11 @@ public class PokerBase
 
         lostPlayers.addAll(losers);
         players.removeAll(losers);
-
         System.out.println(players);
         players.add(players.remove(0));
         System.out.println(players);
 
-        if(players.size() == 1){
+        if(players.size() == 1 || !hasNonAiPlayers()){
             isGameOver = true;
             lostPlayers.addAll(players);
             gameOver();
@@ -372,6 +387,15 @@ public class PokerBase
         latestBettingPlayer = currentPlayer;
     }
 
+    private boolean hasNonAiPlayers(){
+        for (Player player : players) {
+            if(player.getController().equals("player")){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void gameOver(){
         System.out.println("Winner: " + players.get(0).getName() + ",  Yaaaaaaaaaay!! you won the whole game!! you are absolutely the best player");
         Collections.reverse(lostPlayers);
@@ -383,11 +407,19 @@ public class PokerBase
     }
 
 
-    public void awardWinner(Player winner, int amount){
-        System.out.println(winner.getName() + " wins " + amount + " chips");
-        winner.addChips(amount);
-        pot -= amount;
+    public void awardWinner(List<Player> winners, int amount){
+        for (Player winner : winners) {
+            System.out.println(winner.getName() + " wins " + amount/winners.size() + " chips");
+            winner.addChips(amount/winners.size());
+            pot -= amount/winners.size();
+        }
     }
+
+    private boolean checkCurrentPlayerForChips(){
+        return currentPlayer.getChips() > 0;
+    }
+
+    public void addPlayerToLosers(Player player){ lostPlayers.add(player); }
 
     public int getPot(){
         return pot;

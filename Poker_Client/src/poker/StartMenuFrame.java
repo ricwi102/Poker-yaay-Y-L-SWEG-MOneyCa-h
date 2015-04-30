@@ -182,6 +182,9 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	    }else{
 		JOptionPane.showMessageDialog(this, "Must have at least 2 players, and at least 1 non AI player");
 	    }
+	}else if(e.getSource().equals(quit)){
+	    dispose();
+	    System.exit(0);
 	}
     }
 }

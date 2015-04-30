@@ -69,40 +69,45 @@ public class ClientWorker implements Runnable{
     protected void recieveOptions(String[] command){
         switch (command[0]){
             case "TEXT":
-            for (ClientWorker clientWorker : clients) {
-                clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
-            }
-            break;
+                for (ClientWorker clientWorker : clients) {
+                    clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
+                }
+                break;
             case "RAISE":
-            int bet = Integer.parseInt(command[1]);
-            if(player.equals(pokerRules.getCurrentPlayer())){
-                if(pokerRules.raise(bet)){
-                sendUpdate();
-                }else{
-                sendError("Can't bet that ammount");
+                int bet = Integer.parseInt(command[1]);
+                if(player.equals(pokerRules.getCurrentPlayer())){
+                    if(pokerRules.raise(bet)){
+                    sendUpdate();
+                    }else{
+                    sendError("Can't bet that ammount");
+                    }
                 }
-            }
-            break;
+                break;
             case "CALL":
-            if(player.equals(pokerRules.getCurrentPlayer())){
-                pokerRules.call();
-                sendUpdate();
-            }
-            break;
-            case "CHECK":
-            if(player.equals(pokerRules.getCurrentPlayer())){
-                if(pokerRules.check()){
-                sendUpdate();
-                }else{
-                sendError("There is an active bet, you can't check");
+                if(player.equals(pokerRules.getCurrentPlayer())){
+                    pokerRules.call();
+                    sendUpdate();
                 }
-            }
+                break;
+            case "CHECK":
+                if(player.equals(pokerRules.getCurrentPlayer())){
+                    if(pokerRules.check()){
+                    sendUpdate();
+                    }else{
+                    sendError("There is an active bet, you can't check");
+                    }
+                }
             break;
             case "FOLD":
-            if(player.equals(pokerRules.getCurrentPlayer())){
-                pokerRules.fold();
-            }
-            break;
+                if(player.equals(pokerRules.getCurrentPlayer())){
+                    pokerRules.fold();
+                }
+                break;
+            case "ALLIN":
+                if (pokerRules.getBettingRules().isLegalAllIn()){
+                    pokerRules.allIn();
+                }
+                break;
             case "NEWPLAYER":
                 if (!(hasPlayer() || playerWithName(command[1]))) {
                     System.out.println("player added");

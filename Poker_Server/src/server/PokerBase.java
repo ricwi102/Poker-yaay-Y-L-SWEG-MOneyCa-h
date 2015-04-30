@@ -64,7 +64,7 @@ public class PokerBase
                     addToPot(bigBlind);
                 }else{
                     player.bet(player.getChips());
-                    addToPot(player.getChips());
+                    addToPot(player.getActiveBet());
                 }
                 bettingRules.setLatestBet(bigBlind);
                 bettingRules.setRaised(true);
@@ -74,7 +74,7 @@ public class PokerBase
                     addToPot(smallBlind);
                 }else{
                     player.bet(player.getChips());
-                    addToPot(player.getChips());
+                    addToPot(player.getActiveBet());
                 }
 
             }
@@ -132,7 +132,15 @@ public class PokerBase
         if(mustSplitPot){
             calculateSidePots(bestHands,players);
         }else {
-            awardWinner(bestHand.getPlayer(), pot);
+            List<Player> playersWithSameHand = new ArrayList<>();
+            playersWithSameHand.add(bestHands.get(0).getPlayer());
+            HandComparator comparator = new HandComparator();
+            for (int i = 1; i < bestHands.size(); i++) {
+                if (comparator.compare(bestHands.get(0), bestHands.get(i)) == 0){
+                    playersWithSameHand.add(bestHands.get(i).getPlayer());
+                }
+            }
+            awardWinner(playersWithSameHand, pot);
         }
     }
 
@@ -155,7 +163,9 @@ public class PokerBase
                 higherBettingPlayerHands.add(bestHand);
             }
         }
-        awardWinner(currentBestPlayer,currentPot);
+        List<Player> winners = new ArrayList<>();
+        winners.add(currentBestPlayer);
+        awardWinner(winners,currentPot);
         if(!higherBettingPlayerHands.isEmpty()){
             System.out.println("Higher betting players: " + higherBettingPlayers);
             Collections.sort(higherBettingPlayerHands, new HandComparator());
@@ -181,7 +191,12 @@ public class PokerBase
             sendPlayerCards();
             payBlinds();
             sendUpdateNewRound();
-            checkForAction();
+            if (!checkCurrentPlayerForChips()){
+                 advanceGame();
+             } else {
+                 checkForAction();
+            }
+
         }
     }
 
@@ -232,7 +247,9 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            awardWinner(nextPlayer, pot);
+            List<Player> winners = new ArrayList<>();
+            winners.add(nextPlayer);
+            awardWinner(winners, pot);
             newRound();
         }else if (nextPlayer.equals(latestBettingPlayer)) {
             nextStreet();
@@ -312,6 +329,15 @@ public class PokerBase
             return true;
         }
         return false;
+    }
+
+    public void allIn(){
+        int amount = currentPlayer.bet(currentPlayer.getChips());
+        addToPot(amount);
+        sendUpdateCurrentPlayer();
+        sendUpdatePot();
+
+        advanceGame();
     }
 
     public void fold(){
@@ -534,15 +560,21 @@ public class PokerBase
         newFrame.setVisible(true);
     }
 
-    public void awardWinner(Player winner, int amount){
-        System.out.println(winner.getName() + " wins " + amount + " chips");
-        winner.addChips(amount);
-        pot -= amount;
+    public void awardWinner(List<Player> winners, int amount){
+        for (Player winner : winners) {
+            System.out.println(winner.getName() + " wins " + amount/winners.size() + " chips");
+            winner.addChips(amount/winners.size());
+            pot -= amount/winners.size();
+        }
     }
 
     public void addClients(List<ClientWorker> clients){
         this.clients = clients;
         sendTablePositions();
+    }
+
+    private boolean checkCurrentPlayerForChips(){
+        return currentPlayer.getChips() > 0;
     }
 
     public int getPot(){

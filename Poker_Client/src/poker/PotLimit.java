@@ -22,6 +22,8 @@ public class PotLimit implements BettingRules
         }
     }
 
+    public boolean isLegalAllIn(){ return false;}
+
     public void setLatestBet(final int latestBet) { this.latestBet = latestBet;}
 
     public int getLatestBet() {
