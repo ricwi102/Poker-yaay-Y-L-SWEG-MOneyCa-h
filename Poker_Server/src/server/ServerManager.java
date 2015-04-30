@@ -32,27 +32,7 @@ public class ServerManager extends Thread {
             System.exit(-1);
         }
         while (true) {
-            /*
-            System.out.println(host != null && host.getStartGame());
-            if (host != null && host.getStartGame()) {
-                System.out.println("HOST and STARTGAME");
-                BettingRules bettingRules;
-                switch (host.getBettingRules()) {
-                    case "POT_LIMIT":
-                        bettingRules = new PotLimit();
-                        break;
-                    case "NO_LIMIT":
-                    default:
-                        bettingRules = new NoLimit();
-                }
-                switch (host.getGameMode()) {
-                    case "OMAHA":
-                        return  new Omaha(getClientPlayers(), new Board(), bettingRules);
-                    case "HOLDEM":
-                    default:
-                        return new Holdem(getClientPlayers(), new Board(), bettingRules);
-                }
-            }*/
+
             try {
                 ClientWorker worker;
                 if (host == null) {

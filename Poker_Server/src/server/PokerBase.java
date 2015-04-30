@@ -297,7 +297,7 @@ public class PokerBase
 
     public boolean raise(int chips) {
         System.out.println("RAISE");
-        if (bettingRules.isLegalRaise(chips)) {
+        if (bettingRules.isLegalRaise(chips + currentPlayer.getActiveBet())) {
             addToPot(chips);
             currentPlayer.bet(chips);
             latestBettingPlayer = currentPlayer;
