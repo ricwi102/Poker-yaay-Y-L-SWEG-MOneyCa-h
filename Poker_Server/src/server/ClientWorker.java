@@ -38,32 +38,33 @@ public class ClientWorker implements Runnable{
     }
 
     public void run(){
+        BufferedReader in;
 
-        BufferedReader in = getInAndOutput();
+        in = getInAndOutput();
         while (true) {
             try {
                 String[] command;
                 command = in.readLine().split("&");
                 recieveOptions(command);
             } catch (IOException e) {
+                e.printStackTrace();
                 System.out.println("Read failed");
                 System.exit(-1);
             }
         }
-
     }
 
     protected BufferedReader getInAndOutput(){
-	BufferedReader in = null;
-	out = null;
-	try{
-	    in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-	    out = new PrintWriter(client.getOutputStream(), true);
-	} catch (IOException e) {
-	    System.out.println("in or out failed");
-	    System.exit(-1);
-	}
-	return in;
+        BufferedReader in = null;
+        out = null;
+        try{
+            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            out = new PrintWriter(client.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("in or out failed");
+            System.exit(-1);
+        }
+        return in;
     }
 
     protected void recieveOptions(String[] command){
@@ -112,24 +113,21 @@ public class ClientWorker implements Runnable{
                 if (!(hasPlayer() || playerWithName(command[1]))) {
                     System.out.println("player added");
                     player = new Player(command[1]);
-                    out.println("ADDPLAYER&" + command[1] + "&2000&YOU");
+                    out.println("ADDPLAYER&" + command[1] + "&YOU");
                     for (ClientWorker worker : clients) {
                         if (!worker.equals(this) && worker.getPlayer() != null){
-                            out.println("ADDPLAYER&" + worker.getPlayer().getName() + "&" + worker.getPlayer().getChips());
-                            worker.getOut().println("ADDPLAYER&" + command[1] + "&2000");
+                            out.println("ADDPLAYER&" + worker.getPlayer().getName());
+                            worker.getOut().println("ADDPLAYER&" + command[1]);
                         }
                     }
                 }
-                break;
-            case "LOGIN":
-            //if we in the future want to save chips
             break;
         }
     }
 
     public void sendPlayerCards(){
         StringBuilder builder = new StringBuilder();
-        builder.append("UPDATE&YOU&CARDS&");
+        builder.append("UPDATE&CARDS&YOU&");
         for (Card card: player.getHand()){
             builder.append(card);
             builder.append("%");

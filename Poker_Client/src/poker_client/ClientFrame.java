@@ -14,6 +14,7 @@ import poker.PotLimit;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -140,37 +141,16 @@ public class ClientFrame extends JFrame{
         }else {
             lobbyComponent.startComponent();
         }
-
         cardLayout.show(layouts, LOBBY);
-
-
-
     }
 
-    public void addPlayerFrame() {
-        //Container cont = getContentPane();
-        //cont.removeAll();
-        addPlayerComponent.startComponent();
-
-        cardLayout.show(layouts, ADD_PLAYER);
 
 
-        //cont.doLayout();
-        //cont.update(getGraphics());
-
-    }
 
     public void connectToServerFrame() {
-        //Container cont = getContentPane();
-        //cont.removeAll();
         connectComponent.startComponent();
 
         cardLayout.show(layouts, CONNECT);
-
-
-        //cont.doLayout();
-        //cont.update(getGraphics());
-
     }
 
 
@@ -188,8 +168,10 @@ public class ClientFrame extends JFrame{
         } catch (UnknownHostException exc) {
             System.err.println("UnknownHostException: " + exc.getMessage());
             JOptionPane.showMessageDialog(null, "Unknown Host");
+        } catch (IOException exc){
+            System.err.println("IOException: " + exc.getMessage());
+            JOptionPane.showMessageDialog(null, exc.getMessage());
         }
-
     }
 
     /*

@@ -399,7 +399,7 @@ public class PokerBase
 
     private void sendUpdateBoardCards(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&BOARD&" + board);
+            client.getOut().println("UPDATE&CARDS&BOARD&" + board);
         }
     }
 
