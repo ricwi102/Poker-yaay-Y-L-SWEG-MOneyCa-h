@@ -2,13 +2,11 @@ package server;
 
 
 public class Ai {
-    private PokerBase pokerType;
     private BettingRules bettingRules;
 
 
 
     public Ai(PokerBase pokerType) {
-        this.pokerType = pokerType;
         bettingRules = pokerType.getBettingRules();
     }
 
@@ -23,6 +21,4 @@ public class Ai {
             return "call";
         }
     }
-
-
 }

@@ -1,7 +1,9 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -11,36 +13,30 @@ import java.util.List;
 public class PokerBase
 {
     protected List<Player> players;
-    protected List<Player> lostPlayers;
+    protected List<Player> lostPlayers = new ArrayList<>();
     protected Board board;
-    protected Deck deck;
-    protected Player currentPlayer;
-    protected Player latestBettingPlayer;
-    protected int dealCounter;
-    protected int pot;
-    protected int smallBlind;
-    protected int bigBlind;
+    protected Deck deck = new Deck();
+    protected Player currentPlayer = null;
+    protected Player latestBettingPlayer = null;
+    protected int dealCounter = 1;
+    protected int pot = 0;
+
     protected BettingRules bettingRules;
-    protected Ai ai;
-    protected boolean isGameOver;
-    protected boolean checkingForAction;
-    protected List<ClientWorker> clients;
+    protected Ai ai = new Ai(this);
+    protected boolean isGameOver = false;
+    protected boolean checkingForAction = false;
+    protected List<ClientWorker> clients = null;
+
+    protected static final int SMALL_BLIND = 10;
+    protected static final int BIG_BLIND = 20;
 
 
     protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
         this.players = players;
         this.board = board;
-        lostPlayers = new ArrayList<>();
-        isGameOver = false;
-        smallBlind = 10;
-        bigBlind = 20;
-        pot = 0;
-        dealCounter = 1;
-        checkingForAction = false;
         this.bettingRules = bettingRules;
-        bettingRules.setMinimumBet(bigBlind);
-        deck = new Deck();
-        ai = new Ai(this);
+        bettingRules.setMinimumBet(BIG_BLIND);
+
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
@@ -59,19 +55,19 @@ public class PokerBase
     protected void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
-                if(player.getChips() > bigBlind) {
-                    player.bet(bigBlind);
-                    addToPot(bigBlind);
+                if(player.getChips() > BIG_BLIND) {
+                    player.bet(BIG_BLIND);
+                    addToPot(BIG_BLIND);
                 }else{
                     player.bet(player.getChips());
                     addToPot(player.getActiveBet());
                 }
-                bettingRules.setLatestBet(bigBlind);
+                bettingRules.setLatestBet(BIG_BLIND);
                 bettingRules.setRaised(true);
             }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
-                if(player.getChips() > smallBlind) {
-                    player.bet(smallBlind);
-                    addToPot(smallBlind);
+                if(player.getChips() > SMALL_BLIND) {
+                    player.bet(SMALL_BLIND);
+                    addToPot(SMALL_BLIND);
                 }else{
                     player.bet(player.getChips());
                     addToPot(player.getActiveBet());
@@ -87,8 +83,6 @@ public class PokerBase
             board.addCard(deck.drawCard());
         }
     }
-
-
 
     private void dealOneCard(){
         board.addCard(deck.drawCard());
@@ -132,9 +126,9 @@ public class PokerBase
         if(mustSplitPot){
             calculateSidePots(bestHands,players);
         }else {
-            List<Player> playersWithSameHand = new ArrayList<>();
+            Collection<Player> playersWithSameHand = new ArrayList<>();
             playersWithSameHand.add(bestHands.get(0).getPlayer());
-            HandComparator comparator = new HandComparator();
+            Comparator<PokerHand> comparator = new HandComparator();
             for (int i = 1; i < bestHands.size(); i++) {
                 if (comparator.compare(bestHands.get(0), bestHands.get(i)) == 0){
                     playersWithSameHand.add(bestHands.get(i).getPlayer());
@@ -144,11 +138,11 @@ public class PokerBase
         }
     }
 
-    private void calculateSidePots(List<PokerHand> bestHands, List<Player> players){
+    private void calculateSidePots(List<PokerHand> bestHands, Iterable<Player> players){
         int currentPot = 0;
         Player currentBestPlayer = bestHands.get(0).getPlayer();
         List<PokerHand> higherBettingPlayerHands = new ArrayList<>();
-        List<Player> higherBettingPlayers = new ArrayList<>();
+        Collection<Player> higherBettingPlayers = new ArrayList<>();
         for(Player player : players){
             if(player.getTotalBetThisRound() <= currentBestPlayer.getTotalBetThisRound()){
                 currentPot += player.getTotalBetThisRound();
@@ -163,7 +157,7 @@ public class PokerBase
                 higherBettingPlayerHands.add(bestHand);
             }
         }
-        List<Player> winners = new ArrayList<>();
+        Collection<Player> winners = new ArrayList<>();
         winners.add(currentBestPlayer);
         awardWinner(winners,currentPot);
         if(!higherBettingPlayerHands.isEmpty()){
@@ -177,8 +171,10 @@ public class PokerBase
         sendOutAllCards();
 
         try {
-            Thread.sleep(6000);
+            final int sleepTimeInSeconds = 6;
+            Thread.sleep(sleepTimeInSeconds * 1000);
         }catch (InterruptedException e){
+            e.printStackTrace();
             System.out.println("Interrupted action");
         }
 
@@ -206,7 +202,6 @@ public class PokerBase
             String decision = ai.decide(currentPlayer);
             switch(decision) {
                 case "check":
-                    currentPlayer.check();
                     advanceGame();
                     break;
                 case "call":
@@ -247,7 +242,7 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            List<Player> winners = new ArrayList<>();
+            Collection<Player> winners = new ArrayList<>();
             winners.add(nextPlayer);
             awardWinner(winners, pot);
             newRound();
@@ -296,8 +291,8 @@ public class PokerBase
 
 
     public boolean raise(int chips) {
-        System.out.println("RAISE");
-        if (bettingRules.isLegalRaise(chips + currentPlayer.getActiveBet())) {
+        checkingForAction = false;
+        if (bettingRules.isLegalRaise(chips + currentPlayer.getActiveBet(), currentPlayer.getActiveBet())) {
             addToPot(chips);
             currentPlayer.bet(chips);
             latestBettingPlayer = currentPlayer;
@@ -309,10 +304,13 @@ public class PokerBase
             advanceGame();
             return true;
         }
+        checkingForAction = true;
         return false;
     }
 
     public void call(){
+        checkingForAction = false;
+
         System.out.println("CALL");
         int call = currentPlayer.call(bettingRules.getLatestBet());
         addToPot(call);
@@ -323,15 +321,18 @@ public class PokerBase
     }
 
     public boolean check(){
+        checkingForAction = false;
         if (currentPlayer.getActiveBet() >= bettingRules.getLatestBet()){
             sendUpdateCurrentPlayer();
             advanceGame();
             return true;
         }
+        checkingForAction = true;
         return false;
     }
 
     public void allIn(){
+        checkingForAction = false;
         int amount = currentPlayer.bet(currentPlayer.getChips());
         addToPot(amount);
         sendUpdateCurrentPlayer();
@@ -341,6 +342,7 @@ public class PokerBase
     }
 
     public void fold(){
+        checkingForAction = false;
         currentPlayer.fold();
         sendUpdateCurrentPlayer();
         advanceGame();
@@ -348,8 +350,8 @@ public class PokerBase
 
     private void sendUpdateCurrentPlayer(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&PLAYER&" + currentPlayer.getName() + "&" + currentPlayer.getChips() + "&"
-                                    + currentPlayer.getActiveBet() + "&" + currentPlayer.isActive() + "&" +
+            client.sendMessageToOut("UPDATE&PLAYER&" + currentPlayer.getName() + "&" + currentPlayer.getChips() + "&" +
+                                    currentPlayer.getActiveBet() + "&" + currentPlayer.isActive() + "&" +
                                     currentPlayer.getPosition());
         }
     }
@@ -365,7 +367,7 @@ public class PokerBase
                     builder.append(card);
                     builder.append("%");
                 }
-                client.getOut().println(builder);
+                client.sendMessageToOut(builder.toString());
             }
         }
     }
@@ -376,7 +378,7 @@ public class PokerBase
                 StringBuilder builder = new StringBuilder();
                 builder.append("UPDATE&CARDS&PLAYER&");
                 builder.append(player.getName());
-                client.getOut().println(builder);
+                client.sendMessageToOut(builder.toString());
             }
         }
     }
@@ -384,22 +386,23 @@ public class PokerBase
     private void sendUpdateAllPlayers(){
         for (Player player : players) {
             for (ClientWorker client : clients) {
-                client.getOut().println("UPDATE&PLAYER&" + player.getName() + "&" + player.getChips() + "&"
-                                        + player.getActiveBet() + "&" + player.isActive() + "&" +
-                                        player.getPosition());
+                client.sendMessageToOut(
+                        "UPDATE&PLAYER&" + player.getName() + "&" + player.getChips() + "&" + player.getActiveBet() + "&" +
+                        player.isActive() + "&" +
+                        player.getPosition());
             }
         }
     }
 
     private void sendUpdatePot(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&POT&" + pot + "&" + bettingRules.getLatestBet());
+            client.sendMessageToOut("UPDATE&POT&" + pot + "&" + bettingRules.getLatestBet());
         }
     }
 
     private void sendUpdateBoardCards(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&CARDS&BOARD&" + board);
+            client.sendMessageToOut("UPDATE&CARDS&BOARD&" + board);
         }
     }
 
@@ -411,13 +414,13 @@ public class PokerBase
 
     private void sendCurrentPlayer(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&CURRENTPLAYER&" + currentPlayer.getName());
+            client.sendMessageToOut("UPDATE&CURRENTPLAYER&" + currentPlayer.getName());
         }
     }
 
     private void sendUpdateNewStreet(){
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&NEWSTREET");
+            client.sendMessageToOut("UPDATE&NEWSTREET");
         }
     }
 
@@ -439,7 +442,7 @@ public class PokerBase
             builder.append("%");
         }
         for (ClientWorker client : clients) {
-            client.getOut().println("UPDATE&TABLEPOSITIONS&" + builder);
+            client.sendMessageToOut("UPDATE&TABLEPOSITIONS&" + builder);
         }
     }
 
@@ -483,9 +486,7 @@ public class PokerBase
 
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
+
 
     protected void resetGame(){
         deck.shuffleDeck();
@@ -509,7 +510,7 @@ public class PokerBase
 
     protected void updatePlayerPositions(){
         System.out.println("HEJ");
-        List<Player> losers = new ArrayList<>();
+        Collection<Player> losers = new ArrayList<>();
         for (Player player : players) {
             if(player.getChips() <= 0) losers.add(player);
         }
@@ -517,12 +518,10 @@ public class PokerBase
         if (clients != null) {
             for (ClientWorker client : clients) {
                 for (Player loser : losers) {
-                    client.getOut().println("REMOVEPLAYER&" + loser.getName());
+                    client.sendMessageToOut("REMOVEPLAYER&" + loser.getName());
                 }
             }
         }
-
-
 
         lostPlayers.addAll(losers);
         players.removeAll(losers);
@@ -552,15 +551,18 @@ public class PokerBase
         latestBettingPlayer = currentPlayer;
     }
 
+    public Player getCurrentPlayer() {
+           return currentPlayer;
+       }
+
+    public boolean isCheckingForAction() { return checkingForAction; }
+
     public void gameOver(){
         System.out.println("Winner: " + players.get(0).getName() + ",  Yaaaaaaaaaay!! you won the whole game!! you are absolutely the best player");
         Collections.reverse(lostPlayers);
-        GameOverFrame newFrame = new GameOverFrame(lostPlayers);
-        newFrame.pack();
-        newFrame.setVisible(true);
     }
 
-    public void awardWinner(List<Player> winners, int amount){
+    public void awardWinner(Collection<Player> winners, int amount){
         for (Player winner : winners) {
             System.out.println(winner.getName() + " wins " + amount/winners.size() + " chips");
             winner.addChips(amount/winners.size());
@@ -577,19 +579,9 @@ public class PokerBase
         return currentPlayer.getChips() > 0;
     }
 
-    public int getPot(){
-        return pot;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
     public BettingRules getBettingRules() {
         return bettingRules;
     }
-
-    public List<Player> getPlayers() { return players; }
 
 }
 

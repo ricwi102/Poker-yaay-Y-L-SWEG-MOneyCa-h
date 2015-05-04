@@ -11,9 +11,6 @@ public final class ServerStarter{
 
 	PokerBase pokerRules = serverManager.listenSocket(port);
 
-
-
-
 	pokerRules.checkForAction();
 
     }

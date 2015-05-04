@@ -1,6 +1,6 @@
 package server;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class PokerHand{
@@ -12,14 +12,6 @@ public class PokerHand{
 	this.handType = handType;
 	this.cards = cards;
         this.player = player;
-    }
-
-    public PokerHand(){
-        cards = new ArrayList<>();
-    }
-
-    public HandType getHandType() {
-	return handType;
     }
 
     public Player getPlayer() {

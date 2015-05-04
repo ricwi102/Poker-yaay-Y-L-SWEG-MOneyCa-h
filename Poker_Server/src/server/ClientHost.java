@@ -1,6 +1,5 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class ClientHost extends ClientWorker
 {
-    private boolean startGame;
+    private boolean gameStarted = false;
     private String gameMode = "HOLDEM";
     private String bettingRules = "NO_LIMIT";//No limit when implemented
     private static final Collection<String> GAME_MODES = Arrays.asList("HOLDEM", "OMAHA");//add all poker modes
@@ -19,33 +18,18 @@ public class ClientHost extends ClientWorker
 
     public ClientHost(final Socket client) {
 	super(client);
-	startGame = false;
     }
 
-    public String getGameMode() { return gameMode; }
 
-    public String getBettingRules() { return bettingRules; }
-
-    public boolean getStartGame() { return startGame;}
-
-    @Override public void run() {
-
-	BufferedReader in = getInAndOutput();
-	getOut().println("HOST&TRUE");
-
-	while (true) {
-	    try {
-		String[] command;
-		command = in.readLine().split("&");
-		recieveOptions(command);
-		hostOptions(command);
-	    } catch (IOException e) {
-		System.out.println("Read failed");
-		System.exit(-1);
-	    }
-	}
+    @Override protected void recieveOptions(final String[] command) {
+	super.recieveOptions(command);
+	hostOptions(command);
     }
 
+    @Override protected void getInAndOutput() throws IOException {
+	super.getInAndOutput();
+	out.println("HOST&TRUE");
+    }
 
     private void hostOptions(String[] command) {
 	switch (command[0]) {
@@ -53,7 +37,7 @@ public class ClientHost extends ClientWorker
 		if (GAME_MODES.contains(command[1])) {
 		    gameMode = command[1];
 		    for (ClientWorker client : clients) {
-		    	client.getOut().println("GAMERULES&" + gameMode);
+		    	client.sendMessageToOut("GAMERULES&" + gameMode);
 		    }
 		}
 		break;
@@ -61,39 +45,50 @@ public class ClientHost extends ClientWorker
 		if (BETTING_RULES.contains(command[1])) {
 		    bettingRules = command[1];
 		    for (ClientWorker client : clients) {
-			client.getOut().println("BETRULES&" + bettingRules);
+			client.sendMessageToOut("BETRULES&" + bettingRules);
 		    }
 
 		}
 		break;
-
 	    case "STARTGAME":
-		BettingRules bettingRules;
-		switch (this.bettingRules) {
-		    case "POTLIMIT":
-			bettingRules = new PotLimit();
-			break;
-		    case "NOLIMIT":
-		    default:
-			bettingRules = new NoLimit();
+		if (!gameStarted) {
+		    startGame();
+		    gameStarted = true;
 		}
-		PokerBase pokerRules;
-		switch (gameMode) {
-		    case "OMAHA":
-			pokerRules = new Omaha(getClientPlayers(), new Board(), bettingRules);
-			break;
-		    case "HOLDEM":
-		    default:
-			pokerRules = new Holdem(getClientPlayers(), new Board(), bettingRules);
-			break;
-		    }
-		for (ClientWorker client : clients) {
-		    client.getOut().println("STARTGAME&" + gameMode + "&" + this.bettingRules);
-		    client.addPokerRules(pokerRules);
-		}
-		pokerRules.addClients(clients);
-		pokerRules.sendUpdateNewRound();
-		pokerRules.checkForAction();
+	}
+    }
+
+    private void startGame(){
+
+	BettingRules bettingRules = createBettingRules(this.bettingRules);
+	PokerBase pokerRules = createPokerRules(gameMode, bettingRules);
+
+	for (ClientWorker client : clients) {
+	    client.sendMessageToOut("STARTGAME&" + gameMode + "&" + this.bettingRules);
+	    client.addPokerRules(pokerRules);
+	}
+	pokerRules.addClients(clients);
+	pokerRules.sendUpdateNewRound();
+	pokerRules.checkForAction();
+    }
+
+    private BettingRules createBettingRules(String bettingRules){
+	switch (bettingRules) {
+	    case "POTLIMIT":
+		return new PotLimit();
+	    case "NOLIMIT":
+	    default:
+		return new NoLimit();
+	}
+    }
+
+    private PokerBase createPokerRules(String gameMode, BettingRules bettingRules) {
+	switch (gameMode) {
+	    case "OMAHA":
+		return new Omaha(getClientPlayers(), new Board(), bettingRules);
+	    case "HOLDEM":
+	    default:
+		return new Holdem(getClientPlayers(), new Board(), bettingRules);
 	}
     }
 

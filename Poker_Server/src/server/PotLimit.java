@@ -14,11 +14,11 @@ public class PotLimit implements BettingRules
 	raised = false;
     }
 
-    public boolean isLegalRaise(int raise) {
+    public boolean isLegalRaise(int raise, int activeBet) {
         if(raised) {
-            return (raise >= 2 * latestBet) && (raise <= pot * 2);
+            return (raise >= 2 * latestBet) && (raise <= pot + (2 * latestBet) - activeBet);
         }else{
-            return raise >= minimumBet;
+            return raise >= minimumBet && (raise <= pot * 2);
         }
     }
 
@@ -28,10 +28,6 @@ public class PotLimit implements BettingRules
 
     public int getLatestBet() {
     	return latestBet;
-        }
-
-    public boolean someoneRaised() {
-            return raised;
         }
 
     public void setRaised(boolean raised) {

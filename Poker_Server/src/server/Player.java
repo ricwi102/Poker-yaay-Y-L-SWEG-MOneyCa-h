@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Player
@@ -15,6 +16,8 @@ public class Player
     private boolean active;
     private PlayerPosition position;
 
+    private static final int STARTING_CHIPS = 2000;
+
     public Player(String name) {
         hand = new ArrayList<>();
         this.name = name;
@@ -24,7 +27,7 @@ public class Player
         position = PlayerPosition.STANDARD;
         activeBet = 0;
         totalBetThisRound = 0;
-        chips = 2*1000;
+        chips = STARTING_CHIPS;
     }
 
     public Player(final String name, final String controller) {
@@ -35,14 +38,14 @@ public class Player
         tablePosition = 0;
         position = PlayerPosition.STANDARD;
         activeBet = 0;
-        chips = 2*1000;
+        chips = STARTING_CHIPS;
     }
 
     public void addCard(Card card){
         hand.add(card);
     }
 
-    public List<Card> getHand() { return hand; }
+    public Collection<Card> getHand() { return hand; }
 
     public String getName() { return name; }
 
@@ -67,8 +70,6 @@ public class Player
     public void setTablePosition(final int tablePosition) { this.tablePosition = tablePosition; }
 
     public void activate(){ active = true;}
-
-    public void check(){ }
 
     public void resetTotalBet(){ totalBetThisRound = 0;}
 

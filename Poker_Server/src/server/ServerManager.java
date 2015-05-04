@@ -5,10 +5,11 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerManager extends Thread {
-    private ServerSocket server;
+public class ServerManager
+{
+    private ServerSocket server = null;
     private List<ClientWorker> clients;
-    private ClientHost host;
+    private ClientHost host = null;
 
     public ServerManager() {
         clients = new ArrayList<>();
@@ -18,6 +19,7 @@ public class ServerManager extends Thread {
         try {
             server.close();
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Could not close socket");
             System.exit(-1);
         }
@@ -28,11 +30,11 @@ public class ServerManager extends Thread {
         try {
             server = new ServerSocket(port);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Could not listen on port " + port);
             System.exit(-1);
         }
         while (true) {
-
             try {
                 ClientWorker worker;
                 if (host == null) {
@@ -48,33 +50,14 @@ public class ServerManager extends Thread {
                 Thread t = new Thread(worker);
                 t.start();
             } catch (IOException e) {
+                e.printStackTrace();
                 System.out.println("Accept failed: " + port);
                 System.exit(-1);
             }
         }
     }
-
-
-    public List<Player> getClientPlayers(){
-        List<Player> players = new ArrayList<>();
-        for (ClientWorker client : clients) {
-            players.add(client.getPlayer());
-        }
-        return players;
-    }
-
-
-    /*
-
-    public boolean clientsHavePlayers(){
-	for (ClientWorker client : clients) {
-	    if (client.getPlayer() == null) return false;
-	}
-	return true;
-    }*/
-
-    public List<ClientWorker> getClients() {
-	return clients;
-    }
 }
+
+
+
 

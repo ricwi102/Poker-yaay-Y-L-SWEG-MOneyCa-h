@@ -2,15 +2,13 @@ package server;
 
 public interface BettingRules
 {
-    public boolean isLegalRaise(int raise);
+    public boolean isLegalRaise(int raise, int activeBet);
 
     public boolean isLegalAllIn();
 
     public void setLatestBet(int latestBet);
 
     public int getLatestBet();
-
-    public boolean someoneRaised();
 
     public void setRaised(boolean raised);
 

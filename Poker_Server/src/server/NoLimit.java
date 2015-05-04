@@ -14,7 +14,7 @@ public class NoLimit implements BettingRules
         minimumBet = 0;
     }
 
-    public boolean isLegalRaise(int raise) {
+    public boolean isLegalRaise(int raise, int activeBet) {
 	if(raised) {
             return raise >= 2 * latestBet;
         }else{
@@ -30,9 +30,6 @@ public class NoLimit implements BettingRules
 	return latestBet;
     }
 
-    public boolean someoneRaised() {
-        return raised;
-    }
 
     public void setRaised(boolean raised) {
         this.raised = raised;

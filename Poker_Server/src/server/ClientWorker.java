@@ -10,10 +10,12 @@ import java.util.List;
 public class ClientWorker implements Runnable{
 
     private Socket client;
-    protected List<ClientWorker> clients;
-    private PrintWriter out;
-    private Player player;
-    private PokerBase pokerRules;
+    protected List<ClientWorker> clients = null;
+    protected PrintWriter out = null;
+    protected BufferedReader in = null;
+    private Player player = null;
+    private PokerBase pokerRules = null;
+
 
     ClientWorker(Socket client) {
 	this.client = client;
@@ -31,16 +33,14 @@ public class ClientWorker implements Runnable{
 	out.println("ERROR&" + error);
     }
 
-    private void sendSuccess(String success) { out.println("SUCCESS&" + success); }
-
-    private void sendUpdate(){
-
-    }
-
     public void run(){
-        BufferedReader in;
 
-        in = getInAndOutput();
+        try {
+            getInAndOutput();
+        } catch (IOException exc){
+            exc.printStackTrace();
+            System.exit(-1);
+        }
         while (true) {
             try {
                 String[] command;
@@ -54,72 +54,57 @@ public class ClientWorker implements Runnable{
         }
     }
 
-    protected BufferedReader getInAndOutput(){
-        BufferedReader in = null;
+    protected void getInAndOutput() throws IOException{
         out = null;
-        try{
+        try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             out = new PrintWriter(client.getOutputStream(), true);
-        } catch (IOException e) {
+        } catch (IOException exc) {
             System.out.println("in or out failed");
-            System.exit(-1);
+            throw exc;
         }
-        return in;
     }
 
     protected void recieveOptions(String[] command){
         switch (command[0]){
             case "TEXT":
                 for (ClientWorker clientWorker : clients) {
-                    clientWorker.getOut().println("TEXT&" + player.getName() + "&" + command[1]);
+                        clientWorker.out.println("TEXT&" + player.getName() + "&" + command[1]);
                 }
                 break;
             case "RAISE":
                 int bet = Integer.parseInt(command[1]);
-                if(player.equals(pokerRules.getCurrentPlayer())){
-                    if(pokerRules.raise(bet)){
-                    sendUpdate();
-                    }else{
-                    sendError("Can't bet that ammount");
+                if(isCurrentPlayer() && lookingForAction()){
+                    if(!pokerRules.raise(bet)){
+                        sendError("Can't bet that ammount");
                     }
                 }
                 break;
             case "CALL":
-                if(player.equals(pokerRules.getCurrentPlayer())){
+                if(isCurrentPlayer() && lookingForAction()){
                     pokerRules.call();
-                    sendUpdate();
                 }
                 break;
             case "CHECK":
-                if(player.equals(pokerRules.getCurrentPlayer())){
-                    if(pokerRules.check()){
-                    sendUpdate();
-                    }else{
-                    sendError("There is an active bet, you can't check");
+                if(isCurrentPlayer() && lookingForAction()){
+                    if(!pokerRules.check()){
+                        sendError("There is an active bet, you can't check");
                     }
                 }
             break;
             case "FOLD":
-                if(player.equals(pokerRules.getCurrentPlayer())){
+                if(isCurrentPlayer() && lookingForAction()){
                     pokerRules.fold();
                 }
                 break;
             case "ALLIN":
-                if (pokerRules.getBettingRules().isLegalAllIn()){
+                if (isCurrentPlayer() && lookingForAction() && pokerRules.getBettingRules().isLegalAllIn()){
                     pokerRules.allIn();
                 }
                 break;
             case "NEWPLAYER":
-                if (!(hasPlayer() || playerWithName(command[1]))) {
-                    System.out.println("player added");
-                    player = new Player(command[1]);
-                    out.println("ADDPLAYER&" + command[1] + "&YOU");
-                    for (ClientWorker worker : clients) {
-                        if (!worker.equals(this) && worker.getPlayer() != null){
-                            out.println("ADDPLAYER&" + worker.getPlayer().getName());
-                            worker.getOut().println("ADDPLAYER&" + command[1]);
-                        }
-                    }
+                if (!(hasPlayer())) {
+                   addNewPlayer(command[1]);
                 }
             break;
         }
@@ -135,18 +120,25 @@ public class ClientWorker implements Runnable{
         out.println(builder);
     }
 
-    private boolean playerWithName(String name){
-        for (ClientWorker clientWorker : clients) {
-            if (clientWorker.getPlayer() != null && clientWorker.getPlayer().getName().equals(name)){
-                return true;
+    private void addNewPlayer(String name){
+        System.out.println("player added");
+        player = new Player(name);
+        out.println("ADDPLAYER&" + name + "&YOU");
+        for (ClientWorker worker : clients) {
+            if (!worker.equals(this) && worker.player != null){
+                out.println("ADDPLAYER&" + worker.player.getName());
+                worker.out.println("ADDPLAYER&" + name);
             }
-        } return false;
+        }
     }
 
-
-    public PrintWriter getOut() {
-	return out;
+    public void sendMessageToOut(String message){
+        out.println(message);
     }
+
+    private boolean isCurrentPlayer(){ return player.equals(pokerRules.getCurrentPlayer());}
+
+    private boolean lookingForAction(){ return pokerRules.isCheckingForAction();}
 
     public Player getPlayer() { return player; }
 }
