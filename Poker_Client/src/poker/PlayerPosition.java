@@ -2,5 +2,5 @@ package poker;
 
 
 public enum PlayerPosition {
-    DEALER, SMALLBLIND, BIGBLIND, STANDARD;
+    DEALER, SMALLBLIND, BIGBLIND, STANDARD
 }

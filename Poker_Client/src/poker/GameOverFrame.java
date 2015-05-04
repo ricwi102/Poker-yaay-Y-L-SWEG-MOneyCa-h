@@ -26,6 +26,8 @@ public class GameOverFrame extends JFrame implements ActionListener
     private void showPlayerList(){
 	final int panelHeight = 400;
 	final int panelWidth = 400;
+	final int headlineFontSize = 24;
+	final int topListFontSize = 16;
 	JLabel topList = new JLabel("<html>");
 	JLabel headline = new JLabel("Player Placings");
 	JPanel panel = new JPanel();
@@ -37,8 +39,8 @@ public class GameOverFrame extends JFrame implements ActionListener
 	    playerPlacement++;
 	}
 	topList.setText(topList.getText()  + "</html>");
-	headline.setFont(new Font("Arial", Font.BOLD, 24));
-	topList.setFont(new Font("Arial", Font.BOLD, 16));
+	headline.setFont(new Font("Arial", Font.BOLD, headlineFontSize));
+	topList.setFont(new Font("Arial", Font.BOLD, topListFontSize));
 	headline.setAlignmentX(CENTER_ALIGNMENT);
 	topList.setAlignmentX(CENTER_ALIGNMENT);
 	panel.add(headline);

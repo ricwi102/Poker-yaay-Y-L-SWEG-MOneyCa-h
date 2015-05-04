@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Board
@@ -8,14 +9,14 @@ public class Board
     private List<Card> openCards;
 
     public Board() {
-	openCards = new ArrayList<Card>();
+	openCards = new ArrayList<>();
     }
 
     public void addCard(Card card){
 	openCards.add(card);
     }
 
-    public List<Card> getOpenCards() {
+    public Collection<Card> getOpenCards() {
 	return openCards;
     }
 

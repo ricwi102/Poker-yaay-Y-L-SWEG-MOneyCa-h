@@ -19,10 +19,9 @@ public class PokerFrame extends JFrame implements ActionListener
     private JButton allIn;
     private JLabel communityCards;
     private JLabel currentPlayerChips;
-    private JLabel currentPlayerCards;
     private JLabel pot;
     private PokerComponent component;
-    private Client client;
+    private Client client = null;
 
 
     public PokerFrame(final PokerBase pokerBase) throws HeadlessException{
@@ -43,7 +42,6 @@ public class PokerFrame extends JFrame implements ActionListener
    	this.pokerBase = pokerBase;
 	this.client = client;
    	component = new PokerComponent(pokerBase);
-	component.addClient(client);
    	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
    	this.setLayout(new BorderLayout());
    	pokerBase.setFrame(this);
@@ -71,7 +69,7 @@ public class PokerFrame extends JFrame implements ActionListener
 
 	communityCards = new JLabel();
 	currentPlayerChips = new JLabel();
-	currentPlayerCards = new JLabel();
+	final JLabel currentPlayerCards = new JLabel();
 	pot = new JLabel();
 
 	check.addActionListener(this);
@@ -166,7 +164,6 @@ public class PokerFrame extends JFrame implements ActionListener
 	    if (pokerBase.isMultiplayer()){
 		client.getOut().println("CHECK");
 	    }else {
-		pokerBase.getCurrentPlayer().check();
 		pokerBase.advanceGame();
 	    }
 	    updateUi();
@@ -187,7 +184,8 @@ public class PokerFrame extends JFrame implements ActionListener
 	    if (pokerBase.isMultiplayer()){
 	    	client.getOut().println("RAISE&" + amount);
 	    }else {
-	    	if (pokerBase.getBettingRules().isLegalRaise(amount + pokerBase.getCurrentPlayer().getActiveBet())){
+	    	if (pokerBase.getBettingRules().isLegalRaise(amount + pokerBase.getCurrentPlayer().getActiveBet(),
+							     pokerBase.getCurrentPlayer().getActiveBet())){
 			int bet = pokerBase.getCurrentPlayer().bet(amount);
 			pokerBase.raise(bet);
 			pokerBase.advanceGame();
@@ -196,13 +194,15 @@ public class PokerFrame extends JFrame implements ActionListener
 		    if (pokerBase.getBettingRules() instanceof NoLimit) {
 			JOptionPane.showMessageDialog(this, "Invalid ammount! Must be at least doulbe the latest bet" + "\n" +
 							    "minimum amount: " +
-							    pokerBase.getBettingRules().getLatestBet() * 2);
+							    (pokerBase.getBettingRules().getLatestBet() * 2 - pokerBase.getCurrentPlayer().getActiveBet()));
 		    } else {
 			JOptionPane.showMessageDialog(this,
 						      "Invalid ammount! Must be at least double the latest bet but less than twice the pot" +
 						      "\n" +
-						      "Valid ammounts: " + pokerBase.getBettingRules().getLatestBet() * 2 +
-						      " - " + pokerBase.getPot() * 2);
+						      "Valid ammounts: " + (pokerBase.getBettingRules().getLatestBet() * 2
+						      - pokerBase.getCurrentPlayer().getActiveBet()) +
+						      " - " + (pokerBase.getPot() + 2*pokerBase.getBettingRules().getLatestBet()
+							       -2*pokerBase.getCurrentPlayer().getActiveBet()));
 		    }
 		}
 	    }

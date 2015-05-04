@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,23 +57,23 @@ public final class PokerHandCalc
 	return possibleBestHands.get(0);
     }
 
-    private static List<List<Card>> getSetsOfCards(List<Card> cards, int size){
-	List<List<Card>> powersets = new ArrayList<List<Card>>();
-	powersets.add(new ArrayList<Card>());
+    private static List<List<Card>> getSetsOfCards(Iterable<Card> cards, int size){
+	List<List<Card>> powersets = new ArrayList<>();
+	powersets.add(new ArrayList<>());
 
 	for(Card card : cards){
-	    List<List<Card>> newPowersets = new ArrayList<List<Card>>();
+	    List<List<Card>> newPowersets = new ArrayList<>();
 
 	    for(List<Card> subset: powersets){
 		newPowersets.add(subset);
 
-		List<Card> newSubset = new ArrayList<Card>(subset);
+		List<Card> newSubset = new ArrayList<>(subset);
 		newSubset.add(card);
 		newPowersets.add(newSubset);
 	    }
 	    powersets = newPowersets;
 	}
-	List<List<Card>> wrongSizeSets = new ArrayList<>();
+	Collection<List<Card>> wrongSizeSets = new ArrayList<>();
 	for(List<Card> set : powersets){
 	    if(set.size() != size){
 		wrongSizeSets.add(set);
@@ -139,7 +140,7 @@ public final class PokerHandCalc
     }
 
 
-    private static List<Card> getStraightFlush(List<Card> cards){
+    private static List<Card> getStraightFlush(Iterable<Card> cards){
 	List<Card> testHand = getFlush(cards);
 	if (testHand != null){
 	    return getStraight(testHand);
@@ -147,7 +148,7 @@ public final class PokerHandCalc
 	return null;
     }
 
-    private static List<Card> getFlush(List<Card> cards){
+    private static List<Card> getFlush(Iterable<Card> cards){
 	List<Card> testHand = new ArrayList<>();
 	for (int i = 0; i < 4; i++) {
 	    testHand = new ArrayList<>();
@@ -193,7 +194,7 @@ public final class PokerHandCalc
 	return null;
     }
 
-    private static List<Card> getNumOfAKind(List<List<Card>>  sameValueCards, List<Card> cards, int num){
+    private static List<Card> getNumOfAKind(Iterable<List<Card>> sameValueCards, List<Card> cards, int num){
 	sortHand(cards);
 	List<Card> testHand = new ArrayList<>();
 	if (sameValueCards == null) return null;
@@ -213,7 +214,7 @@ public final class PokerHandCalc
 	return null;
     }
 
-    private static List<Card> getNumOfAKind(List<List<Card>>  sameValueCards, List<Card> cards, int num1, int num2){
+    private static List<Card> getNumOfAKind(Iterable<List<Card>> sameValueCards, List<Card> cards, int num1, int num2){
 	sortHand(cards);
 	List<Card> testHand = new ArrayList<>();
 	boolean foundFirst = false;

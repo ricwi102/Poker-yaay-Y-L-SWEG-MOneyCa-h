@@ -1,7 +1,6 @@
 package poker;
 
 
-import poker_client.Client;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -19,11 +19,10 @@ public class PokerComponent extends JComponent
 {
     private PokerBase pokerBase;
     private List<Player> players;
-    private BufferedImage hiddenImage;
-    private BufferedImage foldedImage;
-    private BufferedImage buttonImage;
+    private BufferedImage hiddenImage = null;
+    private BufferedImage foldedImage = null;
+    private BufferedImage buttonImage = null;
     private BufferedImage[][] deckImages;
-    private Client client;
     private static final int NUMBEROFCOLORS = 4;
     private static final int NUMBEROFVALUES = 13;
     private Board board;
@@ -59,29 +58,26 @@ public class PokerComponent extends JComponent
             foldedImage = ImageIO.read(file2);
             buttonImage = ImageIO.read(file3);
         }catch(IOException | URISyntaxException e){
-            System.out.println("could not find image");
-            hiddenImage = null;
-            foldedImage = null;
-            buttonImage = null;
+            e.printStackTrace();
         }
 
         addCardImages();
     }
 
     private void addCardImages(){
-        final int cardWidth = 73;
-        final int cardHeight = 98;
         try{
             URI url1 = getClass().getResource("images" + File.separator + "Deck.jpg").toURI();
        	    File file1 = new File(url1.getPath());
        	    BufferedImage deckImage = ImageIO.read(file1);
-       	    for(int i = 0; i < NUMBEROFCOLORS; i++){
+            final int cardWidth = 73;
+            final int cardHeight = 98;
+            for(int i = 0; i < NUMBEROFCOLORS; i++){
        		for(int j = 0; j < NUMBEROFVALUES; j++){
         	    deckImages[i][j] = deckImage.getSubimage(j * cardWidth, i * cardHeight, cardWidth, cardHeight);
         	}
             }
        	}catch(URISyntaxException |IOException e){
-       	    BufferedImage deckImage = null;
+       	    e.printStackTrace();
        	}
     }
 
@@ -107,8 +103,10 @@ public class PokerComponent extends JComponent
         Graphics2D g2 = (Graphics2D) g;
         final int spaceFromCards = 16;
         final int buttonSize = 16;
+        final int playerNameFontSize = 16;
+        final int potFontSize = 22;
         for(Player player : players){
-            g2.setFont(new Font("Arial", Font.BOLD, 16));
+            g2.setFont(new Font("Arial", Font.BOLD, playerNameFontSize));
             g2.drawString(player.getName(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + (spaceFromCards*2));
             g2.drawString("Chips: " + player.getChips(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS) , CARD_HEIGHT + (spaceFromCards*3));
             g2.drawString("Bet: "+player.getActiveBet(), player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + (spaceFromCards*4));
@@ -121,20 +119,19 @@ public class PokerComponent extends JComponent
                 g2.drawString("BB",player.getTablePosition() * (CARD_WIDTH * cardsPerPlayer + SPACE_BETWEEN_PLAYERS), CARD_HEIGHT + spaceFromCards);
             }
         }
-        g2.setFont(new Font("Arial",Font.BOLD,22));
+        g2.setFont(new Font("Arial",Font.BOLD,potFontSize));
         g2.drawString("Pot: "+ pokerBase.getPot(),((numberOfPlayers*cardsPerPlayer* CARD_WIDTH)/2) - CARD_WIDTH,
                       CARD_HEIGHT +(spaceFromCards*6));
     }
 
     private void drawPlayerCards(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        List<BufferedImage> images;
-
+        final int cardValues = 14;
         for (Player player : players) {
             int currentCard = 0;
-            images = new ArrayList<>();
+            Collection<BufferedImage> images = new ArrayList<>();
             for(Card card : player.getHand()){
-                if(card.getValue() < 14) {
+                if(card.getValue() < cardValues) {
                     images.add(deckImages[card.getColor().getValue()][card.getValue() - 1]);
                 }else{
                     images.add(deckImages[card.getColor().getValue()][0]);
@@ -191,12 +188,13 @@ public class PokerComponent extends JComponent
 
     private void drawOpenCards(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        List<BufferedImage> images = new ArrayList<>();
+        Collection<BufferedImage> images = new ArrayList<>();
         int currentCard = 0;
         final int spacing = 110;
+        final int cardValues = 14;
 
         for(Card card : board.getOpenCards()){
-            if(card.getValue() < 14) {
+            if(card.getValue() < cardValues) {
                 images.add(deckImages[card.getColor().getValue()][card.getValue() - 1]);
             }else{
                 images.add(deckImages[card.getColor().getValue()][0]);
@@ -208,9 +206,7 @@ public class PokerComponent extends JComponent
         }
     }
 
-    public void addClient(Client client){
-        this.client = client;
-    }
+
 
 }
 

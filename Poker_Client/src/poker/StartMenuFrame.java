@@ -32,6 +32,7 @@ public class StartMenuFrame extends JFrame implements ActionListener
 
     public StartMenuFrame() throws HeadlessException {
 	super("Main menu");
+	final int fontSize = 16;
 	gameType = GameType.HOLDEM;
 	players = new ArrayList<>();
 	bettingRules = new NoLimit();
@@ -39,11 +40,11 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	this.setLayout(new BorderLayout());
 	hasNonAiPlayer = false;
 	gameRules = new JLabel("Game type: " + "Texas Holem");
-	gameRules.setFont(new Font("Arial", Font.BOLD, 16));
+	gameRules.setFont(new Font("Arial", Font.BOLD, fontSize));
 	bettingStructure = new JLabel("Betting structure: " + "No Limit");
-	bettingStructure.setFont(new Font("Arial", Font.BOLD, 16));
+	bettingStructure.setFont(new Font("Arial", Font.BOLD, fontSize));
 	playerLabel = new JLabel("Players: " + 0);
-	playerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+	playerLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
 	potLimit = new JButton("Pot Limit");
 	noLimit = new JButton("No Limit");
 	omaha = new JButton("Omaha");
@@ -87,7 +88,8 @@ public class StartMenuFrame extends JFrame implements ActionListener
 
     private void createGameOptionsMenu(){
 	getContentPane().removeAll();
-	Component spacing = Box.createRigidArea(new Dimension(0,16));
+	final int spacingSize = 16;
+	Component spacing = Box.createRigidArea(new Dimension(0,spacingSize));
 	final int frameWidth = 400;
 	final int frameHeight = 400;
 
@@ -121,14 +123,45 @@ public class StartMenuFrame extends JFrame implements ActionListener
     }
 
     public void actionPerformed(ActionEvent e){
+	menuActions(e);
+	startGameActions(e);
+    }
+
+    private void startGameActions(ActionEvent e) {
+	if (e.getSource().equals(startGame)) {
+	    if (players.size() >= 2 && hasNonAiPlayer) {
+		if (gameType == GameType.HOLDEM) {
+		    Board board = new Board();
+		    Holdem holdem = new Holdem(players, board, bettingRules);
+		    PokerFrame frame = new PokerFrame(holdem);
+		    frame.pack();
+		    frame.setVisible(true);
+		    holdem.startSingleplayer();
+		    setVisible(false);
+		    dispose();
+		} else if (gameType == GameType.OMAHA) {
+		    Board board = new Board();
+		    Omaha omaha = new Omaha(players, board, bettingRules);
+		    PokerFrame frame = new PokerFrame(omaha);
+		    frame.pack();
+		    frame.setVisible(true);
+		    omaha.startSingleplayer();
+		    setVisible(false);
+		    dispose();
+		}
+	    } else {
+		JOptionPane.showMessageDialog(this, "Must have at least 2 players, and at least 1 non AI player");
+	    }
+	}
+    }
+
+    private void menuActions(ActionEvent e){
 	if(e.getSource().equals(setUpGame)){
 	    createGameOptionsMenu();
 	}else if(e.getSource().equals(multiplayer)){
 	    Client client = new Client();
 	    ClientFrame clientFrame = new ClientFrame(client);
 	    client.addFrame(clientFrame);
-
-
 	    clientFrame.connectToServerFrame();
 
 	    clientFrame.pack();
@@ -157,30 +190,6 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	    if (name != null) {
 		players.add(new Player(name,"ai"));
 		playerLabel.setText("Players: " + players);
-	    }
-	}else if(e.getSource().equals(startGame)){
-	    if(players.size() >= 2 && hasNonAiPlayer){
-		if(gameType == GameType.HOLDEM){
-		    Board board = new Board();
-		    Holdem holdem = new Holdem(players,board,bettingRules);
-		    PokerFrame frame = new PokerFrame(holdem);
-		    frame.pack();
-		    frame.setVisible(true);
-		    holdem.startSingleplayer();
-		    setVisible(false);
-		    dispose();
-		}else if(gameType == GameType.OMAHA){
-		    Board board = new Board();
-		    Omaha omaha = new Omaha(players,board,bettingRules);
-		    PokerFrame frame = new PokerFrame(omaha);
-		    frame.pack();
-		    frame.setVisible(true);
-		    omaha.startSingleplayer();
-		    setVisible(false);
-		    dispose();
-		}
-	    }else{
-		JOptionPane.showMessageDialog(this, "Must have at least 2 players, and at least 1 non AI player");
 	    }
 	}else if(e.getSource().equals(quit)){
 	    dispose();

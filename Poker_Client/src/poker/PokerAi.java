@@ -1,14 +1,13 @@
 package poker;
 
 
-public class Ai {
-    private PokerBase pokerType;
+public class PokerAi
+{
     private BettingRules bettingRules;
 
 
 
-    public Ai(PokerBase pokerType) {
-        this.pokerType = pokerType;
+    public PokerAi(PokerBase pokerType) {
         bettingRules = pokerType.getBettingRules();
     }
 

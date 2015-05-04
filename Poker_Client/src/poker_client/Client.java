@@ -20,19 +20,18 @@ import java.util.List;
 
 public class Client implements Runnable
 {
-    private PokerBase pokerRules;
-    private ClientFrame frame;
-    private PrintWriter out;
-    private BufferedReader in;
+    private PokerBase pokerRules = null;
+    private ClientFrame frame = null;
+    private PrintWriter out = null;
+    private BufferedReader in = null;
     private List<Player> players = new ArrayList<>();
-    private Player you;
+    private Player you = null;
     private boolean host = false;
-    private Socket socket = null;
 
 
     public void listenSocket(int port, InetAddress address) throws UnknownHostException, IOException {
         try {
-            socket = new Socket(address, port);
+            final Socket socket = new Socket(address, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (UnknownHostException e) {
@@ -363,6 +362,7 @@ public class Client implements Runnable
         for (Player player : players) {
             if (name.equals(player.getName())) {
                 pokerRules.setCurrentPlayer(player);
+                break;
             }
         }
     }

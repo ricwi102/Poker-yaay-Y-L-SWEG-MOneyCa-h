@@ -4,6 +4,8 @@ package poker_client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 /**
  * Created by Richard on 2015-04-23.
@@ -15,7 +17,7 @@ public class ConnectToServerComponent extends JComponent{
     private JTextField port;
     private JTextField name;
 
-    public ConnectToServerComponent(ClientListener listener, ClientKeyAdapter keyAdapter) {
+    public ConnectToServerComponent(ActionListener listener, KeyListener keyAdapter) {
 
         connect = new JButton("Connect to server");
         ip = new JTextField(10*2);
@@ -31,6 +33,7 @@ public class ConnectToServerComponent extends JComponent{
     }
 
     public void startComponent(){
+        final int ySpacing = 15;
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -42,12 +45,10 @@ public class ConnectToServerComponent extends JComponent{
         panel.add(Box.createRigidArea(new Dimension(0,5)));
         panel.add(new JLabel("Player Name"));
         panel.add(name);
-        panel.add(Box.createRigidArea(new Dimension(5,15)));
+        panel.add(Box.createRigidArea(new Dimension(5,ySpacing)));
         panel.add(connect);
 
         this.add(panel);
-
-        //setPreferredSize(new Dimension(500, 500));
     }
 
     public String getIpText() {
@@ -64,11 +65,4 @@ public class ConnectToServerComponent extends JComponent{
 
     public String getPlayerNameText(){ return name.getText();}
 
-    public JTextField getIp() {
-        return ip;
-    }
-
-    public JTextField getPort() {
-        return port;
-    }
 }
