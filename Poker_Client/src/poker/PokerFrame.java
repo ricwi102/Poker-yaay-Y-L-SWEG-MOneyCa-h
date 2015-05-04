@@ -7,6 +7,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * This is the frame that is shown during the game. It contains the PokerComponent to show the cards and such, and it has
+ * all the buttons that can be used during the game. It also handles the actions of said buttons
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
 
 public class PokerFrame extends JFrame implements ActionListener
 {

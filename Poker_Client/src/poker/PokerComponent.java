@@ -14,6 +14,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This class handles the graphics of the playing board. Like painting the cards, player chips, player names, the pot
+ * and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
 
 public class PokerComponent extends JComponent
 {
@@ -38,7 +45,7 @@ public class PokerComponent extends JComponent
         players = pokerBase.getPlayers();
         board = pokerBase.getBoard();
         numberOfPlayers = players.size();
-        if(pokerBase instanceof Omaha){
+        if(pokerBase.getGameType() == GameType.OMAHA){
             cardsPerPlayer = 4;
         }else {
             cardsPerPlayer = 2;

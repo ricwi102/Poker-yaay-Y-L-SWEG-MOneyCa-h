@@ -1,6 +1,12 @@
 package poker;
 
-
+/**
+ * This class is used to keep track of all betting in a No-Limit game. Like keeping track of the latest bet,
+ * checking if a certain bet is legal and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
 
 public class NoLimit implements BettingRules
 {

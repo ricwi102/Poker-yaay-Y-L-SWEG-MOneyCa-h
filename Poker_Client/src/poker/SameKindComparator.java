@@ -3,6 +3,12 @@ package poker;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * This comparator is used to compare different pairs, thee-of-a-kinds, four-of-a-kinds to each other
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
 public class SameKindComparator implements Comparator<List<Card>>
 {
     public int compare(List<Card> list1, List<Card> list2){

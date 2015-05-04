@@ -6,17 +6,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Calculates the best hand, given a players cards and the boards cards
+ * This class contains all methods used to calculate a players best possible hand given their hand and
+ * the community cards.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public final class PokerHandCalc
 {
     private PokerHandCalc() {}
 
+    /*
+    This method is used to calculate the best hand in a game of Omaha. In Omaha you have 4 cards in hand and 5
+    community cards. You have to use EXACTLY 2 cards from your hand and 3 cards from the community cards to form
+    your poker hand
+     */
     public static PokerHand getBestOmahaHand(Player player, Board board){
-	final int fourOfAKind = 4;
-	final int threeOfAKind = 3;
-	final int pair = 2;
 	List<PokerHand> possibleBestHands = new ArrayList<>();
 	List<List<Card>> setsOfPlayerCards = getSetsOfCards(player.getHand(),2);
 	List<List<Card>> setsOfOpenCards = getSetsOfCards(board.getOpenCards(),3);
@@ -26,31 +32,7 @@ public final class PokerHandCalc
 		cards.clear();
 		cards.addAll(currentSetOfPlayerCards);
 		cards.addAll(currentSetOfOpenCards);
-		List<List<Card>> numOfAKind = getSameValueCards(cards);
-		if(getStraightFlush(cards) != null){
-		    possibleBestHands.add(new PokerHand(HandType.STRAIGHTFLUSH, getStraightFlush(cards),player));
-		}else if(getNumOfAKind(numOfAKind, cards, fourOfAKind) != null) {
-		    possibleBestHands.add(new PokerHand(HandType.FOUROFAKIND, getNumOfAKind(numOfAKind, cards, fourOfAKind),player));
-		}else if(getNumOfAKind(numOfAKind, cards, threeOfAKind, pair) != null) {
-		    possibleBestHands.add(new PokerHand(HandType.FULLHOUSE, getNumOfAKind(numOfAKind, cards, threeOfAKind, pair),player));
-		} else if(getFlush(cards) != null){
-		    possibleBestHands.add(new PokerHand(HandType.FLUSH, getBestFive(getFlush(cards)),player));
-		}else if(getStraight(cards) != null){
-		    possibleBestHands.add(new PokerHand(HandType.STRAIGHT, getStraight(cards),player));
-		}else if(getNumOfAKind(numOfAKind, cards, threeOfAKind) != null) {
-		    possibleBestHands.add(new PokerHand(HandType.THREEOFAKIND, getNumOfAKind(numOfAKind, cards, threeOfAKind),player));
-		}else if(getNumOfAKind(numOfAKind, cards, pair, pair) != null){
-		    possibleBestHands.add(new PokerHand(HandType.TWOPAIR, getNumOfAKind(numOfAKind, cards, pair, pair),player));
-		}else if (getNumOfAKind(numOfAKind, cards, pair) != null) {
-		    possibleBestHands.add(new PokerHand(HandType.PAIR, getNumOfAKind(numOfAKind, cards, pair),player));
-		}else{
-		    sortHand(cards);
-		    while(cards.size() > 5){
-			cards.remove(0);
-		    }
-		    Collections.reverse(cards);
-		    possibleBestHands.add(new PokerHand(HandType.HIGHCARD, cards,player));
-		}
+		possibleBestHands.add(getBestHand(cards,player));
 	    }
 	}
 	Collections.sort(possibleBestHands, new HandComparator());
@@ -83,13 +65,22 @@ public final class PokerHandCalc
 	return powersets;
     }
 
+    /*
+    This method is used to calculate the best hand in a game of Hold'em. In Hold'em you have 2 cards in hand and 5
+     community cards. You may ues any combination of 5 between these cards to form you poker hand
+     */
     public static PokerHand getBestHoldemHand(Player player, Board board){
-	final int fourOfAKind = 4;
-	final int threeOfAKind = 3;
-	final int pair = 2;
+
 	List<Card> cards = new ArrayList<>();
 	cards.addAll(board.getOpenCards());
 	cards.addAll(player.getHand());
+	return getBestHand(cards,player);
+    }
+
+    private static PokerHand getBestHand(List<Card> cards, Player player){
+	final int fourOfAKind = 4;
+	final int threeOfAKind = 3;
+	final int pair = 2;
 	List<List<Card>> numOfAKind = getSameValueCards(cards);
 	if(getStraightFlush(cards) != null){
 	    return new PokerHand(HandType.STRAIGHTFLUSH, getStraightFlush(cards),player);

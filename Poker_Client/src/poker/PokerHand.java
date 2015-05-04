@@ -3,6 +3,14 @@ package poker;
 
 import java.util.List;
 
+/**
+ *This is the class for made poker hands. It contains a list of the cards in the hand, a HandType (flush, pair etc)
+ * and the player who is the owner of the hand.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
 public class PokerHand{
     private HandType handType;
     private List<Card> cards;

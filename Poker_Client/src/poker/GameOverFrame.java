@@ -6,6 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * This is the frame that is shown to players when they are eliminated in a network game, or when a winner has been
+ * decided in a local game.
+ * It shows a list of the players eliminated so far and in which order they were eliminated.
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
+ */
 
 public class GameOverFrame extends JFrame implements ActionListener
 {

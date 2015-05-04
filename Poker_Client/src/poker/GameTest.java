@@ -3,7 +3,10 @@ package poker;
 
 
 /**
- * GameTest
+ * This class contains the main method. Run this when you want to start the game.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 public final class GameTest
 {

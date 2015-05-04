@@ -3,9 +3,8 @@ package poker_client;
 
 import poker.BettingRules;
 import poker.Board;
-import poker.Holdem;
 import poker.NoLimit;
-import poker.Omaha;
+import poker.GameType;
 import poker.Player;
 import poker.PokerBase;
 import poker.PokerFrame;
@@ -87,9 +86,9 @@ public class ClientFrame extends JFrame{
         PokerBase pokerRules;
         Board board = new Board();
         if (gameMode.equals("OMAHA")) {
-            pokerRules = new Omaha(players, board, bettingRules);
+            pokerRules = new PokerBase(players, board, bettingRules, GameType.OMAHA);
         }else{
-            pokerRules = new Holdem(players, board, bettingRules);
+            pokerRules = new PokerBase(players, board, bettingRules,GameType.HOLDEM);
         }
         pokerRules.startMultiplayer();
         client.addPokerRules(pokerRules);

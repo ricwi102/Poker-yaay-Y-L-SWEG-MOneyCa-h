@@ -1,7 +1,12 @@
 package poker;
 
 
-
+/**
+ * This is the class for individual playing cards and contains information about the cards color and value
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
+ */
 
 
 public class Card

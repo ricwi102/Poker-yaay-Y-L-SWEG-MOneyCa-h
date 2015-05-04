@@ -10,6 +10,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the frame that you see when you start up a game. It handles all options for a single player game
+ * and creates a ClientFrame if a player wants to play multiplayer
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
 public class StartMenuFrame extends JFrame implements ActionListener
 {
     private JButton setUpGame;
@@ -130,30 +138,22 @@ public class StartMenuFrame extends JFrame implements ActionListener
     private void startGameActions(ActionEvent e) {
 	if (e.getSource().equals(startGame)) {
 	    if (players.size() >= 2 && hasNonAiPlayer) {
-		if (gameType == GameType.HOLDEM) {
-		    Board board = new Board();
-		    Holdem holdem = new Holdem(players, board, bettingRules);
-		    PokerFrame frame = new PokerFrame(holdem);
-		    frame.pack();
-		    frame.setVisible(true);
-		    holdem.startSingleplayer();
-		    setVisible(false);
-		    dispose();
-		} else if (gameType == GameType.OMAHA) {
-		    Board board = new Board();
-		    Omaha omaha = new Omaha(players, board, bettingRules);
-		    PokerFrame frame = new PokerFrame(omaha);
-		    frame.pack();
-		    frame.setVisible(true);
-		    omaha.startSingleplayer();
-		    setVisible(false);
-		    dispose();
-		}
+
+		Board board = new Board();
+		PokerBase pokerBase = new PokerBase(players, board, bettingRules, gameType);
+		PokerFrame frame = new PokerFrame(pokerBase);
+		frame.pack();
+		frame.setVisible(true);
+		pokerBase.startSingleplayer();
+		setVisible(false);
+		dispose();
+
 	    } else {
 		JOptionPane.showMessageDialog(this, "Must have at least 2 players, and at least 1 non AI player");
 	    }
 	}
     }
+
 
     private void menuActions(ActionEvent e){
 	if(e.getSource().equals(setUpGame)){

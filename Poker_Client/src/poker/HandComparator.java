@@ -2,6 +2,12 @@ package poker;
 
 import java.util.Comparator;
 
+/**
+ * This comparator defines how Poker hands should be compared against each other
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
+ */
 
 public class HandComparator implements Comparator<PokerHand>
 {

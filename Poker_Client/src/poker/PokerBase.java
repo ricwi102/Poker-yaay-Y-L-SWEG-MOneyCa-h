@@ -7,9 +7,13 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Poker base that include the shared rules of all pokergames available with this program
+ * This class handles everything regarding the game flow. It moves the game forward in appropriate ways depending
+ * on the game type, like updating player positions, deciding who is the winner of each round,
+ * eliminating players when appropriate, dealing cards and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
-
 public class PokerBase
 {
     protected List<Player> players;
@@ -23,15 +27,17 @@ public class PokerBase
     protected final static int SMALL_BLIND = 10;
     protected final static int BIG_BLIND = 20;
     protected BettingRules bettingRules;
+    protected GameType gameType;
     protected PokerFrame frame = null;
     protected PokerAi ai;
     protected boolean isGameOver;
     protected boolean multiplayer;
 
 
-    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
+    public PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
         this.players = players;
         this.board = board;
+        this.gameType = gameType;
         this.bettingRules = bettingRules;
         lostPlayers = new ArrayList<>();
         isGameOver = false;
@@ -48,12 +54,15 @@ public class PokerBase
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
+        dealCards();
+        checkForAction();
     }
 
     public void startMultiplayer(){
         multiplayer = true;
     }
 
+    //This is used to decide where a players name and cards should appear on the playing board.
     private void setTablePositions(){
         int currentPosition = 0;
         for (Player player : players) {
@@ -62,7 +71,19 @@ public class PokerBase
         }
     }
 
-    protected void dealCards(){}
+    protected void dealCards(){
+        int numberOfCards;
+        if(gameType == GameType.OMAHA){
+            numberOfCards = 4;
+        }else{
+            numberOfCards = 2;
+        }
+        for(int i = 0; i < numberOfCards; i++) {
+            for (Player player : players) {
+                player.addCard(deck.drawCard());}
+        }
+    }
+
 
     protected void payBlinds(){
         for (Player player : players) {
@@ -96,19 +117,18 @@ public class PokerBase
         }
     }
 
-
-
     private void dealOneCard(){
         board.addCard(deck.drawCard());
     }
 
+    //Uses the class PokerHandCalc and HandComparator to decide which active player has the best hand
     private void compareHands(){
         List<PokerHand> bestHands = new ArrayList<>();
         boolean mustSplitPot = false;
         for (Player player : players) {
             if(player.isActive()) {
                 System.out.println(player);
-                if(player.getHand().size() == 4) {
+                if(gameType == GameType.OMAHA) {
                     bestHands.add(PokerHandCalc.getBestOmahaHand(player, board));
                 }else{
                     bestHands.add(PokerHandCalc.getBestHoldemHand(player, board));
@@ -152,6 +172,11 @@ public class PokerBase
         }
     }
 
+    /*
+    This is used if the active player with the best hand did not have enough chips to bet as much as some other players.
+    The pot must then be split appropriately between the players. This function calculates how much each player should get
+    and rewards them as such.
+     */
     private void calculateSidePots(List<PokerHand> bestHands, Iterable<Player> players){
         int currentPot = 0;
         Player currentBestPlayer = bestHands.get(0).getPlayer();
@@ -175,7 +200,6 @@ public class PokerBase
         winners.add(currentBestPlayer);
         awardWinner(winners,currentPot);
         if(!higherBettingPlayerHands.isEmpty()){
-            System.out.println("Higher betting players: " + higherBettingPlayers);
             Collections.sort(higherBettingPlayerHands, new HandComparator());
             calculateSidePots(higherBettingPlayerHands,higherBettingPlayers);
         }
@@ -195,7 +219,7 @@ public class PokerBase
         }
     }
 
-
+    //This is used to check if the current player is an AI and let the AI decide what to do if that is the case
     public void checkForAction(){
         frame.updateUi();
         if(currentPlayer.getController().equals("ai")){
@@ -233,7 +257,8 @@ public class PokerBase
         }
     }
 
-
+    /* This is used to decide who is next to act and to check if it´s time to move on to the next street
+    (pre-flop, flop, turn and river in poker terms) */
     public void advanceGame(){
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
@@ -354,7 +379,7 @@ public class PokerBase
         bettingRules.setRaised(false);
     }
 
-
+    // This removes players with no chips, moves around the blinds and dealer positions
     protected void updatePlayerPositions(){
         Collection<Player> losers = new ArrayList<>();
         for (Player player : players) {
@@ -436,6 +461,8 @@ public class PokerBase
     public List<Player> getPlayers() { return players; }
 
     public PokerFrame getFrame() { return frame; }
+
+    public GameType getGameType() { return gameType; }
 
     public boolean isMultiplayer() { return multiplayer; }
 

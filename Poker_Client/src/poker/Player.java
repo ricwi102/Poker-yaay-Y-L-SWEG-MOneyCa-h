@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This is the class for individual players in the game. Contains all relevant information for each player, like table
+ * position, cards, chips and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
 public class Player
 {
     private List<Card> hand;
@@ -15,6 +23,7 @@ public class Player
     private int tablePosition;
     private boolean active;
     private PlayerPosition position;
+    private final static int STARTING_CHIPS = 2000;
 
     public Player(String name) {
         hand = new ArrayList<>();
@@ -25,7 +34,7 @@ public class Player
         position = PlayerPosition.STANDARD;
         activeBet = 0;
         totalBetThisRound = 0;
-        chips = 2*1000;
+        chips = STARTING_CHIPS;
     }
 
     public Player(final String name, final String controller) {

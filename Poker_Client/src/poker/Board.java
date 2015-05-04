@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This class contains the open community cards that are available to all players during the game
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
+ */
 public class Board
 {
     private List<Card> openCards;
