@@ -1,6 +1,7 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Player
@@ -42,7 +43,7 @@ public class Player
         hand.add(card);
     }
 
-    public List<Card> getHand() { return hand; }
+    public Collection<Card> getHand() { return hand; }
 
     public String getName() { return name; }
 
@@ -73,8 +74,6 @@ public class Player
     public void setActive(boolean active){ this.active = active;}
 
     public void setHand(final List<Card> hand) { this.hand = hand; }
-
-    public void check(){ }
 
     public void resetTotalBet(){ totalBetThisRound = 0;}
 

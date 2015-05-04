@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class ClientListener implements ActionListener{
 
-    ClientFrame frame;
+    private ClientFrame frame;
 
     public ClientListener(ClientFrame frame) {
 

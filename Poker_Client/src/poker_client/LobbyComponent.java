@@ -5,7 +5,7 @@ import poker.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.List;
+
 
 /**
  * Created by Richard on 2015-04-23.
@@ -43,19 +43,21 @@ public class LobbyComponent extends JComponent{
 
     public void startComponent() {
         createPanel();
+        final int spacing = 40;
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(gameMode);
         panel.add(Box.createRigidArea(new Dimension(10, 10)));
         panel.add(betRules);
 
-        this.add(Box.createRigidArea(new Dimension(40, 40)));
+        this.add(Box.createRigidArea(new Dimension(spacing, spacing)));
         this.add(panel);
 
     }
 
     public void startComponentHost(){
         createPanel();
+        final int spacing = 40;
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(gameOptions);
@@ -64,7 +66,7 @@ public class LobbyComponent extends JComponent{
         panel.add(Box.createRigidArea(new Dimension(10, 10)));
         panel.add(startGame);
 
-        this.add(Box.createRigidArea(new Dimension(40, 40)));
+        this.add(Box.createRigidArea(new Dimension(spacing, spacing)));
         this.add(panel);
 
     }
@@ -76,7 +78,7 @@ public class LobbyComponent extends JComponent{
         this.add(panel);
     }
 
-    public void updatePlayersInLobby(List<Player> players){
+    public void updatePlayersInLobby(Iterable<Player> players){
         StringBuilder builder = new StringBuilder();
         for (Player player : players) {
             builder.append("<html>");

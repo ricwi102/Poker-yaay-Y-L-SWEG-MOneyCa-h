@@ -12,7 +12,7 @@ public class Deck
 
 
     public Deck() {
-	deck = new ArrayList<Card>();
+	deck = new ArrayList<>();
 	makeDeck();
     }
 
@@ -21,11 +21,7 @@ public class Deck
 	final int values = 14;
 	for(int j = 0; j < 4; j++){
 	    for (int i = 2; i <= values; i++) {
-		if(i == 14){
-		    deck.add(new Card(i,CardColor.values()[j]));
-		}else {
-		    deck.add(new Card(i, CardColor.values()[j]));
-		}
+		deck.add(new Card(i,CardColor.values()[j]));
 	    }
 	}
     }
@@ -35,9 +31,6 @@ public class Deck
 	makeDeck();
     }
 
-    public List<Card> getDeck() {
-	return deck;
-    }
 
     public Card drawCard(){
 	Random rand = new Random();

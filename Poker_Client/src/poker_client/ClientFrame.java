@@ -24,26 +24,15 @@ public class ClientFrame extends JFrame{
 
     private Client client;
     private ClientListener clientListener;
-    private PokerBase pokerRules;
     private JMenuItem item;
-    private JButton check;
-    private JButton fold;
-    private JButton raise;
-    private JButton call;
-    private JButton allIn;
-    private JLabel communityCards;
-    private JLabel pot;
     private JPanel layouts;
     private ConnectToServerComponent connectComponent;
-    private AddPlayerComponent addPlayerComponent;
     private LobbyComponent lobbyComponent;
     private CardLayout cardLayout = new CardLayout();
 
-    private boolean connected = false;
 
     private static final String CONNECT = "CONNECT";
     private static final String LOBBY = "LOBBY";
-    private static final String ADD_PLAYER = "ADD_PLAYER";
 
     public ClientFrame(Client client) throws HeadlessException{
         super("Pokr sweg, holdum YÅLÅ");
@@ -51,7 +40,6 @@ public class ClientFrame extends JFrame{
         clientListener = new ClientListener(this);
         ClientKeyAdapter keyAdapter = new ClientKeyAdapter(this);
         connectComponent = new ConnectToServerComponent(clientListener, keyAdapter);
-        addPlayerComponent = new AddPlayerComponent(clientListener);
         lobbyComponent = new LobbyComponent(clientListener);
 
 
@@ -59,14 +47,12 @@ public class ClientFrame extends JFrame{
         layouts = new JPanel(cardLayout);
 
         layouts.add(connectComponent, CONNECT);
-        layouts.add(addPlayerComponent, ADD_PLAYER);
         layouts.add(lobbyComponent, LOBBY);
 
 
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //this.setLayout(new BorderLayout());
         this.add(layouts/*, BorderLayout.PAGE_END*/);
-        createButtons();
         createMenu();
         //displayBoard();
     }
@@ -76,28 +62,7 @@ public class ClientFrame extends JFrame{
 	this.add(component,BorderLayout.PAGE_START);
     }*/
 
-    private void createButtons() {
 
-
-        check = new JButton();
-        fold = new JButton();
-        call = new JButton();
-        raise = new JButton();
-        allIn = new JButton();
-
-
-        check.addActionListener(clientListener);
-        fold.addActionListener(clientListener);
-        call.addActionListener(clientListener);
-        raise.addActionListener(clientListener);
-        allIn.addActionListener(clientListener);
-
-
-        communityCards = new JLabel();
-
-        pot = new JLabel();
-
-    }
 
 
     private void createMenu() {
@@ -160,7 +125,6 @@ public class ClientFrame extends JFrame{
         try {
             InetAddress address = InetAddress.getByName(connectComponent.getIpText());
             client.listenSocket(serverPort, address);
-            connected = true;
             Thread t = new Thread(client);
             t.start();
             client.getOut().println("NEWPLAYER&" + connectComponent.getPlayerNameText());
@@ -217,34 +181,8 @@ public class ClientFrame extends JFrame{
         Object source = e.getSource();
         if (source.equals(item)) {
             System.exit(0);
-        } else if (source.equals(check)) {
-
-            //updateUi();
-        } else if (source.equals(fold)) {
-
-        } else if (source.equals(raise)) {
-            int amount;
-            do {
-                String input = JOptionPane.showInputDialog("Ammount to bet: ");
-                amount = Integer.parseInt(input);
-            } while (pokerRules.getCurrentPlayer().getChips() - amount < 0);
-            if (pokerRules.getBettingRules().isLegalRaise(amount + pokerRules.getCurrentPlayer().getActiveBet())) {
-
-                //updateUi();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid ammount");
-            }
-        } else if (source.equals(call)) {
-
-            //updateUi();
-        } else if (source.equals(allIn)) {
-
-            //updateUi();
         } else if (source.equals(connectComponent.getConnect())){
             connectToServer();
-
-        } else if (source.equals(addPlayerComponent.getAddPlayer())){
-            client.getOut().println("NEWPLAYER&" + addPlayerComponent.getPlayerName().getText());
 
         } else if (source.equals(lobbyComponent.getStartGame())){
             client.getOut().println("STARTGAME");
@@ -268,17 +206,7 @@ public class ClientFrame extends JFrame{
         }
     }
 
-    public boolean isConnected() {
-        return connected;
-    }
 
-    public ConnectToServerComponent getConnectComponent() {
-        return connectComponent;
-    }
-
-    public AddPlayerComponent getAddPlayerComponent() {
-        return addPlayerComponent;
-    }
 
     public LobbyComponent getLobbyComponent() {
         return lobbyComponent;

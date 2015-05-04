@@ -1,7 +1,9 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -14,15 +16,15 @@ public class PokerBase
     protected List<Player> lostPlayers;
     protected Board board;
     protected Deck deck;
-    protected Player currentPlayer;
-    protected Player latestBettingPlayer;
+    protected Player currentPlayer = null;
+    protected Player latestBettingPlayer = null;
     protected int dealCounter;
     protected int pot;
-    protected int smallBlind;
-    protected int bigBlind;
+    protected final static int SMALL_BLIND = 10;
+    protected final static int BIG_BLIND = 20;
     protected BettingRules bettingRules;
-    protected PokerFrame frame;
-    protected Ai ai;
+    protected PokerFrame frame = null;
+    protected PokerAi ai;
     protected boolean isGameOver;
     protected boolean multiplayer;
 
@@ -34,13 +36,12 @@ public class PokerBase
         lostPlayers = new ArrayList<>();
         isGameOver = false;
         multiplayer = false;
-        smallBlind = 10;
-        bigBlind = 20;
+
         pot = 0;
         dealCounter = 1;
-        bettingRules.setMinimumBet(bigBlind);
+        bettingRules.setMinimumBet(BIG_BLIND);
         deck = new Deck();
-        ai = new Ai(this);
+        ai = new PokerAi(this);
     }
 
     public void startSingleplayer(){
@@ -66,19 +67,19 @@ public class PokerBase
     protected void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
-                if(player.getChips() > bigBlind) {
-                    player.bet(bigBlind);
-                    addToPot(bigBlind);
+                if(player.getChips() > BIG_BLIND) {
+                    player.bet(BIG_BLIND);
+                    addToPot(BIG_BLIND);
                 }else{
                     player.bet(player.getChips());
                     addToPot(player.getChips());
                 }
-                bettingRules.setLatestBet(bigBlind);
+                bettingRules.setLatestBet(BIG_BLIND);
                 bettingRules.setRaised(true);
             }else if(player.getPosition() == PlayerPosition.SMALLBLIND){
-                if(player.getChips() > smallBlind) {
-                    player.bet(smallBlind);
-                    addToPot(smallBlind);
+                if(player.getChips() > SMALL_BLIND) {
+                    player.bet(SMALL_BLIND);
+                    addToPot(SMALL_BLIND);
                 }else{
                     player.bet(player.getChips());
                     addToPot(player.getChips());
@@ -139,9 +140,9 @@ public class PokerBase
         if(mustSplitPot){
             calculateSidePots(bestHands,players);
         }else {
-            List<Player> playersWithSameHand = new ArrayList<>();
+            Collection<Player> playersWithSameHand = new ArrayList<>();
             playersWithSameHand.add(bestHands.get(0).getPlayer());
-            HandComparator comparator = new HandComparator();
+            Comparator<PokerHand> comparator = new HandComparator();
             for (int i = 1; i < bestHands.size(); i++) {
                 if (comparator.compare(bestHands.get(0), bestHands.get(i)) == 0){
                     playersWithSameHand.add(bestHands.get(i).getPlayer());
@@ -151,11 +152,11 @@ public class PokerBase
         }
     }
 
-    private void calculateSidePots(List<PokerHand> bestHands, List<Player> players){
+    private void calculateSidePots(List<PokerHand> bestHands, Iterable<Player> players){
         int currentPot = 0;
         Player currentBestPlayer = bestHands.get(0).getPlayer();
         List<PokerHand> higherBettingPlayerHands = new ArrayList<>();
-        List<Player> higherBettingPlayers = new ArrayList<>();
+        Collection<Player> higherBettingPlayers = new ArrayList<>();
         for(Player player : players){
             if(player.getTotalBetThisRound() <= currentBestPlayer.getTotalBetThisRound()){
                 currentPot += player.getTotalBetThisRound();
@@ -170,7 +171,7 @@ public class PokerBase
                 higherBettingPlayerHands.add(bestHand);
             }
         }
-        List<Player> winners = new ArrayList<>();
+        Collection<Player> winners = new ArrayList<>();
         winners.add(currentBestPlayer);
         awardWinner(winners,currentPot);
         if(!higherBettingPlayerHands.isEmpty()){
@@ -201,7 +202,6 @@ public class PokerBase
             String decision = ai.decide(currentPlayer);
             switch(decision) {
                 case "check":
-                    currentPlayer.check();
                     advanceGame();
                     break;
                 case "call":
@@ -238,7 +238,7 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            List<Player> winners = new ArrayList<>();
+            Collection<Player> winners = new ArrayList<>();
             winners.add(nextPlayer);
             awardWinner(winners, pot);
             newRound();
@@ -356,7 +356,7 @@ public class PokerBase
 
 
     protected void updatePlayerPositions(){
-        List<Player> losers = new ArrayList<>();
+        Collection<Player> losers = new ArrayList<>();
         for (Player player : players) {
             if(player.getChips() <= 0) losers.add(player);
         }
@@ -407,7 +407,7 @@ public class PokerBase
     }
 
 
-    public void awardWinner(List<Player> winners, int amount){
+    public void awardWinner(Collection<Player> winners, int amount){
         for (Player winner : winners) {
             System.out.println(winner.getName() + " wins " + amount/winners.size() + " chips");
             winner.addChips(amount/winners.size());
@@ -440,8 +440,6 @@ public class PokerBase
     public boolean isMultiplayer() { return multiplayer; }
 
     public void setFrame(final PokerFrame frame) { this.frame = frame; }
-
-    public void setMultiplayer(final boolean multiplayer) { this.multiplayer = multiplayer; }
 
     public void setCurrentPlayer(final Player currentPlayer) { this.currentPlayer = currentPlayer; }
 
