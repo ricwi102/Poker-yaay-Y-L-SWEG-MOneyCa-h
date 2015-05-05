@@ -3,7 +3,10 @@ package server;
 import java.util.Comparator;
 
 /**
- * Compares the value of a card to another.
+ * This comparator defines how we compare 2 cards with each other.
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
  */
 
 public class CardComparator implements Comparator<Card>

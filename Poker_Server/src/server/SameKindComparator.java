@@ -4,8 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Compares lists of cards of the same value, to see which has the most cards in them.
- * Or if they have the same amount of cards it compares the cards value to each other.
+ * This comparator is used to compare different pairs, thee-of-a-kinds, four-of-a-kinds to each other
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public class SameKindComparator implements Comparator<List<Card>>

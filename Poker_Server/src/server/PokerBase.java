@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Poker base that include the shared rules of all poker games available with this program
+ * This class handles everything regarding the game flow. It moves the game forward in appropriate ways depending
+ * on the game type, like updating player positions, deciding who is the winner of each round,
+ * eliminating players when appropriate, dealing cards and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public class PokerBase
@@ -21,6 +26,7 @@ public class PokerBase
     protected int dealCounter = 1;
 
     protected BettingRules bettingRules;
+    protected GameType gameType;
     protected PokerAi pokerAi = new PokerAi(this);
     protected boolean isGameOver = false;
     protected boolean checkingForAction = false;
@@ -30,15 +36,17 @@ public class PokerBase
     protected static final int BIG_BLIND = 20;
 
 
-    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
+    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
         this.players = players;
         this.board = board;
         this.bettingRules = bettingRules;
+        this.gameType = gameType;
         bettingRules.setMinimumBet(BIG_BLIND);
 
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
+        dealCards();
     }
 
     private void setTablePositions(){
@@ -49,7 +57,19 @@ public class PokerBase
         }
     }
 
-    protected void dealCards(){}
+    protected void dealCards(){
+        int cardsPerPlayer;
+        if(gameType == GameType.OMAHA){
+            cardsPerPlayer = 4;
+        }else{
+            cardsPerPlayer = 2;
+        }
+        for(int i = 0; i < cardsPerPlayer; i++) {
+            for (Player player : players) {
+                player.addCard(deck.drawCard());
+            }
+        }
+    }
 
     protected void payBlinds(){
         for (Player player : players) {
@@ -91,7 +111,7 @@ public class PokerBase
 
     private void calculateBestHands(){
         players.forEach(player -> {
-            if (player.getHand().size() == 4) {
+            if (gameType == GameType.OMAHA) {
                 player.setBestHand(PokerHandCalc.getBestOmahaHand(player, board));
             } else {
                 player.setBestHand(PokerHandCalc.getBestHoldemHand(player, board));

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Contains the relevant information about a player and functions to modify that information.
+ * This is the class for individual players in the game. Contains all relevant information for each player, like table
+ * position, cards, chips and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public class Player

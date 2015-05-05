@@ -1,7 +1,11 @@
 package server;
 
 /**
- * Interface for the implemented betting rules in the game.
+ * This is the interface for the rules regarding betting in the game. Classes PotLimit and NoLimit
+ * implement this interface and they make up the 2 different betting structures available in the game
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public interface BettingRules

@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Contains the relevant information about the open board and the functions to modify that information.
+ * This class contains the open community cards that are available to all players during the game
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
  */
-
 
 public class Board
 {

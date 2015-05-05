@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Creates a deck of 52 cards of different colors and values, from which cards are then drawn when advancing the game.
+ * This class Creates instances of the Card class to make a playing-card deck. The draw card method can then be used
+ * to get a random card from the deck.
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
  */
 
 public class Deck

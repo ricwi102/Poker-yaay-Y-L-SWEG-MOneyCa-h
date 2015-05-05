@@ -2,7 +2,14 @@ package server;
 
 
 /**
- * Primitive artificial intelligence mostly implemented for testing
+ * This is a VERY basic AI that can be used in local games. The main focus of this game is the network
+ * play (since poker is not very fun to play local on the same computer) so this class was mostly used for testing.
+ * But it can still be used in game if one wants to.
+ *
+ *
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public class PokerAi
