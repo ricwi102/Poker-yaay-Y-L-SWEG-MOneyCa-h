@@ -1,6 +1,10 @@
 package server;
 
 
+/**
+ * Primitive artificial intelligence mostly implemented for testing
+ */
+
 public class Ai {
     private BettingRules bettingRules;
 

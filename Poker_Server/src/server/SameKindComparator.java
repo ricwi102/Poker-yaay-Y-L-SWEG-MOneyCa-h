@@ -3,6 +3,11 @@ package server;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Compares lists of cards of the same value, to see which has the most cards in them.
+ * Or if they have the same amount of cards it compares the cards value to each other.
+ */
+
 public class SameKindComparator implements Comparator<List<Card>>
 {
     public int compare(List<Card> list1, List<Card> list2){

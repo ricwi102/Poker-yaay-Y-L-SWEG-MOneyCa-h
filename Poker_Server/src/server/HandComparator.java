@@ -3,7 +3,7 @@ package server;
 import java.util.Comparator;
 
 /**
- * Something not quite working when players have the same hand, seems to just be returning 0
+ * Compares the value of a 5 card hand with another.
  */
 
 public class HandComparator implements Comparator<PokerHand>
@@ -17,9 +17,11 @@ public class HandComparator implements Comparator<PokerHand>
 			return 1;
 		} else {
 			for (int i = 0; i < HANDSIZE; i++) {
-				if (hand1.getCards().get(i).getValue() > hand2.getCards().get(i).getValue()) {
+				if (hand1.getCards().get(i).getValue() >
+						hand2.getCards().get(i).getValue()) {
 					return -1;
-				} else if (hand1.getCards().get(i).getValue() < hand2.getCards().get(i).getValue()) {
+				} else if (hand1.getCards().get(i).getValue() <
+						hand2.getCards().get(i).getValue()) {
 					return 1;
 				}
 			}

@@ -5,6 +5,12 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the connecting clients, creating an own thread for them and starts the communication
+ * between the server and the clients.
+ */
+
+
 public class ServerManager
 {
     private ServerSocket server = null;

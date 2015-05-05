@@ -1,5 +1,10 @@
 package server;
 
+/**
+ * Starts the server letting clients connect on a given port.
+ */
+
+
 public final class ServerStarter{
 
     private ServerStarter() {}

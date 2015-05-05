@@ -2,17 +2,21 @@ package server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+
+/**
+ * Adds options to set up and start the game, as well as all the functionality in ClientWorker
+ */
 
 public class ClientHost extends ClientWorker
 {
     private boolean gameStarted = false;
     private String gameMode = "HOLDEM";
-    private String bettingRules = "NO_LIMIT";//No limit when implemented
+    private String bettingRules = "NOLIMIT";
     private static final Collection<String> GAME_MODES = Arrays.asList("HOLDEM", "OMAHA");//add all poker modes
     private static final Collection<String> BETTING_RULES = Arrays.asList("NOLIMIT", "POTLIMIT");
 
@@ -21,8 +25,8 @@ public class ClientHost extends ClientWorker
     }
 
 
-    @Override protected void recieveOptions(final String[] command) {
-	super.recieveOptions(command);
+    @Override protected void receiveOptions(final String[] command) {
+	super.receiveOptions(command);
 	hostOptions(command);
     }
 
@@ -93,11 +97,7 @@ public class ClientHost extends ClientWorker
     }
 
     private List<Player> getClientPlayers(){
-	List<Player> players = new ArrayList<>();
-	for (ClientWorker client : clients) {
-	    players.add(client.getPlayer());
-	}
-	return players;
+	 	return clients.stream().map(ClientWorker::getPlayer).collect(Collectors.toList());
     }
 }
 

@@ -2,6 +2,10 @@ package server;
 
 import java.util.Comparator;
 
+/**
+ * Compares the value of a card to another.
+ */
+
 public class CardComparator implements Comparator<Card>
 {
     public int compare(Card card1, Card card2){

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Contains the relevant information about the open board and the functions to modify that information.
+ */
+
+
 public class Board
 {
     private List<Card> openCards;

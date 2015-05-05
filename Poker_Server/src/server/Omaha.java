@@ -2,6 +2,10 @@ package server;
 
 import java.util.List;
 
+/**
+ * Contains the rules of the poker game "Omaha"
+ */
+
 public class Omaha extends PokerBase
 {
     public Omaha(final List<Player> players, final Board board, final BettingRules bettingRules) {

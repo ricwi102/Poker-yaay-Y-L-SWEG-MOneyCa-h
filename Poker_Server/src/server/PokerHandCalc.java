@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Calculates the best hand, given a players cards and the boards cards
@@ -73,13 +74,8 @@ public final class PokerHandCalc
 	    }
 	    powersets = newPowersets;
 	}
-	Collection<List<Card>> wrongSizeSets = new ArrayList<>();
-	for(List<Card> set : powersets){
-	    if(set.size() != size){
-		wrongSizeSets.add(set);
-	    }
-	}
-	powersets.removeAll(wrongSizeSets);
+	Collection<List<Card>> wrongSizeSets = powersets.stream().filter(set -> set.size() != size).collect(Collectors.toList());
+		powersets.removeAll(wrongSizeSets);
 	return powersets;
     }
 

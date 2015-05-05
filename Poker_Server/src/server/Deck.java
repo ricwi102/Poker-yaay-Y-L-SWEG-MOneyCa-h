@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Creates a deck of 52 cards of different colors and values, from which cards are then drawn when advancing the game.
+ */
+
 public class Deck
 {
     private List<Card> deck;

@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+/**
+ * Handles all the communication between the server and the client
+ */
+
 public class ClientWorker implements Runnable{
 
     private Socket client;
@@ -45,7 +49,7 @@ public class ClientWorker implements Runnable{
             try {
                 String[] command;
                 command = in.readLine().split("&");
-                recieveOptions(command);
+                receiveOptions(command);
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Read failed");
@@ -65,7 +69,7 @@ public class ClientWorker implements Runnable{
         }
     }
 
-    protected void recieveOptions(String[] command){
+    protected void receiveOptions(String[] command){
         switch (command[0]){
             case "TEXT":
                 for (ClientWorker clientWorker : clients) {
@@ -74,37 +78,33 @@ public class ClientWorker implements Runnable{
                 break;
             case "RAISE":
                 int bet = Integer.parseInt(command[1]);
-                if(isCurrentPlayer() && lookingForAction()){
-                    if(!pokerRules.raise(bet)){
+                if(canDoAction() && !pokerRules.raise(bet)){
                         sendError("Can't bet that ammount");
-                    }
                 }
                 break;
             case "CALL":
-                if(isCurrentPlayer() && lookingForAction()){
+                if(canDoAction()){
                     pokerRules.call();
                 }
                 break;
             case "CHECK":
-                if(isCurrentPlayer() && lookingForAction()){
-                    if(!pokerRules.check()){
+                if(canDoAction() && !pokerRules.check()){
                         sendError("There is an active bet, you can't check");
-                    }
                 }
             break;
             case "FOLD":
-                if(isCurrentPlayer() && lookingForAction()){
+                if(canDoAction()){
                     pokerRules.fold();
                 }
                 break;
             case "ALLIN":
-                if (isCurrentPlayer() && lookingForAction() && pokerRules.getBettingRules().isLegalAllIn()){
+                if (canDoAction() && pokerRules.getBettingRules().isLegalAllIn()){
                     pokerRules.allIn();
                 }
                 break;
             case "NEWPLAYER":
                 if (!(hasPlayer())) {
-                   addNewPlayer(command[1]);
+                    addNewPlayer(command[1]);
                 }
             break;
         }
@@ -124,13 +124,13 @@ public class ClientWorker implements Runnable{
         System.out.println("player added");
         player = new Player(name);
         out.println("ADDPLAYER&" + name + "&YOU");
-        for (ClientWorker worker : clients) {
-            if (!worker.equals(this) && worker.player != null){
-                out.println("ADDPLAYER&" + worker.player.getName());
-                worker.out.println("ADDPLAYER&" + name);
-            }
-        }
+        clients.stream().filter(worker -> !worker.equals(this) && worker.player != null).forEach(worker -> {
+            out.println("ADDPLAYER&" + worker.player.getName());
+            worker.out.println("ADDPLAYER&" + name);
+        });
     }
+
+
 
     public void sendMessageToOut(String message){
         out.println(message);
@@ -139,6 +139,8 @@ public class ClientWorker implements Runnable{
     private boolean isCurrentPlayer(){ return player.equals(pokerRules.getCurrentPlayer());}
 
     private boolean lookingForAction(){ return pokerRules.isCheckingForAction();}
+
+    private boolean canDoAction(){ return lookingForAction() && isCurrentPlayer();}
 
     public Player getPlayer() { return player; }
 }

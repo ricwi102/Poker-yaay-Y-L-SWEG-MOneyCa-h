@@ -1,18 +1,28 @@
 package server;
 
+/**
+ * Interface for the implemented betting rules in the game.
+ */
+
 public interface BettingRules
 {
-    public boolean isLegalRaise(int raise, int activeBet);
 
-    public boolean isLegalAllIn();
+    boolean isLegalRaise(int raise, int activeBet);
 
-    public void setLatestBet(int latestBet);
+    boolean isLegalAllIn();
 
-    public int getLatestBet();
+    int getPot();
 
-    public void setRaised(boolean raised);
+    int getLatestBet();
 
-    public void setPot(int pot);
+    void setLatestBet(int latestBet);
 
-    public void setMinimumBet(int minimumBet);
+    void setRaised(boolean raised);
+
+    void setMinimumBet(int minimumBet);
+
+    void addToPot(int chips);
+
+    void resetPot();
+
 }

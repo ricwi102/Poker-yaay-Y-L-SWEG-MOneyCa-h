@@ -1,5 +1,8 @@
 package server;
 
+/**
+ * Contains the relevant information needed of a standard playing card.
+ */
 
 public class Card
 {
