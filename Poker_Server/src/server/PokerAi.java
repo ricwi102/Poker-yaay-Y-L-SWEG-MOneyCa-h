@@ -5,12 +5,13 @@ package server;
  * Primitive artificial intelligence mostly implemented for testing
  */
 
-public class Ai {
+public class PokerAi
+{
     private BettingRules bettingRules;
 
 
 
-    public Ai(PokerBase pokerType) {
+    public PokerAi(PokerBase pokerType) {
         bettingRules = pokerType.getBettingRules();
     }
 

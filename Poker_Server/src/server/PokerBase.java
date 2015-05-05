@@ -21,7 +21,7 @@ public class PokerBase
     protected int dealCounter = 1;
 
     protected BettingRules bettingRules;
-    protected Ai ai = new Ai(this);
+    protected PokerAi pokerAi = new PokerAi(this);
     protected boolean isGameOver = false;
     protected boolean checkingForAction = false;
     protected List<ClientWorker> clients = null;
@@ -104,7 +104,7 @@ public class PokerBase
         awardWinners(calculatePots());
     }
 
-    private List<Pot> calculatePots(){
+    private Iterable<Pot> calculatePots(){
         List<Player> sortedByLowestBet = new ArrayList<>();
         players.forEach(sortedByLowestBet::add);
 
@@ -113,7 +113,7 @@ public class PokerBase
         Collections.sort(sortedByLowestBet, new TotalBetComparator());
         System.out.println("pkb, sblb2: " + sortedByLowestBet);
 
-        List<Pot> pots = new ArrayList<>();
+        Collection<Pot> pots = new ArrayList<>();
 
         for (Player player : sortedByLowestBet) {
             int chips = player.getTotalBetThisRound();
@@ -169,7 +169,7 @@ public class PokerBase
 
     public void checkForAction(){
         if(currentPlayer.getController().equals("ai")){
-            String decision = ai.decide(currentPlayer);
+            String decision = pokerAi.decide(currentPlayer);
             switch(decision) {
                 case "check":
                     advanceGame();

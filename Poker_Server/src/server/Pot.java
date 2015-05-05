@@ -3,6 +3,7 @@ package server;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class Pot {
     private int highestBet = 0;
     private int pot = 0;
@@ -26,10 +27,10 @@ public class Pot {
         awardWinners(getWinners());
     }
 
-    private List<Player> getWinners(){
+    private Collection<Player> getWinners(){
         List<PokerHand> contenders = players.stream().filter(Player::isActive).map(Player::getBestHand).collect(Collectors.toList());
 
-        List<Player> winners = new ArrayList<>();
+        Collection<Player> winners = new ArrayList<>();
         Comparator<PokerHand> comparator = new HandComparator();
         Collections.sort(contenders, comparator);
 

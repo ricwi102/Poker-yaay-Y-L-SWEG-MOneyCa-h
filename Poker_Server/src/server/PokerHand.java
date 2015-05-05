@@ -13,8 +13,8 @@ public class PokerHand{
     private Player player;
 
     public PokerHand(final HandType handType, final List<Card> cards, final Player player) {
-	    this.handType = handType;
-	    this.cards = cards;
+        this.handType = handType;
+        this.cards = cards;
         this.player = player;
     }
 

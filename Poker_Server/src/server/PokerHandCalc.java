@@ -178,7 +178,7 @@ public final class PokerHandCalc
 		} else if (i > cards.size() - 5) {
 		    break;
 		} else {
-		    testHand = new ArrayList<>();
+		    testHand.clear();
 		    testHand.add(cards.get(i));
 		}
 	    }
@@ -186,6 +186,10 @@ public final class PokerHandCalc
 	}
 	if (testHand.size() >= 5) {
 	    return testHand;
+	} else if (testHand.size() == 4 && testHand.get(testHand.size() - 1).getValue() == 2){
+	    if (cards.get(0).getValue() == 14){
+		testHand.add(cards.get(0));
+	    }
 	}
 	return null;
     }
