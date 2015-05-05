@@ -17,26 +17,26 @@ import java.util.stream.Collectors;
 
 public class PokerBase
 {
-    protected List<Player> players;
-    protected List<Player> lostPlayers = new ArrayList<>();
-    protected Board board;
-    protected Deck deck = new Deck();
-    protected Player currentPlayer = null;
-    protected Player latestBettingPlayer = null;
-    protected int dealCounter = 1;
+    private List<Player> players;
+    private List<Player> lostPlayers = new ArrayList<>();
+    private Board board;
+    private Deck deck = new Deck();
+    private Player currentPlayer = null;
+    private Player latestBettingPlayer = null;
+    private int dealCounter = 1;
 
-    protected BettingRules bettingRules;
-    protected GameType gameType;
-    protected PokerAi pokerAi = new PokerAi(this);
-    protected boolean isGameOver = false;
-    protected boolean checkingForAction = false;
-    protected List<ClientWorker> clients = null;
+    private BettingRules bettingRules;
+    private GameType gameType;
+    private PokerAi pokerAi = new PokerAi(this);
+    private boolean isGameOver = false;
+    private boolean checkingForAction = false;
+    private List<ClientWorker> clients = null;
 
-    protected static final int SMALL_BLIND = 10;
-    protected static final int BIG_BLIND = 20;
+    private static final int SMALL_BLIND = 10;
+    private static final int BIG_BLIND = 20;
 
 
-    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
+    public PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
         this.players = players;
         this.board = board;
         this.bettingRules = bettingRules;
@@ -57,7 +57,7 @@ public class PokerBase
         }
     }
 
-    protected void dealCards(){
+    private void dealCards(){
         int cardsPerPlayer;
         if(gameType == GameType.OMAHA){
             cardsPerPlayer = 4;
@@ -71,7 +71,7 @@ public class PokerBase
         }
     }
 
-    protected void payBlinds(){
+    private void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
                 if(player.getChips() > BIG_BLIND) {
@@ -487,7 +487,7 @@ public class PokerBase
     }
 
 
-    protected void resetGame(){
+    private void resetGame(){
         deck.shuffleDeck();
         board.resetBoard();
         bettingRules.resetPot();
@@ -499,13 +499,13 @@ public class PokerBase
         }
     }
 
-    protected void resetPlayerBets(){
+    private void resetPlayerBets(){
         players.forEach(Player::resetActiveBet);
         bettingRules.setRaised(false);
     }
 
 
-    protected void updatePlayerPositions(){
+    private void updatePlayerPositions(){
         System.out.println("HEJ");
         Collection<Player> losers = players.stream().filter(player -> player.getChips() <= 0).collect(Collectors.toList());
 
