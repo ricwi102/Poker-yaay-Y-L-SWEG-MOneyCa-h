@@ -12,22 +12,18 @@ import java.awt.event.KeyListener;
  */
 public class ConnectToServerComponent extends JComponent{
 
-    private JButton connect;
-    private JTextField ip;
-    private JTextField port;
-    private JTextField name;
+    private JButton connect = new JButton("Connect to server");
+    private JTextField ip = new JTextField(10*2);
+    private JTextField port = new JTextField(10);
+    private JTextField name = new JTextField(2*10);
 
-    public ConnectToServerComponent(ActionListener listener, KeyListener keyAdapter) {
-
-        connect = new JButton("Connect to server");
-        ip = new JTextField(10*2);
-        port = new JTextField(10);
-        name = new JTextField(2*10);
+    public ConnectToServerComponent(ActionListener listener, ClientKeyAdapter keyAdapter) {
 
         connect.addActionListener(listener);
 
         ip.addKeyListener(keyAdapter);
         port.addKeyListener(keyAdapter);
+        name.addKeyListener(keyAdapter);
 
         setLayout(new FlowLayout());
     }
@@ -58,6 +54,12 @@ public class ConnectToServerComponent extends JComponent{
     public String getPortText() {
         return port.getText();
     }
+
+    public JTextField getIp() { return ip; }
+
+    public JTextField getPort() { return port; }
+
+    public JTextField getNameField() { return name; }
 
     public JButton getConnect() {
         return connect;

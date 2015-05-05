@@ -14,38 +14,27 @@ import java.util.List;
 
 public class Player
 {
-    private List<Card> hand;
+    private List<Card> hand  = new ArrayList<>();
     private String name;
     private String controller;
-    private int chips;
-    private int activeBet;
-    private int totalBetThisRound;
-    private int tablePosition;
-    private boolean active;
-    private PlayerPosition position;
+    private int chips = STARTING_CHIPS;
+    private int activeBet = 0;
+    private int totalBetThisRound = 0;
+    private int tablePosition = 0;
+    private boolean active = true;
+    private PlayerPosition position = PlayerPosition.STANDARD;
+    private PokerHand bestHand = null;
+
     private final static int STARTING_CHIPS = 2000;
 
     public Player(String name) {
-        hand = new ArrayList<>();
         this.name = name;
         controller = "player";
-        active = true;
-        tablePosition = 0;
-        position = PlayerPosition.STANDARD;
-        activeBet = 0;
-        totalBetThisRound = 0;
-        chips = STARTING_CHIPS;
     }
 
     public Player(final String name, final String controller) {
-        hand = new ArrayList<>();
         this.name = name;
         this.controller = controller;
-        active = true;
-        tablePosition = 0;
-        position = PlayerPosition.STANDARD;
-        activeBet = 0;
-        chips = 2*1000;
     }
 
     public void addCard(Card card){
@@ -68,9 +57,9 @@ public class Player
 
     public int getTotalBetThisRound() { return totalBetThisRound; }
 
-    public void resetHand(){ hand.clear(); }
+    public PokerHand getBestHand() { return bestHand; }
 
-    public void setTotalBetThisRound(final int totalBetThisRound) { this.totalBetThisRound = totalBetThisRound; }
+    public void resetHand(){ hand.clear(); }
 
     public void setPosition(PlayerPosition position) {this.position = position;}
 
@@ -84,9 +73,19 @@ public class Player
 
     public void setHand(final List<Card> hand) { this.hand = hand; }
 
-    public void resetTotalBet(){ totalBetThisRound = 0;}
+    public void setBestHand(PokerHand bestHand) { this.bestHand = bestHand; }
 
-    public void newRound(){ activeBet = 0; }
+    private void resetTotalBet(){ totalBetThisRound = 0;}
+
+    private void resetBestHand(){ bestHand = null;}
+
+    public void resetActiveBet() { activeBet = 0; }
+
+    public void newRound(){
+        resetActiveBet();
+        resetBestHand();
+        resetTotalBet();
+    }
 
     public int bet(int amount){
         chips -= amount;

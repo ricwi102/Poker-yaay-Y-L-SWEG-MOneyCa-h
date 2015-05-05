@@ -133,7 +133,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		check.setEnabled(false);
 		fold.setEnabled(false);
 	    } else {
-		if (pokerBase.getCurrentPlayer().getActiveBet() < pokerBase.bettingRules.getLatestBet()) {
+		if (pokerBase.getCurrentPlayer().getActiveBet() < pokerBase.getBettingRules().getLatestBet()) {
 		    call.setEnabled(true);
 		    raise.setEnabled(true);
 		    allIn.setEnabled(true);
@@ -170,14 +170,14 @@ public class PokerFrame extends JFrame implements ActionListener
 	    System.exit(0);
 	} else if (e.getSource().equals(check)){
 	    if (pokerBase.isMultiplayer()){
-		client.getOut().println("CHECK");
+		client.sendMessageToOut("CHECK");
 	    }else {
 		pokerBase.advanceGame();
 	    }
 	    updateUi();
 	}else if(e.getSource().equals(fold)){
 	    if (pokerBase.isMultiplayer()){
-	    	client.getOut().println("FOLD");
+	    	client.sendMessageToOut("FOLD");
 	    }else {
 		pokerBase.getCurrentPlayer().fold();
 		pokerBase.advanceGame();
@@ -190,7 +190,7 @@ public class PokerFrame extends JFrame implements ActionListener
 		amount = Integer.parseInt(input);
 	    } while (pokerBase.getCurrentPlayer().getChips() - amount < 0);
 	    if (pokerBase.isMultiplayer()){
-	    	client.getOut().println("RAISE&" + amount);
+	    	client.sendMessageToOut("RAISE&" + amount);
 	    }else {
 	    	if (pokerBase.getBettingRules().isLegalRaise(amount + pokerBase.getCurrentPlayer().getActiveBet(),
 							     pokerBase.getCurrentPlayer().getActiveBet())){
@@ -216,7 +216,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	    }
 	}else if(e.getSource().equals(call)){
 	    if (pokerBase.isMultiplayer()){
-	    		client.getOut().println("CALL");
+	    		client.sendMessageToOut("CALL");
 	    }else {
 		int amount = pokerBase.getCurrentPlayer().call(pokerBase.getBettingRules().getLatestBet());
 		pokerBase.addToPot(amount);
@@ -226,7 +226,7 @@ public class PokerFrame extends JFrame implements ActionListener
 	}else if(e.getSource().equals(allIn)) {
 	    if (pokerBase.getBettingRules().isLegalAllIn()) {
 		if (pokerBase.isMultiplayer()) {
-		    client.getOut().println("ALLIN");
+		    client.sendMessageToOut("ALLIN");
 		} else {
 		    int amount = pokerBase.getCurrentPlayer().bet(pokerBase.getCurrentPlayer().getChips());
 		    pokerBase.raise(amount);

@@ -3,7 +3,6 @@ package poker;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,22 +15,21 @@ import java.util.List;
  */
 public class PokerBase
 {
-    protected List<Player> players;
-    protected List<Player> lostPlayers;
-    protected Board board;
-    protected Deck deck;
-    protected Player currentPlayer = null;
-    protected Player latestBettingPlayer = null;
-    protected int dealCounter;
-    protected int pot;
-    protected final static int SMALL_BLIND = 10;
-    protected final static int BIG_BLIND = 20;
-    protected BettingRules bettingRules;
-    protected GameType gameType;
-    protected PokerFrame frame = null;
-    protected PokerAi ai;
-    protected boolean isGameOver;
-    protected boolean multiplayer;
+    private List<Player> players;
+    private List<Player> lostPlayers = new ArrayList<>();
+    private Board board;
+    private Deck deck;
+    private Player currentPlayer = null;
+    private Player latestBettingPlayer = null;
+    private int dealCounter;
+    private final static int SMALL_BLIND = 10;
+    private final static int BIG_BLIND = 20;
+    private BettingRules bettingRules;
+    private GameType gameType;
+    private PokerFrame frame = null;
+    private PokerAi ai;
+    private boolean isGameOver = false;
+    private boolean multiplayer = false;
 
 
     public PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
@@ -39,11 +37,7 @@ public class PokerBase
         this.board = board;
         this.gameType = gameType;
         this.bettingRules = bettingRules;
-        lostPlayers = new ArrayList<>();
-        isGameOver = false;
-        multiplayer = false;
 
-        pot = 0;
         dealCounter = 1;
         bettingRules.setMinimumBet(BIG_BLIND);
         deck = new Deck();
@@ -71,7 +65,7 @@ public class PokerBase
         }
     }
 
-    protected void dealCards(){
+    private void dealCards(){
         int numberOfCards;
         if(gameType == GameType.OMAHA){
             numberOfCards = 4;
@@ -85,7 +79,7 @@ public class PokerBase
     }
 
 
-    protected void payBlinds(){
+    private void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
                 if(player.getChips() > BIG_BLIND) {
@@ -105,10 +99,8 @@ public class PokerBase
                     player.bet(player.getChips());
                     addToPot(player.getChips());
                 }
-
             }
         }
-        bettingRules.setPot(pot);
     }
 
     private void dealFlop(){
@@ -121,94 +113,58 @@ public class PokerBase
         board.addCard(deck.drawCard());
     }
 
-    //Uses the class PokerHandCalc and HandComparator to decide which active player has the best hand
-    private void compareHands(){
-        List<PokerHand> bestHands = new ArrayList<>();
-        boolean mustSplitPot = false;
-        for (Player player : players) {
-            if(player.isActive()) {
-                System.out.println(player);
-                if(gameType == GameType.OMAHA) {
-                    bestHands.add(PokerHandCalc.getBestOmahaHand(player, board));
-                }else{
-                    bestHands.add(PokerHandCalc.getBestHoldemHand(player, board));
+    //------- Functions For Awarding Winners --------
+
+        private void calculateBestHands(){
+            players.forEach(player -> {
+                if (player.getHand().size() == 4) {
+                    player.setBestHand(PokerHandCalc.getBestOmahaHand(player, board));
+                } else {
+                    player.setBestHand(PokerHandCalc.getBestHoldemHand(player, board));
+                }
+            });
+        }
+
+        private void resolveWinners(){
+            calculateBestHands();
+            awardWinners(calculatePots());
+        }
+
+        private Iterable<Pot> calculatePots(){
+            List<Player> sortedByLowestBet = new ArrayList<>();
+            players.forEach(sortedByLowestBet::add);
+
+            Collections.sort(sortedByLowestBet, new TotalBetComparator());
+
+            Collection<Pot> pots = new ArrayList<>();
+
+            for (Player player : sortedByLowestBet) {
+                int chips = player.getTotalBetThisRound();
+                for (Pot pot : pots){
+                    if (chips > 0){
+                        chips = pot.addToPlayerBet(chips, player);
+                    }
+                }
+                if (chips > 0){
+                    Pot pot = new Pot();
+                    pots.add(pot);
+                    pot.addToPlayerBet(chips, player);
                 }
             }
-        }
-        System.out.println(board);
-
-        Collections.sort(bestHands, new HandComparator());
-        PokerHand bestHand = bestHands.get(0);
-        for(int i = 1; i < bestHands.size(); i++){
-            if(bestHands.get(i).getPlayer().getTotalBetThisRound() > bestHand.getPlayer().getTotalBetThisRound()){
-                mustSplitPot = true;
-            }
+            return pots;
         }
 
-        for (PokerHand hand : bestHands) {
-            System.out.println("Best hand for " + hand.getPlayer().getName());
-            for(Card card : hand.getCards()){
-                System.out.println(card);
-            }
+        private void awardWinners(Iterable<Pot> pots){
+            pots.forEach(Pot::resolveWinners);
         }
 
-        System.out.println("Best hand overall: ");
-        for (Card card : bestHand.getCards()) {
-            System.out.println(card);
-        }
-        System.out.println("Winner: " + bestHand.getPlayer().getName());
-        if(mustSplitPot){
-            calculateSidePots(bestHands,players);
-        }else {
-            Collection<Player> playersWithSameHand = new ArrayList<>();
-            playersWithSameHand.add(bestHands.get(0).getPlayer());
-            Comparator<PokerHand> comparator = new HandComparator();
-            for (int i = 1; i < bestHands.size(); i++) {
-                if (comparator.compare(bestHands.get(0), bestHands.get(i)) == 0){
-                    playersWithSameHand.add(bestHands.get(i).getPlayer());
-                }
-            }
-            awardWinner(playersWithSameHand, pot);
-        }
-    }
-
-    /*
-    This is used if the active player with the best hand did not have enough chips to bet as much as some other players.
-    The pot must then be split appropriately between the players. This function calculates how much each player should get
-    and rewards them as such.
-     */
-    private void calculateSidePots(List<PokerHand> bestHands, Iterable<Player> players){
-        int currentPot = 0;
-        Player currentBestPlayer = bestHands.get(0).getPlayer();
-        List<PokerHand> higherBettingPlayerHands = new ArrayList<>();
-        Collection<Player> higherBettingPlayers = new ArrayList<>();
-        for(Player player : players){
-            if(player.getTotalBetThisRound() <= currentBestPlayer.getTotalBetThisRound()){
-                currentPot += player.getTotalBetThisRound();
-            }else{
-                currentPot += currentBestPlayer.getTotalBetThisRound();
-                player.setTotalBetThisRound(player.getTotalBetThisRound() - currentBestPlayer.getTotalBetThisRound());
-                higherBettingPlayers.add(player);
-            }
-        }
-        for(PokerHand bestHand : bestHands){
-            if(higherBettingPlayers.contains(bestHand.getPlayer())){
-                higherBettingPlayerHands.add(bestHand);
-            }
-        }
-        Collection<Player> winners = new ArrayList<>();
-        winners.add(currentBestPlayer);
-        awardWinner(winners,currentPot);
-        if(!higherBettingPlayerHands.isEmpty()){
-            Collections.sort(higherBettingPlayerHands, new HandComparator());
-            calculateSidePots(higherBettingPlayerHands,higherBettingPlayers);
-        }
-    }
+    //-------------------------
 
     public void newRound() {
         resetGame();
         updatePlayerPositions();
         if(!isGameOver) {
+            bettingRules.resetPot();
             dealCards();
             payBlinds();
             if (!checkCurrentPlayerForChips()){
@@ -234,7 +190,6 @@ public class PokerBase
                     advanceGame();
                     break;
                 default:
-                    System.out.println("NOT A VALID PLAYER IN AI");
                     advanceGame();
             }
         }
@@ -251,7 +206,6 @@ public class PokerBase
             latestBettingPlayer = currentPlayer;
             if (!(currentPlayer.getChips() > 0)) advanceGame();
             else{
-                System.out.println("Current Player: " + currentPlayer.getName());
                 checkForAction();
             }
         }
@@ -263,9 +217,7 @@ public class PokerBase
         Player nextPlayer = nextActivePlayer(currentPlayer);
 
         if (nextPlayer.equals(nextActivePlayer(nextPlayer))) {
-            Collection<Player> winners = new ArrayList<>();
-            winners.add(nextPlayer);
-            awardWinner(winners, pot);
+            resolveWinners();
             newRound();
         }else if (nextPlayer.equals(latestBettingPlayer)) {
             nextStreet();
@@ -273,7 +225,6 @@ public class PokerBase
             if(!latestBettingPlayer.isActive()){ latestBettingPlayer = nextActivePlayer(latestBettingPlayer); }
             currentPlayer = nextPlayer;
             if (currentPlayer.getChips() > 0) {
-                System.out.println("Current Player: " + currentPlayer.getName());
                 checkForAction();
             }else {
                 advanceGame();
@@ -315,13 +266,12 @@ public class PokerBase
         latestBettingPlayer = currentPlayer;
         bettingRules.setRaised(true);
         bettingRules.setLatestBet(currentPlayer.getActiveBet());
-        bettingRules.setPot(pot);
     }
 
 
 
     public void addToPot(int chips) {
-        pot += chips;
+        bettingRules.addToPot(chips);
     }
 
     public void nextStreet(){
@@ -348,8 +298,7 @@ public class PokerBase
                 dealCounter++;
                 break;
             case 4:
-                compareHands();
-                resetGame();
+                resolveWinners();
                 newRound();
         }
         if (dealCounter != 1) newStreet();
@@ -360,7 +309,7 @@ public class PokerBase
         return currentPlayer;
     }
 
-    protected void resetGame(){
+    private void resetGame(){
         deck.shuffleDeck();
         board.resetBoard();
         dealCounter = 1;
@@ -368,19 +317,18 @@ public class PokerBase
             player.resetHand();
             player.setActive(true);
             player.newRound();
-            player.resetTotalBet();
         }
     }
 
     public void resetPlayerBets(){
         for (Player player : players) {
-            player.newRound();
+            player.resetActiveBet();
         }
         bettingRules.setRaised(false);
     }
 
     // This removes players with no chips, moves around the blinds and dealer positions
-    protected void updatePlayerPositions(){
+    private void updatePlayerPositions(){
         Collection<Player> losers = new ArrayList<>();
         for (Player player : players) {
             if(player.getChips() <= 0) losers.add(player);
@@ -431,24 +379,11 @@ public class PokerBase
         frame.dispose();
     }
 
-
-    public void awardWinner(Collection<Player> winners, int amount){
-        for (Player winner : winners) {
-            System.out.println(winner.getName() + " wins " + amount/winners.size() + " chips");
-            winner.addChips(amount/winners.size());
-            pot -= amount/winners.size();
-        }
-    }
-
     private boolean checkCurrentPlayerForChips(){
         return currentPlayer.getChips() > 0;
     }
 
     public void addPlayerToLosers(Player player){ lostPlayers.add(player); }
-
-    public int getPot(){
-        return pot;
-    }
 
     public Board getBoard() {
         return board;
@@ -464,12 +399,14 @@ public class PokerBase
 
     public GameType getGameType() { return gameType; }
 
+    public int getPot() { return bettingRules.getPot();}
+
     public boolean isMultiplayer() { return multiplayer; }
 
     public void setFrame(final PokerFrame frame) { this.frame = frame; }
 
     public void setCurrentPlayer(final Player currentPlayer) { this.currentPlayer = currentPlayer; }
 
-    public void setPot(final int pot) { this.pot = pot; }
+    public void setPot(int amount) { bettingRules.setPot(amount); }
 }
 

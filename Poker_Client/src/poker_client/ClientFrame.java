@@ -19,10 +19,11 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 
-public class ClientFrame extends JFrame{
+public class ClientFrame extends JFrame
+{
 
     private Client client;
-    private ClientListener clientListener;
+    private ClientListener clientListener = new ClientListener(this);
     private JMenuItem item;
     private JPanel layouts;
     private ConnectToServerComponent connectComponent;
@@ -33,15 +34,11 @@ public class ClientFrame extends JFrame{
     private static final String CONNECT = "CONNECT";
     private static final String LOBBY = "LOBBY";
 
-    public ClientFrame(Client client) throws HeadlessException{
+    public ClientFrame(Client client) throws HeadlessException {
         super("Pokr sweg, holdum YÅLÅ");
         this.client = client;
-        clientListener = new ClientListener(this);
-        ClientKeyAdapter keyAdapter = new ClientKeyAdapter(this);
-        connectComponent = new ConnectToServerComponent(clientListener, keyAdapter);
+        connectComponent = new ConnectToServerComponent(clientListener, new ClientKeyAdapter(this));
         lobbyComponent = new LobbyComponent(clientListener);
-
-
 
         layouts = new JPanel(cardLayout);
 
@@ -55,13 +52,12 @@ public class ClientFrame extends JFrame{
         createMenu();
         //displayBoard();
     }
-/*
+
+    /*
     private void displayBoard(){
 	component.setPreferredSize(component.getPreferedSize());
 	this.add(component,BorderLayout.PAGE_START);
     }*/
-
-
 
 
     private void createMenu() {
@@ -77,9 +73,9 @@ public class ClientFrame extends JFrame{
 
     public void startGame(String gameMode, String betRules, List<Player> players) {
         BettingRules bettingRules;
-        if (betRules.equals("POTLIMIT")){
+        if (betRules.equals("POTLIMIT")) {
             bettingRules = new PotLimit();
-        }else{
+        } else {
             bettingRules = new NoLimit();
         }
 
@@ -87,8 +83,8 @@ public class ClientFrame extends JFrame{
         Board board = new Board();
         if (gameMode.equals("OMAHA")) {
             pokerRules = new PokerBase(players, board, bettingRules, GameType.OMAHA);
-        }else{
-            pokerRules = new PokerBase(players, board, bettingRules,GameType.HOLDEM);
+        } else {
+            pokerRules = new PokerBase(players, board, bettingRules, GameType.HOLDEM);
         }
         pokerRules.startMultiplayer();
         client.addPokerRules(pokerRules);
@@ -100,15 +96,13 @@ public class ClientFrame extends JFrame{
     }
 
     public void lobbyFrame() {
-        if (client.isHost()){
+        if (client.isHost()) {
             lobbyComponent.startComponentHost();
-        }else {
+        } else {
             lobbyComponent.startComponent();
         }
         cardLayout.show(layouts, LOBBY);
     }
-
-
 
 
     public void connectToServerFrame() {
@@ -126,54 +120,28 @@ public class ClientFrame extends JFrame{
             client.listenSocket(serverPort, address);
             Thread t = new Thread(client);
             t.start();
-            client.getOut().println("NEWPLAYER&" + connectComponent.getPlayerNameText());
+            client.sendMessageToOut("NEWPLAYER&" + connectComponent.getPlayerNameText());
 
         } catch (UnknownHostException exc) {
             System.err.println("UnknownHostException: " + exc.getMessage());
             JOptionPane.showMessageDialog(null, "Unknown Host");
-        } catch (IOException exc){
+        } catch (IOException exc) {
             System.err.println("IOException: " + exc.getMessage());
             JOptionPane.showMessageDialog(null, exc.getMessage());
         }
     }
 
-    /*
-    private void updateUi() {
-        StringBuilder openCards = new StringBuilder();
-        for (Card card : pokerRules.getBoard().getOpenCards()) {
-            openCards.append(card);
-            openCards.append(" ");
-        }
 
-
-        communityCards.setText("Community Cards: " + openCards);
-        pot.setText("pot: " + pokerRules.getPot());
-        if (pokerRules.getBettingRules().someoneRaised() && pokerRules.getCurrentPlayer().getActiveBet() != pokerRules.getBettingRules().getLatestBet()) {
-            call.setEnabled(true);
-        } else {
-            call.setEnabled(false);
-        }
-        if (pokerRules.getCurrentPlayer().getActiveBet() == pokerRules.getBettingRules().getLatestBet()) {
-            check.setEnabled(true);
-            fold.setEnabled(false);
-        } else {
-            check.setEnabled(false);
-            fold.setEnabled(true);
-        }
-        call.setText("call: " + (pokerRules.getBettingRules().getLatestBet() - pokerRules.getCurrentPlayer().getActiveBet()));
-
-        component.repaint();
-    }*/
-
-    /*
-    public void nextTextSquare(){
+    public void nextTextSquare() {
         Component focus = getFocusOwner();
-	    if (focus.equals(ip)){
-	       port.requestFocus();
-	    }else if(focus.equals(port)){
-	        connectToServer();
-	    }
-    }*/
+        if (focus.equals(connectComponent.getIp())) {
+            connectComponent.getPort().requestFocus();
+        } else if (focus.equals(connectComponent.getPort())) {
+            connectComponent.getNameField().requestFocus();
+        } else if (focus.equals(connectComponent.getNameField())) {
+            connectToServer();
+        }
+    }
 
 
     public void actionPerformed(ActionEvent e) {
@@ -184,22 +152,22 @@ public class ClientFrame extends JFrame{
             connectToServer();
 
         } else if (source.equals(lobbyComponent.getStartGame())){
-            client.getOut().println("STARTGAME");
+            client.sendMessageToOut("STARTGAME");
 
         } else if (source.equals(lobbyComponent.getGameOptions())){
             String option = (String) lobbyComponent.getGameOptions().getSelectedItem();
             if (option.equals("Omaha")){
-                client.getOut().println("GAMERULES&OMAHA");
+                client.sendMessageToOut("GAMERULES&OMAHA");
             } else {
-                client.getOut().println("GAMERULES&HOLDEM");
+                client.sendMessageToOut("GAMERULES&HOLDEM");
             }
 
         } else if (source.equals(lobbyComponent.getBetOptions())){
             String option = (String) lobbyComponent.getBetOptions().getSelectedItem();
             if (option.equals("Pot Limit")){
-                client.getOut().println("BETRULES&POTLIMIT");
+                client.sendMessageToOut("BETRULES&POTLIMIT");
             } else {
-                client.getOut().println("BETRULES&NOLIMIT");
+                client.sendMessageToOut("BETRULES&NOLIMIT");
             }
 
         }

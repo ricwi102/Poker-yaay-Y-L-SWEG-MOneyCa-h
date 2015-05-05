@@ -38,13 +38,19 @@ public class PotLimit implements BettingRules
     	return latestBet;
         }
 
+    public int getPot() { return pot;}
+
     public void setRaised(boolean raised) {
             this.raised = raised;
         }
 
-    public void setPot(final int pot) { this.pot = pot; }
-
     public void setMinimumBet(final int minimumBet) {
         this.minimumBet = minimumBet;
     }
+
+    public void setPot(int amount) { pot = amount; }
+
+    public void addToPot(int amount) { pot += amount; }
+
+    public void resetPot() { pot = 0; }
 }

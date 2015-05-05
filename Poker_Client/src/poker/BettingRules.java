@@ -18,9 +18,16 @@ public interface BettingRules
 
     public int getLatestBet();
 
+    public int getPot();
+
     public void setRaised(boolean raised);
 
-    public void setPot(int pot);
+    public void addToPot(int amount);
 
     public void setMinimumBet(int minimumBet);
+
+    public void setPot(int amount);
+
+    public void resetPot();
+
 }
