@@ -19,6 +19,7 @@ public class ClientWorker implements Runnable{
     protected BufferedReader in = null;
     private Player player = null;
     private PokerBase pokerRules = null;
+    private boolean closed = false;
 
 
     ClientWorker(Socket client) {
@@ -37,6 +38,19 @@ public class ClientWorker implements Runnable{
 	out.println("ERROR&" + error);
     }
 
+    public void shutDown(){
+        clients.remove(this);
+        closed = true;
+        try{
+            in.close();
+            out.close();
+            client.close();
+        } catch (IOException exc){
+            exc.printStackTrace();
+            System.out.println("Failed to close the client completely");
+        }
+    }
+
     public void run(){
 
         try {
@@ -46,6 +60,9 @@ public class ClientWorker implements Runnable{
             System.exit(-1);
         }
         while (true) {
+            if (closed){
+                break;
+            }
             try {
                 String[] command;
                 command = in.readLine().split("&");
@@ -53,7 +70,7 @@ public class ClientWorker implements Runnable{
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Read failed");
-                System.exit(-1);
+                shutDown();
             }
         }
     }

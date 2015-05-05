@@ -14,9 +14,9 @@ public final class ServerStarter{
 
 	int port = 15388;
 
-	PokerBase pokerRules = serverManager.listenSocket(port);
+	serverManager.listenSocket(port);
 
-	pokerRules.checkForAction();
+	System.out.println("HEJ123");
 
     }
 }

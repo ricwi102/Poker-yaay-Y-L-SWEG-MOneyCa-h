@@ -99,5 +99,9 @@ public class ClientHost extends ClientWorker
     private List<Player> getClientPlayers(){
 	 	return clients.stream().map(ClientWorker::getPlayer).collect(Collectors.toList());
     }
+
+    public boolean isGameStarted() {
+	return gameStarted;
+    }
 }
 

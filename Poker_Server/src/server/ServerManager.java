@@ -16,12 +16,14 @@ public class ServerManager
     private ServerSocket server = null;
     private List<ClientWorker> clients;
     private ClientHost host = null;
+    private boolean close = false;
 
     public ServerManager() {
         clients = new ArrayList<>();
     }
 
-    public void shutdown() {
+    public void shutDown() {
+        close = true;
         try {
             server.close();
         } catch (IOException e) {
@@ -29,10 +31,9 @@ public class ServerManager
             System.out.println("Could not close socket");
             System.exit(-1);
         }
-        System.exit(0);
     }
 
-    public PokerBase listenSocket(int port) {
+    public void listenSocket(int port) {
         try {
             server = new ServerSocket(port);
         } catch (IOException e) {
@@ -41,6 +42,9 @@ public class ServerManager
             System.exit(-1);
         }
         while (true) {
+            if (host != null && host.isGameStarted()) shutDown();
+            if (close) break;
+
             try {
                 ClientWorker worker;
                 if (host == null) {
@@ -58,7 +62,7 @@ public class ServerManager
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Accept failed: " + port);
-                System.exit(-1);
+                shutDown();
             }
         }
     }
