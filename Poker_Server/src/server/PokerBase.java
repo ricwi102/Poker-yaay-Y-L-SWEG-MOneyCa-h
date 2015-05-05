@@ -7,38 +7,46 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Poker base that include the shared rules of all poker games available with this program
+ * This class handles everything regarding the game flow. It moves the game forward in appropriate ways depending
+ * on the game type, like updating player positions, deciding who is the winner of each round,
+ * eliminating players when appropriate, dealing cards and so on.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public class PokerBase
 {
-    protected List<Player> players;
-    protected List<Player> lostPlayers = new ArrayList<>();
-    protected Board board;
-    protected Deck deck = new Deck();
-    protected Player currentPlayer = null;
-    protected Player latestBettingPlayer = null;
-    protected int dealCounter = 1;
+    private List<Player> players;
+    private List<Player> lostPlayers = new ArrayList<>();
+    private Board board;
+    private Deck deck = new Deck();
+    private Player currentPlayer = null;
+    private Player latestBettingPlayer = null;
+    private int dealCounter = 1;
 
-    protected BettingRules bettingRules;
-    protected PokerAi pokerAi = new PokerAi(this);
-    protected boolean isGameOver = false;
-    protected boolean checkingForAction = false;
-    protected List<ClientWorker> clients = null;
+    private BettingRules bettingRules;
+    private GameType gameType;
+    private PokerAi pokerAi = new PokerAi(this);
+    private boolean isGameOver = false;
+    private boolean checkingForAction = false;
+    private List<ClientWorker> clients = null;
 
-    protected static final int SMALL_BLIND = 10;
-    protected static final int BIG_BLIND = 20;
+    private static final int SMALL_BLIND = 10;
+    private static final int BIG_BLIND = 20;
 
 
-    protected PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules) {
+    public PokerBase(final List<Player> players, final Board board, final BettingRules bettingRules, final GameType gameType) {
         this.players = players;
         this.board = board;
         this.bettingRules = bettingRules;
+        this.gameType = gameType;
         bettingRules.setMinimumBet(BIG_BLIND);
 
         setTablePositions();
         updatePlayerPositions();
         payBlinds();
+        dealCards();
     }
 
     private void setTablePositions(){
@@ -49,9 +57,21 @@ public class PokerBase
         }
     }
 
-    protected void dealCards(){}
+    private void dealCards(){
+        int cardsPerPlayer;
+        if(gameType == GameType.OMAHA){
+            cardsPerPlayer = 4;
+        }else{
+            cardsPerPlayer = 2;
+        }
+        for(int i = 0; i < cardsPerPlayer; i++) {
+            for (Player player : players) {
+                player.addCard(deck.drawCard());
+            }
+        }
+    }
 
-    protected void payBlinds(){
+    private void payBlinds(){
         for (Player player : players) {
             if(player.getPosition() == PlayerPosition.BIGBLIND){
                 if(player.getChips() > BIG_BLIND) {
@@ -91,7 +111,7 @@ public class PokerBase
 
     private void calculateBestHands(){
         players.forEach(player -> {
-            if (player.getHand().size() == 4) {
+            if (gameType == GameType.OMAHA) {
                 player.setBestHand(PokerHandCalc.getBestOmahaHand(player, board));
             } else {
                 player.setBestHand(PokerHandCalc.getBestHoldemHand(player, board));
@@ -467,7 +487,7 @@ public class PokerBase
     }
 
 
-    protected void resetGame(){
+    private void resetGame(){
         deck.shuffleDeck();
         board.resetBoard();
         bettingRules.resetPot();
@@ -479,13 +499,13 @@ public class PokerBase
         }
     }
 
-    protected void resetPlayerBets(){
+    private void resetPlayerBets(){
         players.forEach(Player::resetActiveBet);
         bettingRules.setRaised(false);
     }
 
 
-    protected void updatePlayerPositions(){
+    private void updatePlayerPositions(){
         System.out.println("HEJ");
         Collection<Player> losers = players.stream().filter(player -> player.getChips() <= 0).collect(Collectors.toList());
 

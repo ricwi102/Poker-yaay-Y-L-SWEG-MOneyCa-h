@@ -1,7 +1,12 @@
 package server;
 
 /**
- * Used to assign players with a special or standard role at the start of each round.
+ * This enum class contains all possible positions for a plaeyr in a game of poker.
+ * Each player gets a position which is updated every round. A players position decides wheter he/she has to pay blinds
+ * and in which order they get to act.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
  */
 
 public enum PlayerPosition {

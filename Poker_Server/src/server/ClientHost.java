@@ -89,10 +89,10 @@ public class ClientHost extends ClientWorker
     private PokerBase createPokerRules(String gameMode, BettingRules bettingRules) {
 	switch (gameMode) {
 	    case "OMAHA":
-		return new Omaha(getClientPlayers(), new Board(), bettingRules);
+		return new PokerBase(getClientPlayers(), new Board(), bettingRules, GameType.OMAHA);
 	    case "HOLDEM":
 	    default:
-		return new Holdem(getClientPlayers(), new Board(), bettingRules);
+		return new PokerBase(getClientPlayers(), new Board(), bettingRules, GameType.HOLDEM);
 	}
     }
 

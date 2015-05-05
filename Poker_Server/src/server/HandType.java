@@ -1,8 +1,13 @@
 package server;
 
 /**
- * Type of hand with value assigned to it,
+ * This enum class lists all possible types of poker hands. The value integer shows how strong the
+ * hand type is relative to others.
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
  */
+
 public enum HandType{
     /**
      * Lowest value, no combination of cards.

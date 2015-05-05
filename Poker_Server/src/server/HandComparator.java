@@ -3,7 +3,10 @@ package server;
 import java.util.Comparator;
 
 /**
- * Compares the value of a 5 card hand with another.
+ * This comparator defines how Poker hands should be compared against each other
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
  */
 
 public class HandComparator implements Comparator<PokerHand>
