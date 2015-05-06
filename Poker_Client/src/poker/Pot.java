@@ -51,6 +51,7 @@ public class Pot
     }
 
     private void awardWinners(Collection<Player> winners){
+        assert pot >= 0 : "Negative pot";
         winners.forEach(player -> player.addChips(pot / winners.size()));
     }
 

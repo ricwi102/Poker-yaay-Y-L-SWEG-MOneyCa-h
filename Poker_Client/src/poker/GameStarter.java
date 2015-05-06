@@ -8,9 +8,9 @@ package poker;
  * @author Johannes Palm Myllylä, Richard Wigren
  * @version 1.0
  */
-public final class GameTest
+public final class GameStarter
 {
-    private GameTest() {}
+    private GameStarter() {}
 
     public static void main(String[] args) {
 
