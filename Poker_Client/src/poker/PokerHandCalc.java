@@ -23,6 +23,7 @@ public final class PokerHandCalc
     your poker hand
      */
     public static PokerHand getBestOmahaHand(Player player, Board board){
+	assert player.getHand().size() == 4 : "Omaha player does not have 4 cards";
 	List<PokerHand> possibleBestHands = new ArrayList<>();
 	List<List<Card>> setsOfPlayerCards = getSetsOfCards(player.getHand(),2);
 	List<List<Card>> setsOfOpenCards = getSetsOfCards(board.getOpenCards(),3);
@@ -70,7 +71,7 @@ public final class PokerHandCalc
      community cards. You may ues any combination of 5 between these cards to form you poker hand
      */
     public static PokerHand getBestHoldemHand(Player player, Board board){
-
+	assert player.getHand().size() == 2 : "Holdem player does not have 2 cards";
 	List<Card> cards = new ArrayList<>();
 	cards.addAll(board.getOpenCards());
 	cards.addAll(player.getHand());

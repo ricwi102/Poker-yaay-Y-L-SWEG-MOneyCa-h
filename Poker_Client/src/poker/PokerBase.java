@@ -154,9 +154,7 @@ public class PokerBase
             return pots;
         }
 
-        private void awardWinners(Iterable<Pot> pots){
-            pots.forEach(Pot::resolveWinners);
-        }
+        private void awardWinners(Iterable<Pot> pots){ pots.forEach(Pot::resolveWinners); }
 
     //-------------------------
 
