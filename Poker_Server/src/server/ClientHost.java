@@ -17,11 +17,13 @@ public class ClientHost extends ClientWorker
     private boolean gameStarted = false;
     private String gameMode = "HOLDEM";
     private String bettingRules = "NOLIMIT";
+    private ServerManager manager;
     private static final Collection<String> GAME_MODES = Arrays.asList("HOLDEM", "OMAHA");//add all poker modes
     private static final Collection<String> BETTING_RULES = Arrays.asList("NOLIMIT", "POTLIMIT");
 
-    public ClientHost(final Socket client) {
+    public ClientHost(final Socket client, final ServerManager manager) {
 	super(client);
+	this.manager = manager;
     }
 
 
@@ -56,8 +58,9 @@ public class ClientHost extends ClientWorker
 		break;
 	    case "STARTGAME":
 		if (!gameStarted) {
-		    startGame();
 		    gameStarted = true;
+		    startGame();
+		    manager.shutDown();
 		}
 	}
     }

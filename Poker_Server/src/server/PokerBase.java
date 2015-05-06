@@ -128,10 +128,7 @@ public class PokerBase
         List<Player> sortedByLowestBet = new ArrayList<>();
         players.forEach(sortedByLowestBet::add);
 
-        System.out.println("pkb, p: " + players);
-        System.out.println("pkb, sblb1: " + sortedByLowestBet);
         Collections.sort(sortedByLowestBet, new TotalBetComparator());
-        System.out.println("pkb, sblb2: " + sortedByLowestBet);
 
         Collection<Pot> pots = new ArrayList<>();
 

@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,13 +43,12 @@ public class ServerManager
             System.exit(-1);
         }
         while (true) {
-            if (host != null && host.isGameStarted()) shutDown();
             if (close) break;
 
             try {
                 ClientWorker worker;
                 if (host == null) {
-                    worker = new ClientHost(server.accept());
+                    worker = new ClientHost(server.accept(), this);
                     host = (ClientHost) worker;
                     System.out.println("Host Found");
                 } else {
@@ -60,9 +60,13 @@ public class ServerManager
                 Thread t = new Thread(worker);
                 t.start();
             } catch (IOException e) {
+                if (e.getMessage().equals("Socket closed")){
+                    System.out.println("Closed Socket");
+                } else {
+                    System.out.println("Accept failed: " + port);
+                    shutDown();
+                }
                 e.printStackTrace();
-                System.out.println("Accept failed: " + port);
-                shutDown();
             }
         }
     }

@@ -160,7 +160,6 @@ public class PokerFrame extends JFrame implements ActionListener
 		allIn.setEnabled(false);
 	    }
 	    component.repaint();
-	    System.out.println("UPDATED UI");
 	}
     }
 

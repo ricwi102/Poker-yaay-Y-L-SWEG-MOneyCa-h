@@ -72,7 +72,7 @@ public class Client implements Runnable
                 shutDown();
             }
 
-            if (pokerRules != null && pokerRules.getFrame() != null) {
+            if (pokerRules != null && pokerRules.getFrame() != null && !closed) {
                 pokerRules.getFrame().updateUi();
             }
         }
