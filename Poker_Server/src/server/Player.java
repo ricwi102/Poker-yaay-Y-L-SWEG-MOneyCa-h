@@ -31,6 +31,9 @@ public class Player
         controller = "player";
     }
 
+    /*
+        Constructor for addin "AI" players
+
     public Player(final String name, final String controller) {
         hand = new ArrayList<>();
         this.name = name;
@@ -40,7 +43,7 @@ public class Player
         position = PlayerPosition.STANDARD;
         activeBet = 0;
         chips = STARTING_CHIPS;
-    }
+    }*/
 
     public void addCard(Card card){
         hand.add(card);

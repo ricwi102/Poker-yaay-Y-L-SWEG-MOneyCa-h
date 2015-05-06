@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class PokerBase
 {
     private List<Player> players;
-    private List<Player> lostPlayers = new ArrayList<>();
     private Board board;
     private Deck deck = new Deck();
     private Player currentPlayer = null;
@@ -479,8 +478,10 @@ public class PokerBase
     }
 
     public void gameOver(){
-        System.out.println("Winner: " + players.get(0).getName() + ",  Yaaaaaaaaaay!! you won the whole game!! you are absolutely the best player");
-        Collections.reverse(lostPlayers);
+        System.out.println("Winner: " + players.get(0).getName());
+        for (int i = 0; i < clients.size(); i++) {
+            clients.get(0).shutDown();
+        }
     }
 
 
@@ -508,7 +509,6 @@ public class PokerBase
 
         sendLosingPlayers(losers);
 
-        lostPlayers.addAll(losers);
         players.removeAll(losers);
 
         System.out.println(players);
@@ -517,7 +517,6 @@ public class PokerBase
 
         if(players.size() == 1){
             isGameOver = true;
-            lostPlayers.addAll(players);
             gameOver();
         }else if(players.size() == 2){
             players.get(0).setPosition(PlayerPosition.BIGBLIND);

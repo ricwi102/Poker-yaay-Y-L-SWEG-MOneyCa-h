@@ -157,6 +157,8 @@ public final class PokerHandCalc
 	return null;
     }
 
+    private static final int HIGHEST_CARD_VALUE = 14;
+
     private static List<Card> getStraight(List<Card> cards){
 	List<Card> testHand = new ArrayList<>();
 	sortHand(cards);
@@ -179,7 +181,7 @@ public final class PokerHandCalc
 	if (testHand.size() >= 5) {
 	    return testHand;
 	} else if (testHand.size() == 4 && testHand.get(testHand.size() - 1).getValue() == 2){
-	    if (cards.get(0).getValue() == 14){
+	    if (cards.get(0).getValue() == HIGHEST_CARD_VALUE){
 		testHand.add(cards.get(0));
 	    }
 	}

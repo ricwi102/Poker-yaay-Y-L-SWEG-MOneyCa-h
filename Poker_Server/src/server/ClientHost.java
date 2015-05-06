@@ -103,7 +103,7 @@ public class ClientHost extends ClientWorker
 	 	return clients.stream().map(ClientWorker::getPlayer).collect(Collectors.toList());
     }
 
-    public boolean isGameStarted() {
+    public boolean gameIsStarted() {
 	return gameStarted;
     }
 }

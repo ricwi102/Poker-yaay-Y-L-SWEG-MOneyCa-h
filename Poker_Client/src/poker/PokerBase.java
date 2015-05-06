@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class handles everything regarding the game flow. It moves the game forward in appropriate ways depending
@@ -319,18 +320,13 @@ public class PokerBase
     }
 
     public void resetPlayerBets(){
-        for (Player player : players) {
-            player.resetActiveBet();
-        }
+        players.forEach(Player::resetActiveBet);
         bettingRules.setRaised(false);
     }
 
     // This removes players with no chips, moves around the blinds and dealer positions
     private void updatePlayerPositions(){
-        Collection<Player> losers = new ArrayList<>();
-        for (Player player : players) {
-            if(player.getChips() <= 0) losers.add(player);
-        }
+        Collection<Player> losers = players.stream().filter(player -> player.getChips() <= 0).collect(Collectors.toList());
 
         lostPlayers.addAll(losers);
         players.removeAll(losers);

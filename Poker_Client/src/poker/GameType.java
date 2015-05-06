@@ -8,5 +8,12 @@ package poker;
  */
 public enum GameType
 {
-    HOLDEM, OMAHA
+    /**
+     * Rules of "Texas Hold'em" variant of the game
+     */
+    HOLDEM,
+    /**
+     * Rules of "Omaha" variant of the game
+     */
+    OMAHA
 }

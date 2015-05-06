@@ -9,7 +9,7 @@ package server;
  * @version 1.0
  */
 
-@SuppressWarnings("JavaDoc") //No valid explanation. Explains itself for the most part.
+@SuppressWarnings("JavaDoc") //Could not find a good explanation. Explains itself for the most part.
 public enum CardColor
 {
     CLUBS, SPADES, HEARTS, DIAMONDS

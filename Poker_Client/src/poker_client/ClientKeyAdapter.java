@@ -4,6 +4,12 @@ package poker_client;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+/**
+ * KeyAdapter which checks for the "Enter" and "Tab" key
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
 
 public class ClientKeyAdapter extends KeyAdapter{
 

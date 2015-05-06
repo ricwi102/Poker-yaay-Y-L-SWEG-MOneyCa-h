@@ -42,7 +42,7 @@ public enum HandType{
      */
     FOUROFAKIND(7),
     /**
-     * A straight where all cards are of the same value
+     * A straight where all cards are of the same color
      */
     STRAIGHTFLUSH(8);
     private final int value;

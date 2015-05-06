@@ -2,7 +2,6 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +16,12 @@ public class ServerManager
     private ServerSocket server = null;
     private List<ClientWorker> clients;
     private ClientHost host = null;
-    private boolean close = false;
 
     public ServerManager() {
         clients = new ArrayList<>();
     }
 
     public void shutDown() {
-        close = true;
         try {
             server.close();
         } catch (IOException e) {
@@ -42,9 +39,7 @@ public class ServerManager
             System.out.println("Could not listen on port " + port);
             System.exit(-1);
         }
-        while (true) {
-            if (close) break;
-
+        while (!server.isClosed()) {
             try {
                 ClientWorker worker;
                 if (host == null) {
@@ -59,7 +54,8 @@ public class ServerManager
                 worker.addClientWorkers(clients);
                 Thread t = new Thread(worker);
                 t.start();
-            } catch (IOException e) {
+            } catch (IOException e) {   //will get a SockeException every time it closes while waiting for the "accept()" method
+                                        //However, from the reading up i've done, the general consensus seems to be that it's fine if you catch it
                 if (e.getMessage().equals("Socket closed")){
                     System.out.println("Closed Socket");
                 } else {
@@ -67,6 +63,9 @@ public class ServerManager
                     shutDown();
                 }
                 e.printStackTrace();
+            }
+            if (host.gameIsStarted() || clients.size() >= 9) {
+                shutDown();
             }
         }
     }

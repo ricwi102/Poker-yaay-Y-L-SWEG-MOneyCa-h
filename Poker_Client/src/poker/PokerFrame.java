@@ -33,7 +33,7 @@ public class PokerFrame extends JFrame implements ActionListener
 
 
     public PokerFrame(final PokerBase pokerBase) throws HeadlessException{
-	super("Pokr sweg, holdum YÅLÅ");
+	super("Poker");
 	this.pokerBase = pokerBase;
 	component = new PokerComponent(pokerBase);
 	this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

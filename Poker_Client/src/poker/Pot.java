@@ -8,6 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+/**
+ * This class is takes in chips from players and decides who should win the total amount of chips in the object.
+ * Multiple objects of this type can be used for "split-pot" situatuations.
+ *
+ * @author Johannes Palm Myllylä, RIchard Wigren
+ * @version 1.0
+ */
+
 public class Pot
 {
     private int highestBet = 0;

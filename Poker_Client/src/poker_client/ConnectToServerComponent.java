@@ -5,8 +5,15 @@ package poker_client;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 
+/**
+ * Component which lets the user write in IP, port, and player name to connect to a server.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
 
 public class ConnectToServerComponent extends JComponent{
 
@@ -15,7 +22,7 @@ public class ConnectToServerComponent extends JComponent{
     private JTextField port = new JTextField(10);
     private JTextField nameField = new JTextField(2*10);
 
-    public ConnectToServerComponent(ActionListener listener, ClientKeyAdapter keyAdapter) {
+    public ConnectToServerComponent(ActionListener listener, KeyListener keyAdapter) {
 
         connect.addActionListener(listener);
 

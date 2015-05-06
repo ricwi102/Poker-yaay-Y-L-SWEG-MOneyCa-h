@@ -18,6 +18,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ *
+ * This class connects to a server and handles all the communication with said server.
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
+
+
 public class Client implements Runnable
 {
     private PokerBase pokerRules = null;
@@ -28,7 +39,6 @@ public class Client implements Runnable
     private Player you = null;
     private Socket socket = null;
     private boolean host = false;
-    private boolean closed  = false;
 
 
     public void listenSocket(int port, InetAddress address) throws UnknownHostException, IOException {
@@ -46,33 +56,27 @@ public class Client implements Runnable
     }
 
     private void shutDown(){
-        closed = true;
         try{
-            in.close();
-            out.close();
             socket.close();
         } catch (IOException exc) {
-            System.out.println("Failed to close everything socket related");
+            System.out.println("Failed to close socket");
             exc.printStackTrace();
             System.exit(-1);
         }
     }
 
     public void run() {
-        while (true) {
-            if (closed){
-                break;
-            }
+        while (!socket.isClosed()) {
             try {
                 String[] command = in.readLine().split("&");
                 commandOptions(command);
-            } catch (IOException e) {
+            } catch (IOException exc) {
                 System.out.println("Read failed");
-                e.printStackTrace();
+                exc.printStackTrace();
                 shutDown();
             }
 
-            if (pokerRules != null && pokerRules.getFrame() != null && !closed) {
+            if (pokerRules != null && pokerRules.getFrame() != null) {
                 pokerRules.getFrame().updateUi();
             }
         }

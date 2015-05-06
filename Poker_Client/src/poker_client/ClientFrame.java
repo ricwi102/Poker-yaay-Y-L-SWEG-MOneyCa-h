@@ -19,6 +19,18 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 
+/**
+ * A frame containing all the Components relevant to connecting to  a server
+ * and methods for switching between thos components.
+ *
+ * Contains ConnectToServerComponent which lets a client connect to a server.
+ * Also contains LobbyComponent which represents a game lobby before the game has started.
+ *
+ *
+ * @author Johannes Palm Myllylä, Richard Wigren
+ * @version 1.0
+ */
+
 public class ClientFrame extends JFrame
 {
 

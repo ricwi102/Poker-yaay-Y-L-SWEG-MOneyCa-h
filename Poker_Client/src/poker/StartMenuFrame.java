@@ -179,17 +179,25 @@ public class StartMenuFrame extends JFrame implements ActionListener
 	    bettingRules = new PotLimit();
 	    bettingStructure.setText("Betting structure: " + "Pot Limit");
 	}else if(e.getSource().equals(addPlayer)){
-	    String name = JOptionPane.showInputDialog("Player name: ");
-	    if(name != null) {
-		players.add(new Player(name));
-		playerLabel.setText("Players: " + players);
-		hasNonAiPlayer = true;
+	    if (players.size() < 9) {
+		String name = JOptionPane.showInputDialog("Player name: ");
+		if (name != null) {
+		    players.add(new Player(name));
+		    playerLabel.setText("Players: " + players);
+		    hasNonAiPlayer = true;
+		}
+	    } else {
+		JOptionPane.showMessageDialog(null, "There are already nine Players");
 	    }
 	}else if(e.getSource().equals(addAiPlayer)) {
-	    String name = JOptionPane.showInputDialog("Player name: ");
-	    if (name != null) {
-		players.add(new Player(name,"ai"));
-		playerLabel.setText("Players: " + players);
+	    if (players.size() < 9) {
+		String name = JOptionPane.showInputDialog("Player name: ");
+		if (name != null) {
+		    players.add(new Player(name,"ai"));
+		    playerLabel.setText("Players: " + players);
+		}
+	    } else {
+	 	JOptionPane.showMessageDialog(null, "There are already nine Players");
 	    }
 	}else if(e.getSource().equals(quit)){
 	    dispose();

@@ -2,14 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0bb29a1-7b21-4084-9b22-00480e571f56" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/GameTest.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/GameStarter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/CardColor.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/CardColor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/CardColor.java" afterPath="$PROJECT_DIR$/src/server/CardColor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker_client/Client.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker_client/Client.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ClientFrame.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ClientFrame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/ClientHost.java" afterPath="$PROJECT_DIR$/src/server/ClientHost.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ClientKeyAdapter.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ClientKeyAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/ClientWorker.java" afterPath="$PROJECT_DIR$/src/server/ClientWorker.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ConnectToServerComponent.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker_client/ConnectToServerComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/GameType.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/GameType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/HandType.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/HandType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/HandType.java" afterPath="$PROJECT_DIR$/src/server/HandType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Player.java" afterPath="$PROJECT_DIR$/src/server/Player.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/PlayerPosition.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/PlayerPosition.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerBase.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/PokerBase.java" afterPath="$PROJECT_DIR$/src/server/PokerBase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerFrame.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerFrame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerHandCalc.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/PokerHandCalc.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/PokerHandCalc.java" afterPath="$PROJECT_DIR$/src/server/PokerHandCalc.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/Poker_Client.iws" afterPath="$PROJECT_DIR$/../Poker_Client/Poker_Client.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Poker_Server.iws" afterPath="$PROJECT_DIR$/Poker_Server.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/Pot.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/Pot.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Pot.java" afterPath="$PROJECT_DIR$/src/server/Pot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/ServerManager.java" afterPath="$PROJECT_DIR$/src/server/ServerManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/ServerStarter.java" afterPath="$PROJECT_DIR$/src/server/ServerStarter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Poker_Client/src/poker/StartMenuFrame.java" afterPath="$PROJECT_DIR$/../Poker_Client/src/poker/StartMenuFrame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/TotalBetComparator.java" afterPath="$PROJECT_DIR$/src/server/TotalBetComparator.java" />
     </list>
     <ignored path="Poker_Server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,84 +53,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Pot.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Pot.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/server/Pot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="342" max-vertical-offset="1102">
-              <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.13950074" vertical-offset="0" max-vertical-offset="1273">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="11" selection-end-column="3" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JAVA/server.Pot" pinned="false" current-in-tab="false">
-        <entry file="uml://JAVA/server.Pot">
-          <provider selected="true" editor-type-id="UmlEditorProvider">
-            <state>
-              <ID>JAVA</ID>
-              <OriginalElement>server.Pot</OriginalElement>
-              <nodes>
-                <node x="57.0" y="158.0">server.HandComparator</node>
-                <node x="162.51041666666663" y="79.0">server.PokerHand</node>
-                <node x="233.75" y="316.0">server.PokerBase</node>
-                <node x="282.0" y="237.0">server.TotalBetComparator</node>
-                <node x="222.40625" y="0.0">server.Card</node>
-                <node x="218.0" y="158.0">server.Player</node>
-                <node x="149.0" y="237.0">server.Pot</node>
-                <node x="0.0" y="237.0">server.PokerHandCalc</node>
-              </nodes>
-              <notes />
-              <edges>
-                <edge source="server.Pot" target="server.HandComparator">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerHand" target="server.Card">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerBase" target="server.Pot">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.Player" target="server.PokerHand">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerBase" target="server.Player">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerHand" target="server.Player">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.Player" target="server.Card">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerHandCalc" target="server.HandComparator">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerHandCalc" target="server.PokerHand">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.Pot" target="server.Player">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-                <edge source="server.PokerBase" target="server.TotalBetComparator">
-                  <point x="0.0" y="0.0" />
-                  <point x="0.0" y="0.0" />
-                </edge>
-              </edges>
-              <settings layout="Hierarchic Group" zoom="1.0" x="-257.0" y="-53.5" />
-              <SelectedNodes />
-              <Categories />
-              <SCOPE>All</SCOPE>
-              <VISIBILITY>private</VISIBILITY>
             </state>
           </provider>
         </entry>
@@ -120,28 +66,45 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="380" max-vertical-offset="2527">
-              <caret line="20" column="30" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="400" max-vertical-offset="2698">
+              <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
+              <folding>
+                <element signature="e#1279#1280#0" expanded="true" />
+                <element signature="e#1309#1310#0" expanded="true" />
+                <element signature="e#3062#3063#0" expanded="true" />
+                <element signature="e#3092#3093#0" expanded="true" />
+                <element signature="e#3124#3125#0" expanded="true" />
+                <element signature="e#3153#3154#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PokerAi.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/PokerAi.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="760">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServerManager.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ServerManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/ServerManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.059436914" vertical-offset="228" max-vertical-offset="1463">
-              <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1520">
+              <caret line="66" column="59" selection-start-line="66" selection-start-column="59" selection-end-line="66" selection-end-column="59" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ServerStarter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/server/ServerStarter.java">
+      <file leaf-file-name="PlayerPosition.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/PlayerPosition.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="665">
+              <caret line="26" column="7" selection-start-line="24" selection-start-column="4" selection-end-line="26" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -150,67 +113,44 @@
       <file leaf-file-name="ClientHost.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/ClientHost.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="965" max-vertical-offset="2071">
-              <caret line="33" column="31" selection-start-line="33" selection-start-column="31" selection-end-line="33" selection-end-column="31" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1523" max-vertical-offset="2204">
+              <caret line="106" column="27" selection-start-line="106" selection-start-column="27" selection-end-line="106" selection-end-column="27" />
+              <folding>
+                <element signature="e#2882#2883#0" expanded="true" />
+                <element signature="e#2909#2910#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PokerBase.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/server/PokerBase.java">
+      <file leaf-file-name="HandComparator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/HandComparator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="10773">
-              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="27" max-vertical-offset="779">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JAVA/server.PokerBase" pinned="false" current-in-tab="false">
-        <entry file="uml://JAVA/server.PokerBase">
-          <provider selected="true" editor-type-id="UmlEditorProvider">
-            <state>
-              <ID>JAVA</ID>
-              <OriginalElement>server.PokerBase</OriginalElement>
-              <nodes>
-                <node x="-17.0" y="84.0">server.PokerBase</node>
-                <node x="141.0" y="74.0">java.io.PrintWriter</node>
-                <node x="275.0" y="81.0">java.io.BufferedReader</node>
-                <node x="423.0" y="80.0">java.net.Socket</node>
-                <node x="6.809895833333314" y="257.0">server.ClientHost</node>
-                <node x="404.25" y="257.0">java.net.ServerSocket</node>
-                <node x="101.5" y="178.0">server.ClientWorker</node>
-                <node x="37.875" y="0.0">server.Player</node>
-                <node x="117.83333333333331" y="415.0">server.ServerStarter</node>
-                <node x="112.33333333333331" y="336.0">server.ServerManager</node>
-              </nodes>
-              <notes />
-              <edges>
-                <edge source="server.ClientHost" target="server.ClientWorker">
-                  <point x="24.5" y="-14.5" />
-                  <point x="80.30989583333331" y="232.0" />
-                  <point x="120.33333333333334" y="232.0" />
-                  <point x="-37.66666666666666" y="14.5" />
-                </edge>
-              </edges>
-              <settings layout="Hierarchic Group" zoom="1.0" x="261.0" y="222.0" />
-              <SelectedNodes>
-                <node>server.PokerBase</node>
-              </SelectedNodes>
-              <Categories />
-              <SCOPE>All</SCOPE>
-              <VISIBILITY>private</VISIBILITY>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BettingRules.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/server/BettingRules.java">
+      <file leaf-file-name="HandType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/HandType.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="722">
-              <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1121">
+              <caret line="42" column="19" selection-start-line="42" selection-start-column="19" selection-end-line="42" selection-end-column="19" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CardColor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/server/CardColor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="418">
+              <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+              <folding>
+                <element signature="e#309#337#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -218,8 +158,8 @@
       <file leaf-file-name="ClientWorker.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/ClientWorker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="228" max-vertical-offset="3097">
-              <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2226" max-vertical-offset="2907">
+              <caret line="151" column="18" selection-start-line="151" selection-start-column="18" selection-end-line="151" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -247,35 +187,35 @@
         <option value="$PROJECT_DIR$/src/server/GameTest.java" />
         <option value="$PROJECT_DIR$/src/server/GameOverFrame.java" />
         <option value="$PROJECT_DIR$/src/server/PokerListener.java" />
-        <option value="$PROJECT_DIR$/src/server/ServerManager.java" />
         <option value="$PROJECT_DIR$/src/server/Ai.java" />
         <option value="$PROJECT_DIR$/src/server/Holdem.java" />
         <option value="$PROJECT_DIR$/src/server/Omaha.java" />
-        <option value="$PROJECT_DIR$/src/server/ServerStarter.java" />
         <option value="$PROJECT_DIR$/src/server/PlayerPotBet.java" />
-        <option value="$PROJECT_DIR$/src/server/TotalBetComparator.java" />
         <option value="$PROJECT_DIR$/src/server/BettingPots.java" />
-        <option value="$PROJECT_DIR$/src/server/ClientWorker.java" />
-        <option value="$PROJECT_DIR$/src/server/ClientHost.java" />
         <option value="$PROJECT_DIR$/src/server/BettingRules.java" />
         <option value="$PROJECT_DIR$/src/server/Board.java" />
         <option value="$PROJECT_DIR$/src/server/Card.java" />
-        <option value="$PROJECT_DIR$/src/server/CardColor.java" />
         <option value="$PROJECT_DIR$/src/server/CardComparator.java" />
         <option value="$PROJECT_DIR$/src/server/Deck.java" />
         <option value="$PROJECT_DIR$/src/server/GameType.java" />
         <option value="$PROJECT_DIR$/src/server/HandComparator.java" />
-        <option value="$PROJECT_DIR$/src/server/HandType.java" />
         <option value="$PROJECT_DIR$/src/server/NoLimit.java" />
-        <option value="$PROJECT_DIR$/src/server/Player.java" />
         <option value="$PROJECT_DIR$/src/server/PlayerPosition.java" />
-        <option value="$PROJECT_DIR$/src/server/PokerAi.java" />
         <option value="$PROJECT_DIR$/src/server/PokerHand.java" />
         <option value="$PROJECT_DIR$/src/server/PotLimit.java" />
         <option value="$PROJECT_DIR$/src/server/SameKindComparator.java" />
-        <option value="$PROJECT_DIR$/src/server/PokerBase.java" />
+        <option value="$PROJECT_DIR$/src/server/ClientWorker.java" />
         <option value="$PROJECT_DIR$/src/server/PokerHandCalc.java" />
+        <option value="$PROJECT_DIR$/src/server/ServerStarter.java" />
+        <option value="$PROJECT_DIR$/src/server/CardColor.java" />
+        <option value="$PROJECT_DIR$/src/server/ClientHost.java" />
+        <option value="$PROJECT_DIR$/src/server/ServerManager.java" />
         <option value="$PROJECT_DIR$/src/server/Pot.java" />
+        <option value="$PROJECT_DIR$/src/server/TotalBetComparator.java" />
+        <option value="$PROJECT_DIR$/src/server/PokerBase.java" />
+        <option value="$PROJECT_DIR$/src/server/Player.java" />
+        <option value="$PROJECT_DIR$/src/server/PokerAi.java" />
+        <option value="$PROJECT_DIR$/src/server/HandType.java" />
       </list>
     </option>
   </component>
@@ -283,8 +223,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1920" />
-    <option name="height" value="1055" />
+    <option name="width" value="1916" />
+    <option name="height" value="1051" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -311,6 +251,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -350,7 +291,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -371,7 +311,7 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Poker_Client" />
     <property name="FullScreen" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
@@ -677,14 +617,16 @@
       <workItem from="1430839587441" duration="1265000" />
       <workItem from="1430911711773" duration="4107000" />
       <workItem from="1430919345734" duration="1283000" />
+      <workItem from="1430922987832" duration="1021000" />
+      <workItem from="1430924293034" duration="6133000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31534000" />
+    <option name="totallyTimeSpent" value="38688000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1055" extended-state="0" />
+    <frame x="0" y="0" width="1916" height="1051" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -693,27 +635,27 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21793535" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32894737" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973877" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32692307" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25642398" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26173097" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3368092" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21868584" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32894737" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26214576" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -770,13 +712,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/server/GameType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="437">
-          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/PokerHand.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="608">
@@ -827,7 +762,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <caret line="90" column="81" selection-start-line="90" selection-start-column="81" selection-end-line="90" selection-end-column="81" />
-          <folding />
+          <folding>
+            <element signature="e#2882#2883#0" expanded="true" />
+            <element signature="e#2909#2910#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -897,7 +835,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#2882#2883#0" expanded="true" />
+            <element signature="e#2909#2910#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -977,13 +918,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/CardColor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="418">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/CardComparator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="589">
@@ -995,27 +929,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="475">
           <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/HandComparator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="27" max-vertical-offset="779">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/PlayerPosition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="665">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/PokerAi.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="760">
-          <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -1034,34 +947,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/PokerHandCalc.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="836" max-vertical-offset="4769">
-          <caret line="69" column="84" selection-start-line="69" selection-start-column="84" selection-end-line="69" selection-end-column="84" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/SameKindComparator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="27" max-vertical-offset="703">
           <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/HandType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="152" max-vertical-offset="1121">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/TotalBetComparator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
-          <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -1090,82 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/PokerBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="10773">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/ClientHost.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="965" max-vertical-offset="2071">
-          <caret line="33" column="31" selection-start-line="33" selection-start-column="31" selection-end-line="33" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/ClientWorker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="228" max-vertical-offset="3097">
-          <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/Pot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1102">
-          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2527">
-          <caret line="20" column="30" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://JAVA/server.PokerBase">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>JAVA</ID>
-          <OriginalElement>server.PokerBase</OriginalElement>
-          <nodes>
-            <node x="-17.0" y="84.0">server.PokerBase</node>
-            <node x="141.0" y="74.0">java.io.PrintWriter</node>
-            <node x="275.0" y="81.0">java.io.BufferedReader</node>
-            <node x="423.0" y="80.0">java.net.Socket</node>
-            <node x="6.809895833333314" y="257.0">server.ClientHost</node>
-            <node x="404.25" y="257.0">java.net.ServerSocket</node>
-            <node x="101.5" y="178.0">server.ClientWorker</node>
-            <node x="37.875" y="0.0">server.Player</node>
-            <node x="117.83333333333331" y="415.0">server.ServerStarter</node>
-            <node x="112.33333333333331" y="336.0">server.ServerManager</node>
-          </nodes>
-          <notes />
-          <edges>
-            <edge source="server.ClientHost" target="server.ClientWorker">
-              <point x="24.5" y="-14.5" />
-              <point x="80.30989583333331" y="232.0" />
-              <point x="120.33333333333334" y="232.0" />
-              <point x="-37.66666666666666" y="14.5" />
-            </edge>
-          </edges>
-          <settings layout="Hierarchic Group" zoom="1.0" x="261.0" y="222.0" />
-          <SelectedNodes>
-            <node>server.PokerBase</node>
-          </SelectedNodes>
-          <Categories />
-          <SCOPE>All</SCOPE>
-          <VISIBILITY>private</VISIBILITY>
-        </state>
-      </provider>
-    </entry>
     <entry file="uml://JAVA/server.Pot">
       <provider selected="true" editor-type-id="UmlEditorProvider">
         <state>
@@ -1182,53 +995,37 @@
             <node x="0.0" y="237.0">server.PokerHandCalc</node>
           </nodes>
           <notes />
-          <edges>
-            <edge source="server.Pot" target="server.HandComparator">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerHand" target="server.Card">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerBase" target="server.Pot">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.Player" target="server.PokerHand">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerBase" target="server.Player">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerHand" target="server.Player">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.Player" target="server.Card">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerHandCalc" target="server.HandComparator">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerHandCalc" target="server.PokerHand">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.Pot" target="server.Player">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-            <edge source="server.PokerBase" target="server.TotalBetComparator">
-              <point x="0.0" y="0.0" />
-              <point x="0.0" y="0.0" />
-            </edge>
-          </edges>
-          <settings layout="Hierarchic Group" zoom="1.0" x="-257.0" y="-53.5" />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="1.0" x="-257.0" y="-53.0" />
+          <SelectedNodes>
+            <node>server.Pot</node>
+          </SelectedNodes>
+          <Categories />
+          <SCOPE>All</SCOPE>
+          <VISIBILITY>private</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JAVA/server.PokerBase">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>JAVA</ID>
+          <OriginalElement>server.PokerBase</OriginalElement>
+          <nodes>
+            <node x="" y="">server.PokerBase</node>
+            <node x="" y="">java.io.PrintWriter</node>
+            <node x="" y="">java.io.BufferedReader</node>
+            <node x="" y="">java.net.Socket</node>
+            <node x="" y="">server.ClientHost</node>
+            <node x="" y="">java.net.ServerSocket</node>
+            <node x="" y="">server.ClientWorker</node>
+            <node x="" y="">server.Player</node>
+            <node x="" y="">server.ServerStarter</node>
+            <node x="" y="">server.ServerManager</node>
+          </nodes>
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="1.0" x="742.0" y="449.0" />
           <SelectedNodes />
           <Categories />
           <SCOPE>All</SCOPE>
@@ -1236,18 +1033,134 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///sw/jdk1.8.0_40/src.zip!/java/lang/Thread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="13107" max-vertical-offset="37544">
+          <caret line="744" column="0" selection-start-line="744" selection-start-column="0" selection-end-line="744" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/PokerHandCalc.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3135" max-vertical-offset="4807">
+          <caret line="184" column="43" selection-start-line="184" selection-start-column="43" selection-end-line="184" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/ServerStarter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="532">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="513">
+          <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/TotalBetComparator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="627">
+          <caret line="8" column="64" selection-start-line="8" selection-start-column="64" selection-end-line="8" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/PokerBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="9335" max-vertical-offset="10697">
+          <caret line="518" column="30" selection-start-line="518" selection-start-column="30" selection-end-line="518" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/ClientWorker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2226" max-vertical-offset="2907">
+          <caret line="151" column="18" selection-start-line="151" selection-start-column="18" selection-end-line="151" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="400" max-vertical-offset="2698">
+          <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
+          <folding>
+            <element signature="e#1279#1280#0" expanded="true" />
+            <element signature="e#1309#1310#0" expanded="true" />
+            <element signature="e#3062#3063#0" expanded="true" />
+            <element signature="e#3092#3093#0" expanded="true" />
+            <element signature="e#3124#3125#0" expanded="true" />
+            <element signature="e#3153#3154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/PokerAi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="760">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/CardColor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="418">
+          <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+          <folding>
+            <element signature="e#309#337#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/ClientHost.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1485" max-vertical-offset="2204">
+          <caret line="106" column="27" selection-start-line="106" selection-start-column="27" selection-end-line="106" selection-end-column="27" />
+          <folding>
+            <element signature="e#2882#2883#0" expanded="true" />
+            <element signature="e#2909#2910#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/HandComparator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="27" max-vertical-offset="779">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/HandType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1121">
+          <caret line="42" column="19" selection-start-line="42" selection-start-column="19" selection-end-line="42" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/ServerManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.059436914" vertical-offset="228" max-vertical-offset="1463">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="654" max-vertical-offset="1520">
+          <caret line="66" column="59" selection-start-line="66" selection-start-column="59" selection-end-line="66" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/PlayerPosition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="665">
+          <caret line="26" column="7" selection-start-line="24" selection-start-column="4" selection-end-line="26" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/Pot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13950074" vertical-offset="0" max-vertical-offset="1273">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="11" selection-end-column="3" />
           <folding />
         </state>
       </provider>

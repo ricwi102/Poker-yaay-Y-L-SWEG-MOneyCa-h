@@ -8,6 +8,7 @@ package poker;
  * @author Johannes Palm Myllylä, RIchard Wigren
  * @version 1.0
  */
+@SuppressWarnings("JavaDoc") //Could not find a good explanation. Explains itself for the most part.
 public enum CardColor
 {
     CLUBS(0),SPADES(1),HEARTS(2),DIAMONDS(3);
